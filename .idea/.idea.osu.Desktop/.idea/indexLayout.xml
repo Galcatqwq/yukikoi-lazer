@@ -3,6 +3,7 @@
   <component name="UserContentModel">
     <attachedFolders />
     <explicitIncludes>
+      <Path>osu.Game.Rulesets.Sandbox</Path>
       <Path>osu.Game.Tests/Visual/Mods/TestSceneModAccuracyChallenge.cs</Path>
       <Path>osu.Game/Localisation/HUD/GameplayAccuracyCounterStrings.cs</Path>
       <Path>osu.Game/Screens/Play/HUD/GameplayAccuracyCounter.cs</Path>

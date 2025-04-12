@@ -10,6 +10,7 @@
       "osu.Game.Rulesets.Mania\\osu.Game.Rulesets.Mania.csproj",
       "osu.Game.Rulesets.Osu.Tests\\osu.Game.Rulesets.Osu.Tests.csproj",
       "osu.Game.Rulesets.Osu\\osu.Game.Rulesets.Osu.csproj",
+      "osu.Game.Rulesets.Sandbox\\osu.Game.Rulesets.Sandbox.csproj",
       "osu.Game.Rulesets.Taiko.Tests\\osu.Game.Rulesets.Taiko.Tests.csproj",
       "osu.Game.Rulesets.Taiko\\osu.Game.Rulesets.Taiko.csproj",
       "osu.Game.Tests\\osu.Game.Tests.csproj",
