@@ -15,6 +15,6 @@ namespace osu.Game.Rulesets.Osu.Mods
         public override Type[] IncompatibleMods => base.IncompatibleMods.Concat(new[] { typeof(Nullable) }).ToArray();
 
         public override ModReplayData CreateReplayData(IBeatmap beatmap, IReadOnlyList<Mod> mods)
-            => new ModReplayData(new OsuAutoGenerator(beatmap, mods).Generate(), new ModCreatedUser { Username = "卢本伟" });
+            => new ModReplayData(new OsuAutoGenerator(beatmap, mods).Generate(), new ModCreatedUser { Username = "Lbw" });
     }
 }
