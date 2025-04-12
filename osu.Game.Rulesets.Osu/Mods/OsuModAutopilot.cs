@@ -23,7 +23,7 @@ namespace osu.Game.Rulesets.Osu.Mods
         public override IconUsage? Icon => OsuIcon.ModAutopilot;
         public override ModType Type => ModType.Automation;
         public override LocalisableString Description => @"Automatic cursor movement - just follow the rhythm.";
-        public override double ScoreMultiplier => 0.1;
+        public override double ScoreMultiplier => 0;
 
         public override Type[] IncompatibleMods => new[]
         {
@@ -61,10 +61,12 @@ namespace osu.Game.Rulesets.Osu.Mods
         {
             // Grab the input manager to disable the user's cursor, and for future use
             inputManager = ((DrawableOsuRuleset)drawableRuleset).KeyBindingInputManager;
+
             inputManager.AllowUserCursorMovement = false;
 
             // Generate the replay frames the cursor should follow
             replayFrames = new OsuAutoGenerator(drawableRuleset.Beatmap, drawableRuleset.Mods).Generate().Frames.Cast<OsuReplayFrame>().ToList();
         }
+
     }
 }
