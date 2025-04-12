@@ -25,7 +25,6 @@ namespace osu.Game.Tests.Visual.Online
     {
         protected override bool UseOnlineAPI => false;
 
-        private LocalUserStatisticsProvider statisticsProvider = null!;
         private UserStatisticsWatcher watcher = null!;
 
         [Resolved]
@@ -108,9 +107,7 @@ namespace osu.Game.Tests.Visual.Online
 
             AddStep("create watcher", () =>
             {
-                Clear();
-                Add(statisticsProvider = new LocalUserStatisticsProvider());
-                Add(watcher = new UserStatisticsWatcher(statisticsProvider));
+                Child = watcher = new UserStatisticsWatcher();
             });
         }
 
@@ -126,7 +123,7 @@ namespace osu.Game.Tests.Visual.Online
 
             var ruleset = new OsuRuleset().RulesetInfo;
 
-            ScoreBasedUserStatisticsUpdate? update = null;
+            UserStatisticsUpdate? update = null;
             registerForUpdates(scoreId, ruleset, receivedUpdate => update = receivedUpdate);
 
             feignScoreProcessing(userId, ruleset, 5_000_000);
@@ -149,7 +146,7 @@ namespace osu.Game.Tests.Visual.Online
             // note ordering - in this test processing completes *before* the registration is added.
             feignScoreProcessing(userId, ruleset, 5_000_000);
 
-            ScoreBasedUserStatisticsUpdate? update = null;
+            UserStatisticsUpdate? update = null;
             registerForUpdates(scoreId, ruleset, receivedUpdate => update = receivedUpdate);
 
             AddStep("signal score processed", () => ((ISpectatorClient)spectatorClient).UserScoreProcessed(userId, scoreId));
@@ -167,7 +164,7 @@ namespace osu.Game.Tests.Visual.Online
             long scoreId = getScoreId();
             var ruleset = new OsuRuleset().RulesetInfo;
 
-            ScoreBasedUserStatisticsUpdate? update = null;
+            UserStatisticsUpdate? update = null;
             registerForUpdates(scoreId, ruleset, receivedUpdate => update = receivedUpdate);
 
             feignScoreProcessing(userId, ruleset, 5_000_000);
@@ -194,7 +191,7 @@ namespace osu.Game.Tests.Visual.Online
             long scoreId = getScoreId();
             var ruleset = new OsuRuleset().RulesetInfo;
 
-            ScoreBasedUserStatisticsUpdate? update = null;
+            UserStatisticsUpdate? update = null;
             registerForUpdates(scoreId, ruleset, receivedUpdate => update = receivedUpdate);
 
             feignScoreProcessing(userId, ruleset, 5_000_000);
@@ -215,7 +212,7 @@ namespace osu.Game.Tests.Visual.Online
             long scoreId = getScoreId();
             var ruleset = new OsuRuleset().RulesetInfo;
 
-            ScoreBasedUserStatisticsUpdate? update = null;
+            UserStatisticsUpdate? update = null;
             registerForUpdates(scoreId, ruleset, receivedUpdate => update = receivedUpdate);
 
             feignScoreProcessing(userId, ruleset, 5_000_000);
@@ -244,7 +241,7 @@ namespace osu.Game.Tests.Visual.Online
 
             feignScoreProcessing(userId, ruleset, 6_000_000);
 
-            ScoreBasedUserStatisticsUpdate? update = null;
+            UserStatisticsUpdate? update = null;
             registerForUpdates(secondScoreId, ruleset, receivedUpdate => update = receivedUpdate);
 
             AddStep("signal score processed", () => ((ISpectatorClient)spectatorClient).UserScoreProcessed(userId, secondScoreId));
@@ -262,14 +259,15 @@ namespace osu.Game.Tests.Visual.Online
 
             var ruleset = new OsuRuleset().RulesetInfo;
 
-            ScoreBasedUserStatisticsUpdate? update = null;
+            UserStatisticsUpdate? update = null;
             registerForUpdates(scoreId, ruleset, receivedUpdate => update = receivedUpdate);
 
             feignScoreProcessing(userId, ruleset, 5_000_000);
 
             AddStep("signal score processed", () => ((ISpectatorClient)spectatorClient).UserScoreProcessed(userId, scoreId));
             AddUntilStep("update received", () => update != null);
-            AddAssert("statistics values are correct", () => statisticsProvider.GetStatisticsFor(ruleset)!.TotalScore, () => Is.EqualTo(5_000_000));
+            AddAssert("local user values are correct", () => dummyAPI.LocalUser.Value.Statistics.TotalScore, () => Is.EqualTo(5_000_000));
+            AddAssert("statistics values are correct", () => dummyAPI.Statistics.Value!.TotalScore, () => Is.EqualTo(5_000_000));
         }
 
         private int nextUserId = 2000;
@@ -291,7 +289,7 @@ namespace osu.Game.Tests.Visual.Online
             });
         }
 
-        private void registerForUpdates(long scoreId, RulesetInfo rulesetInfo, Action<ScoreBasedUserStatisticsUpdate> onUpdateReady) =>
+        private void registerForUpdates(long scoreId, RulesetInfo rulesetInfo, Action<UserStatisticsUpdate> onUpdateReady) =>
             AddStep("register for updates", () =>
             {
                 watcher.RegisterForStatisticsUpdateAfter(

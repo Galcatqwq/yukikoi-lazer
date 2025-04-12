@@ -9,7 +9,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using osu.Framework.Platform;
 using osu.Game.Extensions;
-using osu.Game.IO;
 using osu.Game.Overlays.Notifications;
 using osu.Game.Utils;
 using Realms;
@@ -47,7 +46,7 @@ namespace osu.Game.Database
 
         protected LegacyExporter(Storage storage)
         {
-            exportStorage = (storage as OsuStorage)?.GetExportStorage() ?? storage.GetStorageForDirectory(@"exports");
+            exportStorage = storage.GetStorageForDirectory(@"exports");
             UserFileStorage = storage.GetStorageForDirectory(@"files");
         }
 

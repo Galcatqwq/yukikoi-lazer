@@ -1,6 +1,8 @@
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
+#nullable disable
+
 using System;
 using System.Linq;
 using NUnit.Framework;
@@ -27,10 +29,10 @@ namespace osu.Game.Tests.Visual.Multiplayer
 {
     public partial class TestSceneTeamVersus : ScreenTestScene
     {
-        private BeatmapManager beatmaps = null!;
-        private BeatmapSetInfo importedSet = null!;
+        private BeatmapManager beatmaps;
+        private BeatmapSetInfo importedSet;
 
-        private TestMultiplayerComponents multiplayerComponents = null!;
+        private TestMultiplayerComponents multiplayerComponents;
 
         private TestMultiplayerClient multiplayerClient => multiplayerComponents.MultiplayerClient;
 
@@ -62,15 +64,15 @@ namespace osu.Game.Tests.Visual.Multiplayer
         {
             createRoom(() => new Room
             {
-                Name = "Test Room",
-                Type = MatchType.TeamVersus,
+                Name = { Value = "Test Room" },
+                Type = { Value = MatchType.TeamVersus },
                 Playlist =
-                [
+                {
                     new PlaylistItem(beatmaps.GetWorkingBeatmap(importedSet.Beatmaps.First(b => b.Ruleset.OnlineID == 0)).BeatmapInfo)
                     {
                         RulesetID = new OsuRuleset().RulesetInfo.OnlineID
                     }
-                ]
+                }
             });
 
             AddUntilStep("room type is team vs", () => multiplayerClient.ClientRoom?.Settings.MatchType == MatchType.TeamVersus);
@@ -82,15 +84,15 @@ namespace osu.Game.Tests.Visual.Multiplayer
         {
             createRoom(() => new Room
             {
-                Name = "Test Room",
-                Type = MatchType.TeamVersus,
+                Name = { Value = "Test Room" },
+                Type = { Value = MatchType.TeamVersus },
                 Playlist =
-                [
+                {
                     new PlaylistItem(beatmaps.GetWorkingBeatmap(importedSet.Beatmaps.First(b => b.Ruleset.OnlineID == 0)).BeatmapInfo)
                     {
                         RulesetID = new OsuRuleset().RulesetInfo.OnlineID
                     }
-                ]
+                }
             });
 
             AddUntilStep("user on team 0", () => (multiplayerClient.ClientRoom?.Users.FirstOrDefault()?.MatchState as TeamVersusUserState)?.TeamID == 0);
@@ -119,25 +121,25 @@ namespace osu.Game.Tests.Visual.Multiplayer
         {
             createRoom(() => new Room
             {
-                Name = "Test Room",
-                Type = MatchType.HeadToHead,
+                Name = { Value = "Test Room" },
+                Type = { Value = MatchType.HeadToHead },
                 Playlist =
-                [
+                {
                     new PlaylistItem(beatmaps.GetWorkingBeatmap(importedSet.Beatmaps.First(b => b.Ruleset.OnlineID == 0)).BeatmapInfo)
                     {
                         RulesetID = new OsuRuleset().RulesetInfo.OnlineID,
                     }
-                ]
+                }
             });
 
-            AddUntilStep("match type head to head", () => multiplayerClient.ClientAPIRoom?.Type == MatchType.HeadToHead);
+            AddUntilStep("match type head to head", () => multiplayerClient.ClientAPIRoom?.Type.Value == MatchType.HeadToHead);
 
             AddStep("change match type", () => multiplayerClient.ChangeSettings(new MultiplayerRoomSettings
             {
                 MatchType = MatchType.TeamVersus
             }).WaitSafely());
 
-            AddUntilStep("api room updated to team versus", () => multiplayerClient.ClientAPIRoom?.Type == MatchType.TeamVersus);
+            AddUntilStep("api room updated to team versus", () => multiplayerClient.ClientAPIRoom?.Type.Value == MatchType.TeamVersus);
         }
 
         [Test]
@@ -145,14 +147,14 @@ namespace osu.Game.Tests.Visual.Multiplayer
         {
             createRoom(() => new Room
             {
-                Name = "Test Room",
+                Name = { Value = "Test Room" },
                 Playlist =
-                [
+                {
                     new PlaylistItem(beatmaps.GetWorkingBeatmap(importedSet.Beatmaps.First(b => b.Ruleset.OnlineID == 0)).BeatmapInfo)
                     {
                         RulesetID = new OsuRuleset().RulesetInfo.OnlineID,
                     }
-                ]
+                }
             });
 
             AddUntilStep("room type is head to head", () => multiplayerClient.ClientRoom?.Settings.MatchType == MatchType.HeadToHead);

@@ -128,9 +128,6 @@ namespace osu.Game.Online.API.Requests.Responses
         [JsonProperty(@"converts")]
         public APIBeatmap[]? Converts { get; set; }
 
-        [JsonProperty(@"related_tags")]
-        public APITag[]? RelatedTags { get; set; }
-
         private BeatmapMetadata metadata => new BeatmapMetadata
         {
             Title = Title,

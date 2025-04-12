@@ -4,7 +4,6 @@
 using System;
 using osu.Framework.Allocation;
 using osu.Framework.Extensions.Color4Extensions;
-using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Input.Events;
 using osu.Game.Graphics;
@@ -27,11 +26,10 @@ namespace osu.Game.Rulesets.Mania.Edit.Blueprints.Components
         {
             Height = DefaultNotePiece.NOTE_HEIGHT;
 
-            InternalChild = new EditNotePiece
-            {
-                RelativeSizeAxes = Axes.Both,
-                Height = 1,
-            };
+            CornerRadius = 5;
+            Masking = true;
+
+            InternalChild = new DefaultNotePiece();
         }
 
         protected override void LoadComplete()
@@ -62,23 +60,19 @@ namespace osu.Game.Rulesets.Mania.Edit.Blueprints.Components
         {
             base.OnDrag(e);
             Dragging?.Invoke(e.ScreenSpaceMousePosition);
-            updateState();
         }
 
         protected override void OnDragEnd(DragEndEvent e)
         {
             base.OnDragEnd(e);
             DragEnded?.Invoke();
-            updateState();
         }
 
         private void updateState()
         {
-            InternalChild.Colour = Colour4.White;
-
             var colour = colours.Yellow;
 
-            if (IsHovered || IsDragged)
+            if (IsHovered)
                 colour = colour.Lighten(1);
 
             Colour = colour;

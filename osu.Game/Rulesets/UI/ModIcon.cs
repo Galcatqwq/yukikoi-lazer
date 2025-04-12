@@ -10,11 +10,10 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Cursor;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
-using osu.Framework.Utils;
+using osu.Framework.Localisation;
 using osu.Game.Configuration;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Sprites;
-using osu.Game.Overlays;
 using osu.Game.Rulesets.Mods;
 using osuTK;
 using osuTK.Graphics;
@@ -24,7 +23,7 @@ namespace osu.Game.Rulesets.UI
     /// <summary>
     /// Display the specified mod at a fixed size.
     /// </summary>
-    public partial class ModIcon : Container, IHasCustomTooltip<Mod>
+    public partial class ModIcon : Container, IHasTooltip
     {
         public readonly BindableBool Selected = new BindableBool();
 
@@ -34,23 +33,12 @@ namespace osu.Game.Rulesets.UI
 
         public static readonly Vector2 MOD_ICON_SIZE = new Vector2(80);
 
-        public Mod? TooltipContent { get; private set; }
+        public virtual LocalisableString TooltipText => showTooltip ? ((mod as Mod)?.IconTooltip ?? mod.Name) : string.Empty;
 
         private IMod mod;
 
         private readonly bool showTooltip;
-
-        private bool showExtendedInformation;
-
-        public bool ShowExtendedInformation
-        {
-            get => showExtendedInformation;
-            set
-            {
-                showExtendedInformation = value;
-                updateExtendedInformation();
-            }
-        }
+        private readonly bool showExtendedInformation;
 
         public IMod Mod
         {
@@ -69,9 +57,6 @@ namespace osu.Game.Rulesets.UI
 
         [Resolved]
         private OsuColour colours { get; set; } = null!;
-
-        [Resolved]
-        private OverlayColourProvider? colourProvider { get; set; }
 
         private Color4 backgroundColour;
 
@@ -154,7 +139,7 @@ namespace osu.Game.Rulesets.UI
                             Origin = Anchor.Centre,
                             Anchor = Anchor.Centre,
                             Alpha = 0,
-                            Font = OsuFont.Numeric.With(size: 22f, weight: FontWeight.Black),
+                            Font = OsuFont.Numeric.With(null, 22f),
                             UseFullGlyphHeight = false,
                             Text = mod.Acronym
                         },
@@ -191,7 +176,6 @@ namespace osu.Game.Rulesets.UI
 
             modAcronym.Text = value.Acronym;
             modIcon.Icon = value.Icon ?? FontAwesome.Solid.Question;
-            TooltipContent = showTooltip ? value as Mod : null;
 
             if (value.Icon == null)
             {
@@ -220,7 +204,7 @@ namespace osu.Game.Rulesets.UI
 
         private void updateColour()
         {
-            modAcronym.Colour = modIcon.Colour = Interpolation.ValueAt<Colour4>(0.1f, Colour4.Black, backgroundColour, 0, 1);
+            modAcronym.Colour = modIcon.Colour = OsuColour.Gray(84);
 
             extendedText.Colour = background.Colour = Selected.Value ? backgroundColour.Lighten(0.2f) : backgroundColour;
             extendedBackground.Colour = Selected.Value ? backgroundColour.Darken(2.4f) : backgroundColour.Darken(2.8f);
@@ -231,7 +215,5 @@ namespace osu.Game.Rulesets.UI
             base.Dispose(isDisposing);
             modSettingsChangeTracker?.Dispose();
         }
-
-        public ITooltip<Mod> GetCustomTooltip() => new ModTooltip(colourProvider);
     }
 }

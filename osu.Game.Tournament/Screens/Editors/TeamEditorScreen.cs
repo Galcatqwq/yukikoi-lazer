@@ -71,8 +71,6 @@ namespace osu.Game.Tournament.Screens.Editors
             [Resolved]
             private LadderInfo ladderInfo { get; set; } = null!;
 
-            private readonly SettingsTextBox acronymTextBox;
-
             public TeamRow(TournamentTeam team, TournamentScreen parent)
             {
                 Model = team;
@@ -114,7 +112,7 @@ namespace osu.Game.Tournament.Screens.Editors
                                 Width = 0.2f,
                                 Current = Model.FullName
                             },
-                            acronymTextBox = new SettingsTextBox
+                            new SettingsTextBox
                             {
                                 LabelText = "Acronym",
                                 Width = 0.2f,
@@ -177,27 +175,6 @@ namespace osu.Game.Tournament.Screens.Editors
                         }
                     },
                 };
-            }
-
-            protected override void LoadComplete()
-            {
-                base.LoadComplete();
-
-                Model.Acronym.BindValueChanged(acronym =>
-                {
-                    var teamsWithSameAcronym = ladderInfo.Teams
-                                                         .Where(t => t.Acronym.Value == acronym.NewValue && t != Model)
-                                                         .ToList();
-
-                    if (teamsWithSameAcronym.Count > 0)
-                    {
-                        acronymTextBox.SetNoticeText(
-                            $"Acronym '{acronym.NewValue}' is already in use by team{(teamsWithSameAcronym.Count > 1 ? "s" : "")}:\n"
-                            + $"{string.Join(",\n", teamsWithSameAcronym)}", true);
-                    }
-                    else
-                        acronymTextBox.ClearNoticeText();
-                }, true);
             }
 
             private partial class LastYearPlacementSlider : RoundedSliderBar<int>

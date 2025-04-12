@@ -7,13 +7,9 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using osu.Framework.Graphics;
-using osu.Framework.Graphics.Shapes;
 using osu.Framework.Timing;
 using osu.Game.Beatmaps.Timing;
-using osu.Game.Rulesets.Osu;
-using osu.Game.Rulesets.Scoring;
 using osu.Game.Screens.Play;
-using osuTK.Graphics;
 
 namespace osu.Game.Tests.Visual.Gameplay
 {
@@ -32,25 +28,14 @@ namespace osu.Game.Tests.Visual.Gameplay
 
         public TestSceneBreakTracker()
         {
-            Children = new Drawable[]
+            AddRange(new Drawable[]
             {
-                new Box
-                {
-                    Colour = Color4.White,
-                    RelativeSizeAxes = Axes.Both,
-                },
                 breakTracker = new TestBreakTracker(),
-                breakOverlay = new BreakOverlay(new ScoreProcessor(new OsuRuleset()))
+                breakOverlay = new BreakOverlay(true, null)
                 {
                     ProcessCustomClock = false,
-                    BreakTracker = breakTracker,
-                },
-                new LetterboxOverlay
-                {
-                    ProcessCustomClock = false,
-                    BreakTracker = breakTracker,
-                },
-            };
+                }
+            });
         }
 
         protected override void Update()
@@ -63,6 +48,9 @@ namespace osu.Game.Tests.Visual.Gameplay
         [Test]
         public void TestShowBreaks()
         {
+            setClock(false);
+
+            addShowBreakStep(2);
             addShowBreakStep(5);
             addShowBreakStep(15);
         }
@@ -127,7 +115,7 @@ namespace osu.Game.Tests.Visual.Gameplay
         {
             AddStep($"show '{seconds}s' break", () =>
             {
-                breakTracker.Breaks = new List<BreakPeriod>
+                breakOverlay.Breaks = breakTracker.Breaks = new List<BreakPeriod>
                 {
                     new BreakPeriod(Clock.CurrentTime, Clock.CurrentTime + seconds * 1000)
                 };
@@ -141,7 +129,7 @@ namespace osu.Game.Tests.Visual.Gameplay
 
         private void loadBreaksStep(string breakDescription, IReadOnlyList<BreakPeriod> breaks)
         {
-            AddStep($"load {breakDescription}", () => breakTracker.Breaks = breaks);
+            AddStep($"load {breakDescription}", () => breakOverlay.Breaks = breakTracker.Breaks = breaks);
             seekAndAssertBreak("seek back to 0", 0, false);
         }
 
@@ -187,7 +175,6 @@ namespace osu.Game.Tests.Visual.Gameplay
             }
 
             public TestBreakTracker()
-                : base(0, new ScoreProcessor(new OsuRuleset()))
             {
                 FramedManualClock = new FramedClock(manualClock = new ManualClock());
                 ProcessCustomClock = false;

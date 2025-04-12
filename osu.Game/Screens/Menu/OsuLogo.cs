@@ -53,12 +53,8 @@ namespace osu.Game.Screens.Menu
         private Sample sampleClick;
         private SampleChannel sampleClickChannel;
 
-        protected virtual MenuLogoVisualisation CreateMenuLogoVisualisation() => new MenuLogoVisualisation();
-
-        protected virtual double BeatSampleVariance => 0.1;
-
-        protected Sample SampleBeat;
-        protected Sample SampleDownbeat;
+        private Sample sampleBeat;
+        private Sample sampleDownbeat;
 
         private readonly Container colourAndTriangles;
         private readonly TrianglesV2 triangles;
@@ -155,15 +151,15 @@ namespace osu.Game.Screens.Menu
                                             AutoSizeAxes = Axes.Both,
                                             Children = new Drawable[]
                                             {
-                                                visualizer = CreateMenuLogoVisualisation().With(v =>
+                                                visualizer = new MenuLogoVisualisation
                                                 {
-                                                    v.RelativeSizeAxes = Axes.Both;
-                                                    v.Origin = Anchor.Centre;
-                                                    v.Anchor = Anchor.Centre;
-                                                    v.Alpha = visualizer_default_alpha;
-                                                    v.Size = SCALE_ADJUST;
-                                                }),
-                                                LogoElements = new Container
+                                                    RelativeSizeAxes = Axes.Both,
+                                                    Origin = Anchor.Centre,
+                                                    Anchor = Anchor.Centre,
+                                                    Alpha = visualizer_default_alpha,
+                                                    Size = SCALE_ADJUST
+                                                },
+                                                new Container
                                                 {
                                                     AutoSizeAxes = Axes.Both,
                                                     Children = new Drawable[]
@@ -247,8 +243,6 @@ namespace osu.Game.Screens.Menu
             };
         }
 
-        public Container LogoElements { get; private set; }
-
         /// <summary>
         /// Schedule a new external animation. Handled queueing and finishing previous animations in a sane way.
         /// </summary>
@@ -277,9 +271,8 @@ namespace osu.Game.Screens.Menu
         private void load(TextureStore textures, AudioManager audio)
         {
             sampleClick = audio.Samples.Get(@"Menu/osu-logo-select");
-
-            SampleBeat = audio.Samples.Get(@"Menu/osu-logo-heartbeat");
-            SampleDownbeat = audio.Samples.Get(@"Menu/osu-logo-downbeat");
+            sampleBeat = audio.Samples.Get(@"Menu/osu-logo-heartbeat");
+            sampleDownbeat = audio.Samples.Get(@"Menu/osu-logo-downbeat");
 
             logo.Texture = textures.Get(@"Menu/logo");
             ripple.Texture = textures.Get(@"Menu/logo");
@@ -305,13 +298,12 @@ namespace osu.Game.Screens.Menu
                 {
                     if (beatIndex % timingPoint.TimeSignature.Numerator == 0)
                     {
-                        SampleDownbeat?.Play();
+                        sampleDownbeat?.Play();
                     }
                     else
                     {
-                        var channel = SampleBeat.GetChannel();
-
-                        channel.Frequency.Value = 1 - BeatSampleVariance / 2 + RNG.NextDouble(BeatSampleVariance);
+                        var channel = sampleBeat.GetChannel();
+                        channel.Frequency.Value = 0.95 + RNG.NextDouble(0.1);
                         channel.Play();
                     }
                 });

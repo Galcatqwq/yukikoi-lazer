@@ -3,7 +3,6 @@
 
 using System.Diagnostics;
 using osu.Framework.Allocation;
-using osu.Framework.Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
@@ -14,11 +13,12 @@ using osu.Game.Audio;
 using osu.Game.Beatmaps;
 using osu.Game.Beatmaps.Drawables.Cards;
 using osu.Game.Configuration;
-using osu.Game.Database;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Graphics.UserInterfaceV2;
 using osu.Game.Localisation;
+using osu.Game.Online.API;
+using osu.Game.Online.API.Requests;
 using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Online.Spectator;
 using osu.Game.Overlays;
@@ -34,7 +34,7 @@ namespace osu.Game.Screens.Play
     public partial class SoloSpectatorScreen : SpectatorScreen, IPreviewTrackOwner
     {
         [Resolved]
-        private BeatmapLookupCache beatmapLookupCache { get; set; } = null!;
+        private IAPIProvider api { get; set; } = null!;
 
         [Resolved]
         private PreviewTrackManager previewTrackManager { get; set; } = null!;
@@ -60,7 +60,7 @@ namespace osu.Game.Screens.Play
         /// </summary>
         private SpectatorGameplayState? immediateSpectatorGameplayState;
 
-        private ScheduledDelegate? beatmapFetchCallback;
+        private GetBeatmapSetRequest? onlineBeatmapRequest;
 
         private APIBeatmapSet? beatmapSet;
 
@@ -210,7 +210,7 @@ namespace osu.Game.Screens.Play
         private void clearDisplay()
         {
             watchButton.Enabled.Value = false;
-            beatmapFetchCallback?.Cancel();
+            onlineBeatmapRequest?.Cancel();
             beatmapPanelContainer.Clear();
             previewTrackManager.StopAnyPlaying(this);
         }
@@ -244,17 +244,15 @@ namespace osu.Game.Screens.Play
         {
             Debug.Assert(state.BeatmapID != null);
 
-            beatmapLookupCache.GetBeatmapAsync(state.BeatmapID.Value).ContinueWith(t => beatmapFetchCallback = Schedule(() =>
+            onlineBeatmapRequest = new GetBeatmapSetRequest(state.BeatmapID.Value, BeatmapSetLookupType.BeatmapId);
+            onlineBeatmapRequest.Success += beatmapSet => Schedule(() =>
             {
-                var beatmap = t.GetResultSafely();
-
-                if (beatmap?.BeatmapSet == null)
-                    return;
-
-                beatmapSet = beatmap.BeatmapSet;
-                beatmapPanelContainer.Child = new BeatmapCardNormal(beatmapSet, allowExpansion: false);
+                this.beatmapSet = beatmapSet;
+                beatmapPanelContainer.Child = new BeatmapCardNormal(this.beatmapSet, allowExpansion: false);
                 checkForAutomaticDownload();
-            }));
+            });
+
+            api.Queue(onlineBeatmapRequest);
         }
 
         private void checkForAutomaticDownload()

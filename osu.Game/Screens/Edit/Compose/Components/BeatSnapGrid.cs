@@ -185,28 +185,9 @@ namespace osu.Game.Screens.Edit.Compose.Components
 
             private void onDirectionChanged(ValueChangedEvent<ScrollingDirection> direction)
             {
-                switch (direction.NewValue)
-                {
-                    case ScrollingDirection.Up:
-                        Anchor = Anchor.TopLeft;
-                        Origin = Anchor.CentreLeft;
-                        break;
-
-                    case ScrollingDirection.Down:
-                        Anchor = Anchor.BottomLeft;
-                        Origin = Anchor.CentreLeft;
-                        break;
-
-                    case ScrollingDirection.Left:
-                        Anchor = Anchor.TopLeft;
-                        Origin = Anchor.TopCentre;
-                        break;
-
-                    case ScrollingDirection.Right:
-                        Anchor = Anchor.TopRight;
-                        Origin = Anchor.TopCentre;
-                        break;
-                }
+                Origin = Anchor = direction.NewValue == ScrollingDirection.Up
+                    ? Anchor.TopLeft
+                    : Anchor.BottomLeft;
 
                 bool isHorizontal = direction.NewValue == ScrollingDirection.Left || direction.NewValue == ScrollingDirection.Right;
 

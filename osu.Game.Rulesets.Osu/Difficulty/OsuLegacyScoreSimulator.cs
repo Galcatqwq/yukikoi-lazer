@@ -187,10 +187,6 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             {
                 switch (mod)
                 {
-                    case OsuModNoFail:
-                        multiplier *= scoreV2 ? 1.0 : 0.5;
-                        break;
-
                     case OsuModEasy:
                         multiplier *= 0.5;
                         break;

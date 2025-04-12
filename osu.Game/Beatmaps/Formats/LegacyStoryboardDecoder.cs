@@ -10,7 +10,6 @@ using osu.Game.Beatmaps.Legacy;
 using osu.Game.IO;
 using osu.Game.Storyboards;
 using osu.Game.Storyboards.Commands;
-using osu.Game.Utils;
 using osuTK;
 using osuTK.Graphics;
 
@@ -36,17 +35,6 @@ namespace osu.Game.Beatmaps.Formats
             AddDecoder<Storyboard>(@"osu file format v", m => new LegacyStoryboardDecoder(Parsing.ParseInt(m.Split('v').Last())));
             AddDecoder<Storyboard>(@"[Events]", _ => new LegacyStoryboardDecoder());
             SetFallbackDecoder<Storyboard>(() => new LegacyStoryboardDecoder());
-        }
-
-        protected override Storyboard CreateTemplateObject()
-        {
-            var sb = base.CreateTemplateObject();
-
-            var beatmap = new Beatmap();
-            LegacyBeatmapDecoder.ApplyLegacyDefaults(beatmap);
-            sb.Beatmap = beatmap;
-
-            return sb;
         }
 
         protected override void ParseStreamInto(LineBufferedReader stream, Storyboard storyboard)
@@ -83,10 +71,6 @@ namespace osu.Game.Beatmaps.Formats
             {
                 case "UseSkinSprites":
                     storyboard.UseSkinSprites = pair.Value == "1";
-                    break;
-
-                case @"WidescreenStoryboard":
-                    storyboard.Beatmap.WidescreenStoryboard = Parsing.ParseInt(pair.Value) == 1;
                     break;
             }
         }
@@ -128,7 +112,7 @@ namespace osu.Game.Beatmaps.Formats
                         //
                         // This avoids potential weird crashes when ffmpeg attempts to parse an image file as a video
                         // (see https://github.com/ppy/osu/issues/22829#issuecomment-1465552451).
-                        if (!SupportedExtensions.VIDEO_EXTENSIONS.Contains(Path.GetExtension(path).ToLowerInvariant()))
+                        if (!OsuGameBase.VIDEO_EXTENSIONS.Contains(Path.GetExtension(path).ToLowerInvariant()))
                             break;
 
                         storyboard.GetLayer("Video").Add(storyboardSprite = new StoryboardVideo(path, offset));

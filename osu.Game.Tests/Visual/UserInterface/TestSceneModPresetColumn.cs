@@ -453,7 +453,6 @@ namespace osu.Game.Tests.Visual.UserInterface
                 Mods = new Mod[]
                 {
                     new OsuModFlashlight(),
-                    new OsuModSpinIn()
                 },
                 Ruleset = rulesets.GetRuleset(0).AsNonNull()
             },

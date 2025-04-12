@@ -2,12 +2,12 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System.Collections.Generic;
+using System.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Extensions.ObjectExtensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Input.Events;
-using osu.Framework.Logging;
 using osu.Game.Graphics.Containers;
 using osu.Game.Input.Bindings;
 using osu.Game.Online.API;
@@ -34,7 +34,7 @@ namespace osu.Game.Overlays
         private IAPIProvider api { get; set; } = null!;
 
         private Container<Drawable> medalContainer = null!;
-        private MedalAnimation? currentMedalDisplay;
+        private MedalAnimation? lastAnimation;
 
         [BackgroundDependencyLoader]
         private void load()
@@ -53,12 +53,11 @@ namespace osu.Game.Overlays
         {
             base.LoadComplete();
 
-            OverlayActivationMode.BindValueChanged(_ => showNextMedal(), true);
-        }
-
-        public override void Hide()
-        {
-            // don't allow hiding the overlay via any method other than our own.
+            OverlayActivationMode.BindValueChanged(val =>
+            {
+                if (val.NewValue == OverlayActivation.All && (queuedMedals.Any() || medalContainer.Any() || lastAnimation?.IsLoaded == false))
+                    Show();
+            }, true);
         }
 
         private void handleMedalMessages(SocketMessage obj)
@@ -82,19 +81,30 @@ namespace osu.Game.Overlays
             };
 
             var medalAnimation = new MedalAnimation(medal);
+            queuedMedals.Enqueue(medalAnimation);
+            if (OverlayActivationMode.Value == OverlayActivation.All)
+                Scheduler.AddOnce(Show);
+        }
 
-            Logger.Log($"Queueing medal unlock for \"{medal.Name}\" ({queuedMedals.Count} to display)");
+        protected override void Update()
+        {
+            base.Update();
 
-            Schedule(() => LoadComponentAsync(medalAnimation, m =>
+            if (medalContainer.Any() || lastAnimation?.IsLoaded == false)
+                return;
+
+            if (!queuedMedals.TryDequeue(out lastAnimation))
             {
-                queuedMedals.Enqueue(m);
-                showNextMedal();
-            }));
+                Hide();
+                return;
+            }
+
+            LoadComponentAsync(lastAnimation, medalContainer.Add);
         }
 
         protected override bool OnClick(ClickEvent e)
         {
-            progressDisplayByUser();
+            lastAnimation?.Dismiss();
             return true;
         }
 
@@ -102,54 +112,19 @@ namespace osu.Game.Overlays
         {
             if (e.Action == GlobalAction.Back)
             {
-                progressDisplayByUser();
+                lastAnimation?.Dismiss();
                 return true;
             }
 
             return base.OnPressed(e);
         }
 
-        private void progressDisplayByUser()
-        {
-            // Dismissing may sometimes play out the medal animation rather than immediately dismissing.
-            if (currentMedalDisplay?.Dismiss() == false)
-                return;
-
-            currentMedalDisplay = null;
-            showNextMedal();
-        }
-
-        private void showNextMedal()
-        {
-            // If already displayed, keep displaying medals regardless of activation mode changes.
-            if (OverlayActivationMode.Value != OverlayActivation.All && State.Value == Visibility.Hidden)
-                return;
-
-            // A medal is already displaying.
-            if (currentMedalDisplay != null)
-                return;
-
-            if (queuedMedals.TryDequeue(out currentMedalDisplay))
-            {
-                Logger.Log($"Displaying \"{currentMedalDisplay.Medal.Name}\"");
-                medalContainer.Add(currentMedalDisplay);
-                Show();
-            }
-            else if (State.Value == Visibility.Visible)
-            {
-                Logger.Log("All queued medals have been displayed, hiding overlay!");
-                base.Hide();
-            }
-        }
-
         protected override void Dispose(bool isDisposing)
         {
-            // this event subscription fires async loads, which hard-fail if `CompositeDrawable.disposalCancellationSource` is canceled, which happens in the base call.
-            // therefore, unsubscribe from this event early to reduce the chances of a stray event firing at an inconvenient spot.
+            base.Dispose(isDisposing);
+
             if (api.IsNotNull())
                 api.NotificationsClient.MessageReceived -= handleMedalMessages;
-
-            base.Dispose(isDisposing);
         }
     }
 }

@@ -14,8 +14,6 @@ using osu.Game.Graphics.Sprites;
 using osu.Game.Graphics.UserInterface;
 using osu.Game.Graphics.UserInterfaceV2;
 using osu.Game.Online.API;
-using osu.Game.Online.API.Requests.Responses;
-using osu.Game.Resources.Localisation.Web;
 using osuTK;
 using osuTK.Graphics;
 
@@ -23,8 +21,6 @@ namespace osu.Game.Overlays.Comments
 {
     public abstract partial class CommentEditor : CompositeDrawable
     {
-        public Bindable<CommentableMeta?> CommentableMeta { get; set; } = new Bindable<CommentableMeta?>();
-
         private const int side_padding = 8;
 
         protected abstract LocalisableString FooterText { get; }
@@ -57,7 +53,8 @@ namespace osu.Game.Overlays.Comments
         /// <summary>
         /// Returns the placeholder text for the comment box.
         /// </summary>
-        protected abstract LocalisableString GetPlaceholderText();
+        /// <param name="isLoggedIn">Whether the current user is logged in.</param>
+        protected abstract LocalisableString GetPlaceholderText(bool isLoggedIn);
 
         protected bool ShowLoadingSpinner
         {
@@ -68,7 +65,7 @@ namespace osu.Game.Overlays.Comments
                 else
                     loadingSpinner.Hide();
 
-                updateState();
+                updateCommitButtonState();
             }
         }
 
@@ -170,33 +167,25 @@ namespace osu.Game.Overlays.Comments
         protected override void LoadComplete()
         {
             base.LoadComplete();
-            Current.BindValueChanged(_ => updateState());
-            apiState.BindValueChanged(_ => Scheduler.AddOnce(updateState));
-            CommentableMeta.BindValueChanged(_ => Scheduler.AddOnce(updateState));
-            updateState();
+            Current.BindValueChanged(_ => updateCommitButtonState(), true);
+            apiState.BindValueChanged(updateStateForLoggedIn, true);
         }
 
         protected abstract void OnCommit(string text);
 
-        private void updateState()
+        private void updateCommitButtonState() =>
+            commitButton.Enabled.Value = loadingSpinner.State.Value == Visibility.Hidden && !string.IsNullOrEmpty(Current.Value);
+
+        private void updateStateForLoggedIn(ValueChangedEvent<APIState> state) => Schedule(() =>
         {
-            bool isOnline = apiState.Value > APIState.Offline;
-            LocalisableString? canNewCommentReason = CommentEditor.canNewCommentReason(CommentableMeta.Value);
-            bool commentsDisabled = canNewCommentReason != null;
-            bool canComment = isOnline && !commentsDisabled;
+            bool isAvailable = state.NewValue > APIState.Offline;
 
-            if (!isOnline)
-                TextBox.PlaceholderText = AuthorizationStrings.RequireLogin;
-            else if (canNewCommentReason != null)
-                TextBox.PlaceholderText = canNewCommentReason.Value;
-            else
-                TextBox.PlaceholderText = GetPlaceholderText();
-            TextBox.ReadOnly = !canComment;
+            TextBox.PlaceholderText = GetPlaceholderText(isAvailable);
+            TextBox.ReadOnly = !isAvailable;
 
-            if (isOnline)
+            if (isAvailable)
             {
                 commitButton.Show();
-                commitButton.Enabled.Value = !commentsDisabled && loadingSpinner.State.Value == Visibility.Hidden && !string.IsNullOrEmpty(Current.Value);
                 logInButton.Hide();
             }
             else
@@ -204,25 +193,7 @@ namespace osu.Game.Overlays.Comments
                 commitButton.Hide();
                 logInButton.Show();
             }
-        }
-
-        // https://github.com/ppy/osu-web/blob/83816dbe24ad2927273cba968f2fcd2694a121a9/resources/js/components/comment-editor.tsx#L54-L60
-        // careful here, logic is VERY finicky.
-        private static LocalisableString? canNewCommentReason(CommentableMeta? meta)
-        {
-            if (meta == null)
-                return null;
-
-            if (meta.CurrentUserAttributes != null)
-            {
-                if (meta.CurrentUserAttributes.Value.CanNewCommentReason is string reason)
-                    return reason;
-
-                return null;
-            }
-
-            return AuthorizationStrings.CommentStoreDisabled;
-        }
+        });
 
         private partial class EditorTextBox : OsuTextBox
         {

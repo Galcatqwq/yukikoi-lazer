@@ -22,7 +22,7 @@ namespace osu.Game.Utils
         /// </remarks>
         public readonly bool HasValue;
 
-        public Optional(T value)
+        private Optional(T value)
         {
             Value = value;
             HasValue = true;

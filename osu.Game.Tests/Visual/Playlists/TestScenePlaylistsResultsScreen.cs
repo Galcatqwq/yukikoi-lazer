@@ -1,18 +1,17 @@
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
+#nullable disable
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using JetBrains.Annotations;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
-using osu.Framework.Allocation;
-using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Testing;
-using osu.Framework.Utils;
-using osu.Game.Database;
 using osu.Game.Graphics.Containers;
 using osu.Game.Graphics.UserInterface;
 using osu.Game.Online.API;
@@ -35,22 +34,14 @@ namespace osu.Game.Tests.Visual.Playlists
         private const int scores_per_result = 10;
         private const int real_user_position = 200;
 
-        [Cached]
-        private readonly BeatmapLookupCache beatmapLookupCache = new BeatmapLookupCache();
-
-        private ResultsScreen resultsScreen = null!;
+        private TestResultsScreen resultsScreen;
 
         private int lowestScoreId; // Score ID of the lowest score in the list.
         private int highestScoreId; // Score ID of the highest score in the list.
 
         private bool requestComplete;
         private int totalCount;
-        private ScoreInfo userScore = null!;
-
-        public TestScenePlaylistsResultsScreen()
-        {
-            Add(beatmapLookupCache);
-        }
+        private ScoreInfo userScore;
 
         [SetUpSteps]
         public override void SetUpSteps()
@@ -69,11 +60,9 @@ namespace osu.Game.Tests.Visual.Playlists
                 totalCount = 0;
 
                 userScore = TestResources.CreateTestScoreInfo();
-                userScore.OnlineID = 1;
                 userScore.TotalScore = 0;
                 userScore.Statistics = new Dictionary<HitResult, int>();
                 userScore.MaximumStatistics = new Dictionary<HitResult, int>();
-                userScore.Position = real_user_position;
 
                 // Beatmap is required to be an actual beatmap so the scores can get their scores correctly
                 // calculated for standardised scoring, else the tests that rely on ordering will fall over.
@@ -82,11 +71,11 @@ namespace osu.Game.Tests.Visual.Playlists
         }
 
         [Test]
-        public void TestShowUserScore()
+        public void TestShowWithUserScore()
         {
             AddStep("bind user score info handler", () => bindHandler(userScore: userScore));
 
-            createResultsWithScore(() => userScore);
+            createResults(() => userScore);
             waitForDisplay();
 
             AddAssert("user score selected", () => this.ChildrenOfType<ScorePanel>().Single(p => p.Score.OnlineID == userScore.OnlineID).State == PanelState.Expanded);
@@ -95,24 +84,11 @@ namespace osu.Game.Tests.Visual.Playlists
         }
 
         [Test]
-        public void TestShowUserBest()
-        {
-            AddStep("bind user score info handler", () => bindHandler(userScore: userScore));
-
-            createUserBestResults();
-            waitForDisplay();
-
-            AddAssert("user score selected", () => this.ChildrenOfType<ScorePanel>().Single(p => p.Score.UserID == userScore.UserID).State == PanelState.Expanded);
-            AddAssert($"score panel position is {real_user_position}",
-                () => this.ChildrenOfType<ScorePanel>().Single(p => p.Score.UserID == userScore.UserID).ScorePosition.Value == real_user_position);
-        }
-
-        [Test]
-        public void TestShowNonUserScores()
+        public void TestShowNullUserScore()
         {
             AddStep("bind user score info handler", () => bindHandler());
 
-            createUserBestResults();
+            createResults();
             waitForDisplay();
 
             AddAssert("top score selected", () => this.ChildrenOfType<ScorePanel>().OrderByDescending(p => p.Score.TotalScore).First().State == PanelState.Expanded);
@@ -123,7 +99,7 @@ namespace osu.Game.Tests.Visual.Playlists
         {
             AddStep("bind user score info handler", () => bindHandler(true, userScore));
 
-            createResultsWithScore(() => userScore);
+            createResults(() => userScore);
             waitForDisplay();
 
             AddAssert("more than 1 panel displayed", () => this.ChildrenOfType<ScorePanel>().Count() > 1);
@@ -131,11 +107,11 @@ namespace osu.Game.Tests.Visual.Playlists
         }
 
         [Test]
-        public void TestShowNonUserScoresWithDelay()
+        public void TestShowNullUserScoreWithDelay()
         {
             AddStep("bind delayed handler", () => bindHandler(true));
 
-            createUserBestResults();
+            createResults();
             waitForDisplay();
 
             AddAssert("top score selected", () => this.ChildrenOfType<ScorePanel>().OrderByDescending(p => p.Score.TotalScore).First().State == PanelState.Expanded);
@@ -146,7 +122,7 @@ namespace osu.Game.Tests.Visual.Playlists
         {
             AddStep("bind delayed handler", () => bindHandler(true));
 
-            createUserBestResults();
+            createResults();
             waitForDisplay();
 
             for (int i = 0; i < 2; i++)
@@ -154,16 +130,13 @@ namespace osu.Game.Tests.Visual.Playlists
                 int beforePanelCount = 0;
 
                 AddStep("get panel count", () => beforePanelCount = this.ChildrenOfType<ScorePanel>().Count());
-                AddStep("scroll to right", () => resultsScreen.ChildrenOfType<ScorePanelList>().Single().ChildrenOfType<OsuScrollContainer>().Single().ScrollToEnd(false));
+                AddStep("scroll to right", () => resultsScreen.ScorePanelList.ChildrenOfType<OsuScrollContainer>().Single().ScrollToEnd(false));
 
-                AddUntilStep("right loading spinner shown", () =>
-                    resultsScreen.ChildrenOfType<LoadingSpinner>().Single(l => l.Anchor == Anchor.CentreRight).State.Value == Visibility.Visible);
-
+                AddAssert("right loading spinner shown", () => resultsScreen.RightSpinner.State.Value == Visibility.Visible);
                 waitForDisplay();
 
                 AddAssert($"count increased by {scores_per_result}", () => this.ChildrenOfType<ScorePanel>().Count() == beforePanelCount + scores_per_result);
-                AddUntilStep("right loading spinner hidden", () =>
-                    resultsScreen.ChildrenOfType<LoadingSpinner>().Single(l => l.Anchor == Anchor.CentreRight).State.Value == Visibility.Hidden);
+                AddAssert("right loading spinner hidden", () => resultsScreen.RightSpinner.State.Value == Visibility.Hidden);
             }
         }
 
@@ -172,36 +145,29 @@ namespace osu.Game.Tests.Visual.Playlists
         {
             AddStep("bind delayed handler with scores", () => bindHandler(delayed: true));
 
-            createUserBestResults();
+            createResults();
             waitForDisplay();
 
             int beforePanelCount = 0;
 
             AddStep("get panel count", () => beforePanelCount = this.ChildrenOfType<ScorePanel>().Count());
-            AddStep("scroll to right", () => resultsScreen.ChildrenOfType<ScorePanelList>().Single().ChildrenOfType<OsuScrollContainer>().Single().ScrollToEnd(false));
+            AddStep("scroll to right", () => resultsScreen.ScorePanelList.ChildrenOfType<OsuScrollContainer>().Single().ScrollToEnd(false));
 
-            AddUntilStep("right loading spinner shown", () =>
-                resultsScreen.ChildrenOfType<LoadingSpinner>().Single(l => l.Anchor == Anchor.CentreRight).State.Value == Visibility.Visible);
-
+            AddAssert("right loading spinner shown", () => resultsScreen.RightSpinner.State.Value == Visibility.Visible);
             waitForDisplay();
 
             AddAssert($"count increased by {scores_per_result}", () => this.ChildrenOfType<ScorePanel>().Count() == beforePanelCount + scores_per_result);
-            AddUntilStep("right loading spinner hidden", () =>
-                resultsScreen.ChildrenOfType<LoadingSpinner>().Single(l => l.Anchor == Anchor.CentreRight).State.Value == Visibility.Hidden);
+            AddAssert("right loading spinner hidden", () => resultsScreen.RightSpinner.State.Value == Visibility.Hidden);
 
             AddStep("get panel count", () => beforePanelCount = this.ChildrenOfType<ScorePanel>().Count());
             AddStep("bind delayed handler with no scores", () => bindHandler(delayed: true, noScores: true));
-            AddStep("scroll to right", () => resultsScreen.ChildrenOfType<ScorePanelList>().Single().ChildrenOfType<OsuScrollContainer>().Single().ScrollToEnd(false));
+            AddStep("scroll to right", () => resultsScreen.ScorePanelList.ChildrenOfType<OsuScrollContainer>().Single().ScrollToEnd(false));
 
-            AddUntilStep("right loading spinner shown", () =>
-                resultsScreen.ChildrenOfType<LoadingSpinner>().Single(l => l.Anchor == Anchor.CentreRight).State.Value == Visibility.Visible);
-
+            AddAssert("right loading spinner shown", () => resultsScreen.RightSpinner.State.Value == Visibility.Visible);
             waitForDisplay();
 
             AddAssert("count not increased", () => this.ChildrenOfType<ScorePanel>().Count() == beforePanelCount);
-            AddUntilStep("right loading spinner hidden", () =>
-                resultsScreen.ChildrenOfType<LoadingSpinner>().Single(l => l.Anchor == Anchor.CentreRight).State.Value == Visibility.Hidden);
-
+            AddAssert("right loading spinner hidden", () => resultsScreen.RightSpinner.State.Value == Visibility.Hidden);
             AddAssert("no placeholders shown", () => this.ChildrenOfType<MessagePlaceholder>().Count(), () => Is.Zero);
         }
 
@@ -210,7 +176,7 @@ namespace osu.Game.Tests.Visual.Playlists
         {
             AddStep("bind user score info handler", () => bindHandler(userScore: userScore));
 
-            createResultsWithScore(() => userScore);
+            createResults(() => userScore);
             waitForDisplay();
 
             AddStep("bind delayed handler", () => bindHandler(true));
@@ -220,81 +186,33 @@ namespace osu.Game.Tests.Visual.Playlists
                 int beforePanelCount = 0;
 
                 AddStep("get panel count", () => beforePanelCount = this.ChildrenOfType<ScorePanel>().Count());
-                AddStep("scroll to left", () => resultsScreen.ChildrenOfType<ScorePanelList>().Single().ChildrenOfType<OsuScrollContainer>().Single().ScrollToStart(false));
+                AddStep("scroll to left", () => resultsScreen.ScorePanelList.ChildrenOfType<OsuScrollContainer>().Single().ScrollToStart(false));
 
-                AddUntilStep("left loading spinner shown", () =>
-                    resultsScreen.ChildrenOfType<LoadingSpinner>().Single(l => l.Anchor == Anchor.CentreLeft).State.Value == Visibility.Visible);
-
+                AddAssert("left loading spinner shown", () => resultsScreen.LeftSpinner.State.Value == Visibility.Visible);
                 waitForDisplay();
 
                 AddAssert($"count increased by {scores_per_result}", () => this.ChildrenOfType<ScorePanel>().Count() == beforePanelCount + scores_per_result);
-                AddUntilStep("left loading spinner hidden", () =>
-                    resultsScreen.ChildrenOfType<LoadingSpinner>().Single(l => l.Anchor == Anchor.CentreLeft).State.Value == Visibility.Hidden);
+                AddAssert("left loading spinner hidden", () => resultsScreen.LeftSpinner.State.Value == Visibility.Hidden);
             }
         }
 
-        /// <summary>
-        /// Shows the <see cref="TestUserBestResultsScreen"/> with no scores provided by the API.
-        /// </summary>
         [Test]
-        public void TestShowUserBestWithNoScoresPresent()
+        public void TestShowWithNoScores()
         {
             AddStep("bind user score info handler", () => bindHandler(noScores: true));
-            createUserBestResults();
-            AddAssert("no scores visible", () => !resultsScreen.ChildrenOfType<ScorePanelList>().Single().GetScorePanels().Any());
-            AddUntilStep("placeholder shown", () => this.ChildrenOfType<MessagePlaceholder>().Count(), () => Is.EqualTo(1));
+            createResults();
+            AddAssert("no scores visible", () => !resultsScreen.ScorePanelList.GetScorePanels().Any());
+            AddAssert("placeholder shown", () => this.ChildrenOfType<MessagePlaceholder>().Count(), () => Is.EqualTo(1));
         }
 
-        [Test]
-        public void TestFetchingAllTheWayToFirstNeverDisplaysNegativePosition()
-        {
-            AddStep("set user position", () => userScore.Position = 20);
-            AddStep("bind user score info handler", () => bindHandler(userScore: userScore));
-
-            createResultsWithScore(() => userScore);
-            waitForDisplay();
-
-            AddStep("bind delayed handler", () => bindHandler(true));
-
-            for (int i = 0; i < 2; i++)
-            {
-                AddStep("simulate user falling down ranking", () => userScore.Position += 2);
-                AddStep("scroll to left", () => resultsScreen.ChildrenOfType<ScorePanelList>().Single().ChildrenOfType<OsuScrollContainer>().Single().ScrollToStart(false));
-
-                AddUntilStep("left loading spinner shown", () =>
-                    resultsScreen.ChildrenOfType<LoadingSpinner>().Single(l => l.Anchor == Anchor.CentreLeft).State.Value == Visibility.Visible);
-
-                waitForDisplay();
-
-                AddUntilStep("left loading spinner hidden", () =>
-                    resultsScreen.ChildrenOfType<LoadingSpinner>().Single(l => l.Anchor == Anchor.CentreLeft).State.Value == Visibility.Hidden);
-            }
-
-            AddAssert("total count is 34", () => this.ChildrenOfType<ScorePanel>().Count(), () => Is.EqualTo(34));
-            AddUntilStep("all panels have non-negative position", () => this.ChildrenOfType<ScorePanel>().All(p => p.ScorePosition.Value > 0));
-        }
-
-        private void createResultsWithScore(Func<ScoreInfo> getScore)
+        private void createResults(Func<ScoreInfo> getScore = null)
         {
             AddStep("load results", () =>
             {
-                LoadScreen(resultsScreen = new TestScoreResultsScreen(getScore(), 1, new PlaylistItem(new TestBeatmap(new OsuRuleset().RulesetInfo).BeatmapInfo)
+                LoadScreen(resultsScreen = new TestResultsScreen(getScore?.Invoke(), 1, new PlaylistItem(new TestBeatmap(new OsuRuleset().RulesetInfo).BeatmapInfo)
                 {
                     RulesetID = new OsuRuleset().RulesetInfo.OnlineID
                 }));
-            });
-
-            AddUntilStep("wait for screen to load", () => resultsScreen.IsLoaded);
-        }
-
-        private void createUserBestResults()
-        {
-            AddStep("load results", () =>
-            {
-                LoadScreen(resultsScreen = new TestUserBestResultsScreen(1, new PlaylistItem(new TestBeatmap(new OsuRuleset().RulesetInfo).BeatmapInfo)
-                {
-                    RulesetID = new OsuRuleset().RulesetInfo.OnlineID
-                }, 2));
             });
 
             AddUntilStep("wait for screen to load", () => resultsScreen.IsLoaded);
@@ -306,39 +224,19 @@ namespace osu.Game.Tests.Visual.Playlists
                 requestComplete
                 // request handler may need to fire more than once to get scores.
                 && totalCount > 0
-                && resultsScreen.ChildrenOfType<ScorePanelList>().Single().GetScorePanels().Count() == totalCount
-                && resultsScreen.ChildrenOfType<ScorePanelList>().Single().AllPanelsVisible);
+                && resultsScreen.ScorePanelList.GetScorePanels().Count() == totalCount
+                && resultsScreen.ScorePanelList.AllPanelsVisible);
             AddWaitStep("wait for display", 5);
         }
 
-        private void bindHandler(bool delayed = false, ScoreInfo? userScore = null, bool failRequests = false, bool noScores = false) => ((DummyAPIAccess)API).HandleRequest = request =>
+        private void bindHandler(bool delayed = false, ScoreInfo userScore = null, bool failRequests = false, bool noScores = false) => ((DummyAPIAccess)API).HandleRequest = request =>
         {
             // pre-check for requests we should be handling (as they are scheduled below).
             switch (request)
             {
-                case ShowPlaylistScoreRequest:
                 case ShowPlaylistUserScoreRequest:
                 case IndexPlaylistScoresRequest:
                     break;
-
-                case GetBeatmapsRequest getBeatmaps:
-                    getBeatmaps.TriggerSuccess(new GetBeatmapsResponse
-                    {
-                        Beatmaps = getBeatmaps.BeatmapIds.Select(id => new APIBeatmap
-                        {
-                            OnlineID = id,
-                            StarRating = id,
-                            DifficultyName = $"Beatmap {id}",
-                            BeatmapSet = new APIBeatmapSet
-                            {
-                                Title = $"Title {id}",
-                                Artist = $"Artist {id}",
-                                AuthorString = $"Author {id}"
-                            }
-                        }).ToList()
-                    });
-
-                    return true;
 
                 default:
                     return false;
@@ -358,24 +256,16 @@ namespace osu.Game.Tests.Visual.Playlists
 
                 switch (request)
                 {
-                    case ShowPlaylistScoreRequest s:
+                    case ShowPlaylistUserScoreRequest s:
                         if (userScore == null)
                             triggerFail(s);
                         else
-                            triggerSuccess(s, () => createUserResponse(userScore));
-
-                        break;
-
-                    case ShowPlaylistUserScoreRequest u:
-                        if (userScore == null)
-                            triggerFail(u);
-                        else
-                            triggerSuccess(u, () => createUserResponse(userScore));
+                            triggerSuccess(s, createUserResponse(userScore));
 
                         break;
 
                     case IndexPlaylistScoresRequest i:
-                        triggerSuccess(i, () => createIndexResponse(i, noScores));
+                        triggerSuccess(i, createIndexResponse(i, noScores));
                         break;
                 }
             }, delay);
@@ -383,11 +273,11 @@ namespace osu.Game.Tests.Visual.Playlists
             return true;
         };
 
-        private void triggerSuccess<T>(APIRequest<T> req, Func<T> result)
+        private void triggerSuccess<T>(APIRequest<T> req, T result)
             where T : class
         {
             requestComplete = true;
-            req.TriggerSuccess(result.Invoke());
+            req.TriggerSuccess(result);
         }
 
         private void triggerFail(APIRequest req)
@@ -396,41 +286,53 @@ namespace osu.Game.Tests.Visual.Playlists
             req.TriggerFailure(new WebException("Failed."));
         }
 
-        private MultiplayerScore createUserResponse(ScoreInfo userScore)
+        private MultiplayerScore createUserResponse([NotNull] ScoreInfo userScore)
         {
-            var multiplayerUserScore = createMultiplayerUserScore(userScore);
+            var multiplayerUserScore = new MultiplayerScore
+            {
+                ID = highestScoreId,
+                Accuracy = userScore.Accuracy,
+                Passed = userScore.Passed,
+                Rank = userScore.Rank,
+                Position = real_user_position,
+                MaxCombo = userScore.MaxCombo,
+                User = userScore.User,
+                ScoresAround = new MultiplayerScoresAround
+                {
+                    Higher = new MultiplayerScores(),
+                    Lower = new MultiplayerScores()
+                }
+            };
 
             totalCount++;
 
             for (int i = 1; i <= scores_per_result; i++)
             {
-                multiplayerUserScore.ScoresAround!.Lower!.Scores.Add(new MultiplayerScore
+                multiplayerUserScore.ScoresAround.Lower.Scores.Add(new MultiplayerScore
                 {
                     ID = getNextLowestScoreId(),
                     Accuracy = userScore.Accuracy,
                     Passed = true,
                     Rank = userScore.Rank,
                     MaxCombo = userScore.MaxCombo,
-                    BeatmapId = RNG.Next(0, 7),
                     User = new APIUser
                     {
-                        Id = 2 + i,
+                        Id = 2,
                         Username = $"peppy{i}",
                         CoverUrl = "https://osu.ppy.sh/images/headers/profile-covers/c3.jpg",
                     },
                 });
 
-                multiplayerUserScore.ScoresAround!.Higher!.Scores.Add(new MultiplayerScore
+                multiplayerUserScore.ScoresAround.Higher.Scores.Add(new MultiplayerScore
                 {
                     ID = getNextHighestScoreId(),
                     Accuracy = userScore.Accuracy,
                     Passed = true,
                     Rank = userScore.Rank,
                     MaxCombo = userScore.MaxCombo,
-                    BeatmapId = RNG.Next(0, 7),
                     User = new APIUser
                     {
-                        Id = 2 + i,
+                        Id = 2,
                         Username = $"peppy{i}",
                         CoverUrl = "https://osu.ppy.sh/images/headers/profile-covers/c3.jpg",
                     },
@@ -439,33 +341,13 @@ namespace osu.Game.Tests.Visual.Playlists
                 totalCount += 2;
             }
 
-            addCursor(multiplayerUserScore.ScoresAround!.Lower!);
-            addCursor(multiplayerUserScore.ScoresAround!.Higher!);
+            addCursor(multiplayerUserScore.ScoresAround.Lower);
+            addCursor(multiplayerUserScore.ScoresAround.Higher);
 
             return multiplayerUserScore;
         }
 
-        private MultiplayerScore createMultiplayerUserScore(ScoreInfo userScore)
-        {
-            return new MultiplayerScore
-            {
-                ID = highestScoreId,
-                Accuracy = userScore.Accuracy,
-                Passed = userScore.Passed,
-                Rank = userScore.Rank,
-                Position = userScore.Position,
-                MaxCombo = userScore.MaxCombo,
-                User = userScore.User,
-                BeatmapId = RNG.Next(0, 7),
-                ScoresAround = new MultiplayerScoresAround
-                {
-                    Higher = new MultiplayerScores(),
-                    Lower = new MultiplayerScores()
-                }
-            };
-        }
-
-        private IndexedMultiplayerScores createIndexResponse(IndexPlaylistScoresRequest req, bool noScores)
+        private IndexedMultiplayerScores createIndexResponse(IndexPlaylistScoresRequest req, bool noScores = false)
         {
             var result = new IndexedMultiplayerScores();
 
@@ -473,29 +355,18 @@ namespace osu.Game.Tests.Visual.Playlists
 
             string sort = req.IndexParams?.Properties["sort"].ToObject<string>() ?? "score_desc";
 
-            bool reachedEnd = false;
-
             for (int i = 1; i <= scores_per_result; i++)
             {
-                int nextId = sort == "score_asc" ? getNextHighestScoreId() : getNextLowestScoreId();
-
-                if (userScore.OnlineID - nextId >= userScore.Position)
-                {
-                    reachedEnd = true;
-                    break;
-                }
-
                 result.Scores.Add(new MultiplayerScore
                 {
-                    ID = nextId,
+                    ID = sort == "score_asc" ? getNextHighestScoreId() : getNextLowestScoreId(),
                     Accuracy = 1,
                     Passed = true,
                     Rank = ScoreRank.X,
                     MaxCombo = 1000,
-                    BeatmapId = RNG.Next(0, 7),
                     User = new APIUser
                     {
-                        Id = 2 + i,
+                        Id = 2,
                         Username = $"peppy{i}",
                         CoverUrl = "https://osu.ppy.sh/images/headers/profile-covers/c3.jpg",
                     },
@@ -504,10 +375,7 @@ namespace osu.Game.Tests.Visual.Playlists
                 totalCount++;
             }
 
-            if (!reachedEnd)
-                addCursor(result);
-
-            result.UserScore = createMultiplayerUserScore(userScore);
+            addCursor(result);
 
             return result;
         }
@@ -545,19 +413,15 @@ namespace osu.Game.Tests.Visual.Playlists
             };
         }
 
-        private partial class TestScoreResultsScreen : PlaylistItemScoreResultsScreen
+        private partial class TestResultsScreen : PlaylistItemUserResultsScreen
         {
-            public TestScoreResultsScreen(ScoreInfo score, int roomId, PlaylistItem playlistItem)
-                : base(score, roomId, playlistItem)
-            {
-                AllowRetry = true;
-            }
-        }
+            public new LoadingSpinner LeftSpinner => base.LeftSpinner;
+            public new LoadingSpinner CentreSpinner => base.CentreSpinner;
+            public new LoadingSpinner RightSpinner => base.RightSpinner;
+            public new ScorePanelList ScorePanelList => base.ScorePanelList;
 
-        private partial class TestUserBestResultsScreen : PlaylistItemUserBestResultsScreen
-        {
-            public TestUserBestResultsScreen(int roomId, PlaylistItem playlistItem, int userId)
-                : base(roomId, playlistItem, userId)
+            public TestResultsScreen([CanBeNull] ScoreInfo score, int roomId, PlaylistItem playlistItem)
+                : base(score, roomId, playlistItem)
             {
                 AllowRetry = true;
             }

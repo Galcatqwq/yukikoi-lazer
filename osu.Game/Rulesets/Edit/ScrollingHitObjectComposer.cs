@@ -56,12 +56,7 @@ namespace osu.Game.Rulesets.Edit
                         Spacing = new Vector2(0, 5),
                         Children = new[]
                         {
-                            new DrawableTernaryButton
-                            {
-                                Current = showSpeedChanges,
-                                Description = "Show speed changes",
-                                CreateIcon = () => new SpriteIcon { Icon = FontAwesome.Solid.TachometerAlt },
-                            }
+                            new DrawableTernaryButton(new TernaryButton(showSpeedChanges, "Show speed changes", () => new SpriteIcon { Icon = FontAwesome.Solid.TachometerAlt }))
                         }
                     },
                 });
@@ -115,23 +110,6 @@ namespace osu.Game.Rulesets.Edit
                 else
                     beatSnapGrid.SelectionTimeRange = null;
             }
-        }
-
-        public SnapResult FindSnappedPositionAndTime(Vector2 screenSpacePosition)
-        {
-            var scrollingPlayfield = PlayfieldAtScreenSpacePosition(screenSpacePosition) as ScrollingPlayfield;
-            if (scrollingPlayfield == null)
-                return new SnapResult(screenSpacePosition, null);
-
-            double? targetTime = scrollingPlayfield.TimeAtScreenSpacePosition(screenSpacePosition);
-
-            // apply beat snapping
-            targetTime = BeatSnapProvider.SnapTime(targetTime.Value);
-
-            // convert back to screen space
-            screenSpacePosition = scrollingPlayfield.ScreenSpacePositionAtTime(targetTime.Value);
-
-            return new SnapResult(screenSpacePosition, targetTime, scrollingPlayfield);
         }
 
         protected override void Dispose(bool isDisposing)

@@ -9,7 +9,6 @@ namespace osu.Game.Rulesets.Osu.Skinning
         CursorCentre,
         CursorExpand,
         CursorRotate,
-        CursorTrailRotate,
         HitCircleOverlayAboveNumber,
 
         // ReSharper disable once IdentifierTypo

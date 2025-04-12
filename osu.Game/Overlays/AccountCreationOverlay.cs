@@ -126,7 +126,7 @@ namespace osu.Game.Overlays
                     break;
 
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(state.NewValue));
+                    throw new ArgumentOutOfRangeException();
             }
         }
     }

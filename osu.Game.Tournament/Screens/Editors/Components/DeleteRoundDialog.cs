@@ -2,16 +2,18 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
+using osu.Framework.Graphics.Sprites;
 using osu.Game.Overlays.Dialog;
 using osu.Game.Tournament.Models;
 
 namespace osu.Game.Tournament.Screens.Editors.Components
 {
-    public partial class DeleteRoundDialog : DeletionDialog
+    public partial class DeleteRoundDialog : DangerousActionDialog
     {
         public DeleteRoundDialog(TournamentRound round, Action action)
         {
             HeaderText = round.Name.Value.Length > 0 ? $@"Delete round ""{round.Name.Value}""?" : @"Delete unnamed round?";
+            Icon = FontAwesome.Solid.Trash;
             DangerousAction = action;
         }
     }

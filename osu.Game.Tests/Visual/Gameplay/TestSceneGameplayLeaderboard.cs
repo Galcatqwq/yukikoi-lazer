@@ -155,13 +155,7 @@ namespace osu.Game.Tests.Visual.Gameplay
                 var api = (DummyAPIAccess)API;
 
                 api.Friends.Clear();
-                api.Friends.Add(new APIRelation
-                {
-                    Mutual = true,
-                    RelationType = RelationType.Friend,
-                    TargetID = friend.OnlineID,
-                    TargetUser = friend
-                });
+                api.Friends.Add(friend);
             });
 
             int playerNumber = 1;

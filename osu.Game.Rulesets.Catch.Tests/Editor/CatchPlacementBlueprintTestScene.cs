@@ -12,6 +12,7 @@ using osu.Framework.Testing;
 using osu.Framework.Timing;
 using osu.Game.Rulesets.Catch.Edit.Blueprints.Components;
 using osu.Game.Rulesets.Catch.Objects.Drawables;
+using osu.Game.Rulesets.Edit;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.UI.Scrolling;
 using osu.Game.Tests.Visual;
@@ -22,8 +23,6 @@ namespace osu.Game.Rulesets.Catch.Tests.Editor
 {
     public abstract partial class CatchPlacementBlueprintTestScene : PlacementBlueprintTestScene
     {
-        protected sealed override Ruleset CreateRuleset() => new CatchRuleset();
-
         protected const double TIME_SNAP = 100;
 
         protected DrawableCatchHitObject LastObject;
@@ -72,11 +71,11 @@ namespace osu.Game.Rulesets.Catch.Tests.Editor
             contentContainer.Playfield.HitObjectContainer.Add(hitObject);
         }
 
-        protected override void UpdatePlacementTimeAndPosition()
+        protected override SnapResult SnapForBlueprint(PlacementBlueprint blueprint)
         {
-            var position = InputManager.CurrentState.Mouse.Position;
-            double time = Math.Round(HitObjectContainer.TimeAtScreenSpacePosition(position) / TIME_SNAP) * TIME_SNAP;
-            CurrentBlueprint.UpdateTimeAndPosition(position, time);
+            var result = base.SnapForBlueprint(blueprint);
+            result.Time = Math.Round(HitObjectContainer.TimeAtScreenSpacePosition(result.ScreenSpacePosition) / TIME_SNAP) * TIME_SNAP;
+            return result;
         }
     }
 }

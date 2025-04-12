@@ -14,6 +14,5 @@ namespace osu.Game.Online.Chat
         Group,
         System,
         Announce,
-        Team,
     }
 }

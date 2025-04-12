@@ -15,78 +15,78 @@ using osu.Game.Localisation;
 
 namespace osu.Game.Screens.Edit.Setup
 {
-    public partial class DesignSection : SetupSection
+    internal partial class DesignSection : SetupSection
     {
-        protected FormCheckBox EnableCountdown = null!;
+        protected LabelledSwitchButton EnableCountdown = null!;
 
         protected FillFlowContainer CountdownSettings = null!;
-        protected FormEnumDropdown<CountdownType> CountdownSpeed = null!;
-        protected FormNumberBox CountdownOffset = null!;
+        protected LabelledEnumDropdown<CountdownType> CountdownSpeed = null!;
+        protected LabelledNumberBox CountdownOffset = null!;
 
-        private FormCheckBox widescreenSupport = null!;
-        private FormCheckBox epilepsyWarning = null!;
-        private FormCheckBox letterboxDuringBreaks = null!;
-        private FormCheckBox samplesMatchPlaybackRate = null!;
+        private LabelledSwitchButton widescreenSupport = null!;
+        private LabelledSwitchButton epilepsyWarning = null!;
+        private LabelledSwitchButton letterboxDuringBreaks = null!;
+        private LabelledSwitchButton samplesMatchPlaybackRate = null!;
 
         public override LocalisableString Title => EditorSetupStrings.DesignHeader;
 
         [BackgroundDependencyLoader]
         private void load()
         {
-            Children = new Drawable[]
+            Children = new[]
             {
-                EnableCountdown = new FormCheckBox
+                EnableCountdown = new LabelledSwitchButton
                 {
-                    Caption = EditorSetupStrings.EnableCountdown,
-                    HintText = EditorSetupStrings.CountdownDescription,
-                    Current = { Value = Beatmap.Countdown != CountdownType.None },
+                    Label = EditorSetupStrings.EnableCountdown,
+                    Current = { Value = Beatmap.BeatmapInfo.Countdown != CountdownType.None },
+                    Description = EditorSetupStrings.CountdownDescription
                 },
                 CountdownSettings = new FillFlowContainer
                 {
                     RelativeSizeAxes = Axes.X,
                     AutoSizeAxes = Axes.Y,
-                    Spacing = new Vector2(5),
+                    Spacing = new Vector2(10),
                     Direction = FillDirection.Vertical,
                     Children = new Drawable[]
                     {
-                        CountdownSpeed = new FormEnumDropdown<CountdownType>
+                        CountdownSpeed = new LabelledEnumDropdown<CountdownType>
                         {
-                            Caption = EditorSetupStrings.CountdownSpeed,
-                            Current = { Value = Beatmap.Countdown != CountdownType.None ? Beatmap.Countdown : CountdownType.Normal },
+                            Label = EditorSetupStrings.CountdownSpeed,
+                            Current = { Value = Beatmap.BeatmapInfo.Countdown != CountdownType.None ? Beatmap.BeatmapInfo.Countdown : CountdownType.Normal },
                             Items = Enum.GetValues<CountdownType>().Where(type => type != CountdownType.None)
                         },
-                        CountdownOffset = new FormNumberBox
+                        CountdownOffset = new LabelledNumberBox
                         {
-                            Caption = EditorSetupStrings.CountdownOffset,
-                            HintText = EditorSetupStrings.CountdownOffsetDescription,
-                            Current = { Value = Beatmap.CountdownOffset.ToString() },
-                            TabbableContentContainer = this,
+                            Label = EditorSetupStrings.CountdownOffset,
+                            Current = { Value = Beatmap.BeatmapInfo.CountdownOffset.ToString() },
+                            Description = EditorSetupStrings.CountdownOffsetDescription,
                         }
                     }
                 },
-                widescreenSupport = new FormCheckBox
+                Empty(),
+                widescreenSupport = new LabelledSwitchButton
                 {
-                    Caption = EditorSetupStrings.WidescreenSupport,
-                    HintText = EditorSetupStrings.WidescreenSupportDescription,
-                    Current = { Value = Beatmap.WidescreenStoryboard }
+                    Label = EditorSetupStrings.WidescreenSupport,
+                    Description = EditorSetupStrings.WidescreenSupportDescription,
+                    Current = { Value = Beatmap.BeatmapInfo.WidescreenStoryboard }
                 },
-                epilepsyWarning = new FormCheckBox
+                epilepsyWarning = new LabelledSwitchButton
                 {
-                    Caption = EditorSetupStrings.EpilepsyWarning,
-                    HintText = EditorSetupStrings.EpilepsyWarningDescription,
-                    Current = { Value = Beatmap.EpilepsyWarning }
+                    Label = EditorSetupStrings.EpilepsyWarning,
+                    Description = EditorSetupStrings.EpilepsyWarningDescription,
+                    Current = { Value = Beatmap.BeatmapInfo.EpilepsyWarning }
                 },
-                letterboxDuringBreaks = new FormCheckBox
+                letterboxDuringBreaks = new LabelledSwitchButton
                 {
-                    Caption = EditorSetupStrings.LetterboxDuringBreaks,
-                    HintText = EditorSetupStrings.LetterboxDuringBreaksDescription,
-                    Current = { Value = Beatmap.LetterboxInBreaks }
+                    Label = EditorSetupStrings.LetterboxDuringBreaks,
+                    Description = EditorSetupStrings.LetterboxDuringBreaksDescription,
+                    Current = { Value = Beatmap.BeatmapInfo.LetterboxInBreaks }
                 },
-                samplesMatchPlaybackRate = new FormCheckBox
+                samplesMatchPlaybackRate = new LabelledSwitchButton
                 {
-                    Caption = EditorSetupStrings.SamplesMatchPlaybackRate,
-                    HintText = EditorSetupStrings.SamplesMatchPlaybackRateDescription,
-                    Current = { Value = Beatmap.SamplesMatchPlaybackRate }
+                    Label = EditorSetupStrings.SamplesMatchPlaybackRate,
+                    Description = EditorSetupStrings.SamplesMatchPlaybackRateDescription,
+                    Current = { Value = Beatmap.BeatmapInfo.SamplesMatchPlaybackRate }
                 }
             };
         }
@@ -113,18 +113,18 @@ namespace osu.Game.Screens.Edit.Setup
         {
             updateBeatmap();
             // update displayed text to ensure parsed value matches display (i.e. if empty string was provided).
-            CountdownOffset.Current.Value = Beatmap.CountdownOffset.ToString(CultureInfo.InvariantCulture);
+            CountdownOffset.Current.Value = Beatmap.BeatmapInfo.CountdownOffset.ToString(CultureInfo.InvariantCulture);
         }
 
         private void updateBeatmap()
         {
-            Beatmap.Countdown = EnableCountdown.Current.Value ? CountdownSpeed.Current.Value : CountdownType.None;
-            Beatmap.CountdownOffset = int.TryParse(CountdownOffset.Current.Value, NumberStyles.None, CultureInfo.InvariantCulture, out int offset) ? offset : 0;
+            Beatmap.BeatmapInfo.Countdown = EnableCountdown.Current.Value ? CountdownSpeed.Current.Value : CountdownType.None;
+            Beatmap.BeatmapInfo.CountdownOffset = int.TryParse(CountdownOffset.Current.Value, NumberStyles.None, CultureInfo.InvariantCulture, out int offset) ? offset : 0;
 
-            Beatmap.WidescreenStoryboard = widescreenSupport.Current.Value;
-            Beatmap.EpilepsyWarning = epilepsyWarning.Current.Value;
-            Beatmap.LetterboxInBreaks = letterboxDuringBreaks.Current.Value;
-            Beatmap.SamplesMatchPlaybackRate = samplesMatchPlaybackRate.Current.Value;
+            Beatmap.BeatmapInfo.WidescreenStoryboard = widescreenSupport.Current.Value;
+            Beatmap.BeatmapInfo.EpilepsyWarning = epilepsyWarning.Current.Value;
+            Beatmap.BeatmapInfo.LetterboxInBreaks = letterboxDuringBreaks.Current.Value;
+            Beatmap.BeatmapInfo.SamplesMatchPlaybackRate = samplesMatchPlaybackRate.Current.Value;
 
             Beatmap.SaveState();
         }

@@ -62,7 +62,10 @@ namespace osu.Game.Tests.Visual.Online
                 CountryCode = countryCode,
                 CoverUrl = cover,
                 Colour = color ?? "000000",
-                WasRecentlyOnline = true
+                Status =
+                {
+                    Value = UserStatus.Online
+                },
             };
 
             return new ClickableAvatar(user, showPanel)

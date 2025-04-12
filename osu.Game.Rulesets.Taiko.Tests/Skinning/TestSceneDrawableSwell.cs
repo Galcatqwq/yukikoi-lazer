@@ -20,7 +20,6 @@ namespace osu.Game.Rulesets.Taiko.Tests.Skinning
             {
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
-                Scale = new osuTK.Vector2(0.5f),
             }));
         }
 

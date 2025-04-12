@@ -10,7 +10,7 @@ using osu.Game.Rulesets.Edit.Tools;
 
 namespace osu.Game.Rulesets.Catch.Edit
 {
-    public class JuiceStreamCompositionTool : CompositionTool
+    public class JuiceStreamCompositionTool : HitObjectCompositionTool
     {
         public JuiceStreamCompositionTool()
             : base(nameof(JuiceStream))
@@ -19,6 +19,6 @@ namespace osu.Game.Rulesets.Catch.Edit
 
         public override Drawable CreateIcon() => new BeatmapStatisticIcon(BeatmapStatisticsIconType.Sliders);
 
-        public override HitObjectPlacementBlueprint CreatePlacementBlueprint() => new JuiceStreamPlacementBlueprint();
+        public override PlacementBlueprint CreatePlacementBlueprint() => new JuiceStreamPlacementBlueprint();
     }
 }

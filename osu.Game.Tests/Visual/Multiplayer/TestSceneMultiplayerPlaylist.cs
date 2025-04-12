@@ -1,6 +1,8 @@
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
+#nullable disable
+
 using System;
 using System.Linq;
 using NUnit.Framework;
@@ -27,10 +29,10 @@ namespace osu.Game.Tests.Visual.Multiplayer
 {
     public partial class TestSceneMultiplayerPlaylist : MultiplayerTestScene
     {
-        private MultiplayerPlaylist list = null!;
-        private BeatmapManager beatmaps = null!;
-        private BeatmapSetInfo importedSet = null!;
-        private BeatmapInfo importedBeatmap = null!;
+        private MultiplayerPlaylist list;
+        private BeatmapManager beatmaps;
+        private BeatmapSetInfo importedSet;
+        private BeatmapInfo importedBeatmap;
 
         [BackgroundDependencyLoader]
         private void load(GameHost host, AudioManager audio)
@@ -44,9 +46,6 @@ namespace osu.Game.Tests.Visual.Multiplayer
         public override void SetUpSteps()
         {
             base.SetUpSteps();
-
-            AddStep("join room", () => JoinRoom(CreateDefaultRoom()));
-            WaitForJoined();
 
             AddStep("create list", () =>
             {
@@ -128,7 +127,7 @@ namespace osu.Game.Tests.Visual.Multiplayer
             addItemStep();
             AddStep("finish current item", () => MultiplayerClient.FinishCurrentItem().WaitSafely());
 
-            AddStep("leave room", () => MultiplayerClient.LeaveRoom());
+            AddStep("leave room", () => RoomManager.PartRoom());
             AddUntilStep("wait for room part", () => !RoomJoined);
 
             AddUntilStep("item 0 not in lists", () => !inHistoryList(0) && !inQueueList(0));
@@ -149,41 +148,42 @@ namespace osu.Game.Tests.Visual.Multiplayer
             AddStep("finish current item", () => MultiplayerClient.FinishCurrentItem().WaitSafely());
             assertQueueTabCount(2);
 
-            AddStep("leave room", () => MultiplayerClient.LeaveRoom());
+            AddStep("leave room", () => RoomManager.PartRoom());
             AddUntilStep("wait for room part", () => !RoomJoined);
             assertQueueTabCount(0);
         }
 
+        [Ignore("Expired items are initially removed from the room.")]
         [Test]
         public void TestJoinRoomWithMixedItemsAddedInCorrectLists()
         {
-            AddStep("leave room", () => MultiplayerClient.LeaveRoom());
+            AddStep("leave room", () => RoomManager.PartRoom());
             AddUntilStep("wait for room part", () => !RoomJoined);
 
-            AddStep("join room with expired items", () =>
+            AddStep("join room with items", () =>
             {
-                Room room = CreateDefaultRoom();
-                room.Playlist =
-                [
-                    new PlaylistItem(new TestBeatmap(Ruleset.Value).BeatmapInfo)
+                RoomManager.CreateRoom(new Room
+                {
+                    Name = { Value = "test name" },
+                    Playlist =
                     {
-                        RulesetID = Ruleset.Value.OnlineID
-                    },
-                    new PlaylistItem(new TestBeatmap(Ruleset.Value).BeatmapInfo)
-                    {
-                        RulesetID = Ruleset.Value.OnlineID,
-                        Expired = true
+                        new PlaylistItem(new TestBeatmap(Ruleset.Value).BeatmapInfo)
+                        {
+                            RulesetID = Ruleset.Value.OnlineID
+                        },
+                        new PlaylistItem(new TestBeatmap(Ruleset.Value).BeatmapInfo)
+                        {
+                            RulesetID = Ruleset.Value.OnlineID,
+                            Expired = true
+                        }
                     }
-                ];
-
-                JoinRoom(room);
+                });
             });
 
-            WaitForJoined();
+            AddUntilStep("wait for room join", () => RoomJoined);
 
-            // IDs are offset by 1 because we've joined two rooms in this test.
-            assertItemInQueueListStep(2, 0);
-            assertItemInHistoryListStep(3, 0);
+            assertItemInQueueListStep(1, 0);
+            assertItemInHistoryListStep(2, 0);
         }
 
         [Test]
@@ -198,7 +198,7 @@ namespace osu.Game.Tests.Visual.Multiplayer
             addItemStep();
             addItemStep();
 
-            DrawableRoomPlaylistItem[] drawableItems = null!;
+            DrawableRoomPlaylistItem[] drawableItems = null;
             AddStep("get drawable items", () => drawableItems = this.ChildrenOfType<DrawableRoomPlaylistItem>().ToArray());
 
             // Add 1 item for another user.
@@ -215,7 +215,7 @@ namespace osu.Game.Tests.Visual.Multiplayer
         /// </summary>
         private void addItemStep(bool expired = false, int? userId = null) => AddStep("add item", () =>
         {
-            MultiplayerClient.AddUserPlaylistItem(userId ?? API.LocalUser.Value.OnlineID, new MultiplayerPlaylistItem(new PlaylistItem(importedBeatmap)
+            MultiplayerClient.AddUserPlaylistItem(userId ?? API.LocalUser.Value.OnlineID, TestMultiplayerClient.CreateMultiplayerPlaylistItem(new PlaylistItem(importedBeatmap)
             {
                 Expired = expired,
                 PlayedAt = DateTimeOffset.Now
@@ -266,7 +266,7 @@ namespace osu.Game.Tests.Visual.Multiplayer
 
         private void assertQueueTabCount(int count)
         {
-            string queueTabText = count > 0 ? $"Up next ({count})" : "Up next";
+            string queueTabText = count > 0 ? $"Queue ({count})" : "Queue";
             AddUntilStep($"Queue tab shows \"{queueTabText}\"", () =>
             {
                 return this.ChildrenOfType<OsuTabControl<MultiplayerPlaylistDisplayMode>.OsuTabItem>()

@@ -11,7 +11,6 @@ using osu.Framework.Graphics.Textures;
 using osu.Game.Audio;
 using osu.Game.Beatmaps.Formats;
 using osu.Game.Extensions;
-using osu.Game.Graphics;
 using osu.Game.IO;
 using osu.Game.Screens.Play.HUD;
 using osu.Game.Screens.Play.HUD.HitErrorMeters;
@@ -67,14 +66,17 @@ namespace osu.Game.Skinning
 
             switch (lookup)
             {
-                case GlobalSkinnableContainerLookup containerLookup:
+                case SkinComponentsContainerLookup containerLookup:
+                    if (base.GetDrawableComponent(lookup) is UserConfiguredLayoutContainer c)
+                        return c;
+
                     // Only handle global level defaults for now.
                     if (containerLookup.Ruleset != null)
                         return null;
 
-                    switch (containerLookup.Lookup)
+                    switch (containerLookup.Target)
                     {
-                        case GlobalSkinnableContainers.SongSelect:
+                        case SkinComponentsContainerLookup.TargetArea.SongSelect:
                             var songSelectComponents = new DefaultSkinComponentsContainer(_ =>
                             {
                                 // do stuff when we need to.
@@ -82,7 +84,7 @@ namespace osu.Game.Skinning
 
                             return songSelectComponents;
 
-                        case GlobalSkinnableContainers.MainHUDComponents:
+                        case SkinComponentsContainerLookup.TargetArea.MainHUDComponents:
                             var skinnableTargetWrapper = new DefaultSkinComponentsContainer(container =>
                             {
                                 var score = container.OfType<DefaultScoreCounter>().FirstOrDefault();
@@ -91,7 +93,6 @@ namespace osu.Game.Skinning
                                 var ppCounter = container.OfType<PerformancePointsCounter>().FirstOrDefault();
                                 var songProgress = container.OfType<DefaultSongProgress>().FirstOrDefault();
                                 var keyCounter = container.OfType<DefaultKeyCounterDisplay>().FirstOrDefault();
-                                var spectatorList = container.OfType<SpectatorList>().FirstOrDefault();
 
                                 if (score != null)
                                 {
@@ -144,25 +145,16 @@ namespace osu.Game.Skinning
                                     }
                                 }
 
-                                const float padding = 10;
-
-                                // Hard to find this at runtime, so taken from the most expanded state during replay.
-                                const float song_progress_offset_height = 73;
-
                                 if (songProgress != null && keyCounter != null)
                                 {
+                                    const float padding = 10;
+
+                                    // Hard to find this at runtime, so taken from the most expanded state during replay.
+                                    const float song_progress_offset_height = 73;
+
                                     keyCounter.Anchor = Anchor.BottomRight;
                                     keyCounter.Origin = Anchor.BottomRight;
                                     keyCounter.Position = new Vector2(-padding, -(song_progress_offset_height + padding));
-                                }
-
-                                if (spectatorList != null)
-                                {
-                                    spectatorList.HeaderFont.Value = Typeface.Venera;
-                                    spectatorList.HeaderColour.Value = new OsuColour().BlueLighter;
-                                    spectatorList.Anchor = Anchor.BottomLeft;
-                                    spectatorList.Origin = Anchor.BottomLeft;
-                                    spectatorList.Position = new Vector2(padding, -(song_progress_offset_height + padding));
                                 }
                             })
                             {
@@ -176,8 +168,7 @@ namespace osu.Game.Skinning
                                     new DefaultKeyCounterDisplay(),
                                     new BarHitErrorMeter(),
                                     new BarHitErrorMeter(),
-                                    new TrianglesPerformancePointsCounter(),
-                                    new SpectatorList(),
+                                    new TrianglesPerformancePointsCounter()
                                 }
                             };
 

@@ -36,13 +36,11 @@ namespace osu.Game.Overlays.Settings.Sections.UserInterface
                 },
                 new SettingsCheckbox
                 {
-                    Keywords = new[] { "intro", "welcome" },
                     LabelText = UserInterfaceStrings.InterfaceVoices,
                     Current = config.GetBindable<bool>(OsuSetting.MenuVoice)
                 },
                 new SettingsCheckbox
                 {
-                    Keywords = new[] { "intro", "welcome" },
                     LabelText = UserInterfaceStrings.OsuMusicTheme,
                     Current = config.GetBindable<bool>(OsuSetting.MenuMusic)
                 },

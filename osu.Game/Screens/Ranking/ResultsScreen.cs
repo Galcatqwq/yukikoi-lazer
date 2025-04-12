@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using osu.Framework.Allocation;
 using osu.Framework.Audio;
 using osu.Framework.Audio.Sample;
@@ -13,30 +12,26 @@ using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.Cursor;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Bindings;
 using osu.Framework.Input.Events;
 using osu.Framework.Screens;
-using osu.Game.Audio;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Containers;
 using osu.Game.Graphics.UserInterface;
 using osu.Game.Input.Bindings;
 using osu.Game.Localisation;
+using osu.Game.Online.API;
 using osu.Game.Online.Placeholders;
 using osu.Game.Overlays;
-using osu.Game.Overlays.Volume;
 using osu.Game.Scoring;
 using osu.Game.Screens.Play;
 using osu.Game.Screens.Ranking.Expanded.Accuracy;
 using osu.Game.Screens.Ranking.Statistics;
-using osu.Game.Skinning;
 using osuTK;
 
 namespace osu.Game.Screens.Ranking
 {
-    [Cached]
     public abstract partial class ResultsScreen : ScreenWithBeatmapBackground, IKeyBindingHandler<GlobalAction>
     {
         protected const float BACKGROUND_BLUR = 20;
@@ -59,14 +54,15 @@ namespace osu.Game.Screens.Ranking
         [Resolved]
         private Player? player { get; set; }
 
-        private bool skipExitTransition;
+        [Resolved]
+        private IAPIProvider api { get; set; } = null!;
 
         protected StatisticsPanel StatisticsPanel { get; private set; } = null!;
 
         private Drawable bottomPanel = null!;
         private Container<ScorePanel> detachedPanelContainer = null!;
 
-        private Task lastFetchTask = Task.CompletedTask;
+        private bool lastFetchCompleted;
 
         /// <summary>
         /// Whether the user can retry the beatmap from the results screen.
@@ -79,10 +75,11 @@ namespace osu.Game.Screens.Ranking
         public bool AllowWatchingReplay { get; init; } = true;
 
         /// <summary>
-        /// Whether the provided score is for a local user's play.
-        /// This will trigger elements like the user's ranking to display.
+        /// Whether the user's personal statistics should be shown on the extended statistics panel
+        /// after clicking the score panel associated with the <see cref="ResultsScreen.Score"/> being presented.
+        /// Requires <see cref="Score"/> to be present.
         /// </summary>
-        public bool IsLocalPlay { get; init; }
+        public bool ShowUserStatistics { get; init; }
 
         private Sample? popInSample;
 
@@ -100,79 +97,73 @@ namespace osu.Game.Screens.Ranking
 
             popInSample = audio.Samples.Get(@"UI/overlay-pop-in");
 
-            InternalChild = new PopoverContainer
+            InternalChild = new GridContainer
             {
                 RelativeSizeAxes = Axes.Both,
-                Child = new GridContainer
+                Content = new[]
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Content = new[]
+                    new Drawable[]
                     {
-                        new Drawable[]
+                        VerticalScrollContent = new VerticalScrollContainer
                         {
-                            VerticalScrollContent = new VerticalScrollContainer
+                            RelativeSizeAxes = Axes.Both,
+                            ScrollbarVisible = false,
+                            Child = new Container
                             {
                                 RelativeSizeAxes = Axes.Both,
-                                ScrollbarVisible = false,
-                                Child = new Container
-                                {
-                                    RelativeSizeAxes = Axes.Both,
-                                    Children = new Drawable[]
-                                    {
-                                        new GlobalScrollAdjustsVolume(),
-                                        StatisticsPanel = new StatisticsPanel
-                                        {
-                                            RelativeSizeAxes = Axes.Both,
-                                            Score = { BindTarget = SelectedScore },
-                                            AchievedScore = IsLocalPlay && Score != null ? Score : null,
-                                        },
-                                        ScorePanelList = new ScorePanelList
-                                        {
-                                            RelativeSizeAxes = Axes.Both,
-                                            SelectedScore = { BindTarget = SelectedScore },
-                                            PostExpandAction = () => StatisticsPanel.ToggleVisibility()
-                                        },
-                                        detachedPanelContainer = new Container<ScorePanel>
-                                        {
-                                            RelativeSizeAxes = Axes.Both
-                                        },
-                                    }
-                                }
-                            },
-                        },
-                        new[]
-                        {
-                            bottomPanel = new Container
-                            {
-                                Anchor = Anchor.BottomLeft,
-                                Origin = Anchor.BottomLeft,
-                                RelativeSizeAxes = Axes.X,
-                                Height = TwoLayerButton.SIZE_EXTENDED.Y,
-                                Alpha = 0,
                                 Children = new Drawable[]
                                 {
-                                    new Box
+                                    StatisticsPanel = createStatisticsPanel().With(panel =>
+                                    {
+                                        panel.RelativeSizeAxes = Axes.Both;
+                                        panel.Score.BindTarget = SelectedScore;
+                                    }),
+                                    ScorePanelList = new ScorePanelList
                                     {
                                         RelativeSizeAxes = Axes.Both,
-                                        Colour = Color4Extensions.FromHex("#333")
+                                        SelectedScore = { BindTarget = SelectedScore },
+                                        PostExpandAction = () => StatisticsPanel.ToggleVisibility()
                                     },
-                                    buttons = new FillFlowContainer
+                                    detachedPanelContainer = new Container<ScorePanel>
                                     {
-                                        Anchor = Anchor.Centre,
-                                        Origin = Anchor.Centre,
-                                        AutoSizeAxes = Axes.Both,
-                                        Spacing = new Vector2(5),
-                                        Direction = FillDirection.Horizontal
+                                        RelativeSizeAxes = Axes.Both
                                     },
                                 }
                             }
-                        }
+                        },
                     },
-                    RowDimensions = new[]
+                    new[]
                     {
-                        new Dimension(),
-                        new Dimension(GridSizeMode.AutoSize)
+                        bottomPanel = new Container
+                        {
+                            Anchor = Anchor.BottomLeft,
+                            Origin = Anchor.BottomLeft,
+                            RelativeSizeAxes = Axes.X,
+                            Height = TwoLayerButton.SIZE_EXTENDED.Y,
+                            Alpha = 0,
+                            Children = new Drawable[]
+                            {
+                                new Box
+                                {
+                                    RelativeSizeAxes = Axes.Both,
+                                    Colour = Color4Extensions.FromHex("#333")
+                                },
+                                buttons = new FillFlowContainer
+                                {
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                    AutoSizeAxes = Axes.Both,
+                                    Spacing = new Vector2(5),
+                                    Direction = FillDirection.Horizontal
+                                }
+                            }
+                        }
                     }
+                },
+                RowDimensions = new[]
+                {
+                    new Dimension(),
+                    new Dimension(GridSizeMode.AutoSize)
                 }
             };
 
@@ -188,8 +179,6 @@ namespace osu.Game.Screens.Ranking
                 Scheduler.AddDelayed(() => OverlayActivationMode.Value = OverlayActivation.All, shouldFlair ? AccuracyCircle.TOTAL_DURATION + 1000 : 0);
             }
 
-            bool allowHotkeyRetry = false;
-
             if (AllowWatchingReplay)
             {
                 buttons.Add(new ReplayDownloadButton(SelectedScore.Value)
@@ -197,197 +186,96 @@ namespace osu.Game.Screens.Ranking
                     Score = { BindTarget = SelectedScore },
                     Width = 300
                 });
-
-                // for simplicity, only allow this when coming from a replay player where we know the replay is ready to be played.
-                //
-                // if we show it in all cases, consider the case where a user comes from song select and potentially has to download
-                // the replay before it can be played back. it wouldn't flow well with the quick retry in such a case.
-                allowHotkeyRetry = player is ReplayPlayer;
             }
 
             if (player != null && AllowRetry)
             {
                 buttons.Add(new RetryButton { Width = 300 });
-                allowHotkeyRetry = true;
-            }
 
-            if (allowHotkeyRetry)
-            {
                 AddInternal(new HotkeyRetryOverlay
                 {
                     Action = () =>
                     {
                         if (!this.IsCurrentScreen()) return;
 
-                        skipExitTransition = true;
                         player?.Restart(true);
                     },
                 });
             }
-
-            if (Score?.BeatmapInfo != null)
-                buttons.Add(new CollectionButton(Score.BeatmapInfo));
-
-            if (Score?.BeatmapInfo?.BeatmapSet != null && Score.BeatmapInfo.BeatmapSet.OnlineID > 0)
-                buttons.Add(new FavouriteButton(Score.BeatmapInfo.BeatmapSet));
         }
 
         protected override void LoadComplete()
         {
             base.LoadComplete();
 
-            StatisticsPanel.State.BindValueChanged(onStatisticsStateChanged, true);
+            var req = FetchScores(fetchScoresCallback);
 
-            fetchScores(null);
+            if (req != null)
+                api.Queue(req);
+
+            StatisticsPanel.State.BindValueChanged(onStatisticsStateChanged, true);
         }
 
         protected override void Update()
         {
             base.Update();
 
-            if (ScorePanelList.IsScrolledToStart)
-                fetchScores(-1);
-            else if (ScorePanelList.IsScrolledToEnd)
-                fetchScores(1);
-        }
-
-        #region Applause
-
-        private PoolableSkinnableSample? rankApplauseSound;
-
-        public void PlayApplause(ScoreRank rank)
-        {
-            const double applause_volume = 0.8f;
-
-            if (!this.IsCurrentScreen())
-                return;
-
-            rankApplauseSound?.Dispose();
-
-            var applauseSamples = new List<string>();
-
-            if (rank >= ScoreRank.B)
-                // when rank is B or higher, play legacy applause sample on legacy skins.
-                applauseSamples.Insert(0, @"applause");
-
-            switch (rank)
+            if (lastFetchCompleted)
             {
-                default:
-                case ScoreRank.D:
-                    applauseSamples.Add(@"Results/applause-d");
-                    break;
+                APIRequest? nextPageRequest = null;
 
-                case ScoreRank.C:
-                    applauseSamples.Add(@"Results/applause-c");
-                    break;
+                if (ScorePanelList.IsScrolledToStart)
+                    nextPageRequest = FetchNextPage(-1, fetchScoresCallback);
+                else if (ScorePanelList.IsScrolledToEnd)
+                    nextPageRequest = FetchNextPage(1, fetchScoresCallback);
 
-                case ScoreRank.B:
-                    applauseSamples.Add(@"Results/applause-b");
-                    break;
-
-                case ScoreRank.A:
-                    applauseSamples.Add(@"Results/applause-a");
-                    break;
-
-                case ScoreRank.S:
-                case ScoreRank.SH:
-                case ScoreRank.X:
-                case ScoreRank.XH:
-                    applauseSamples.Add(@"Results/applause-s");
-                    break;
-            }
-
-            LoadComponentAsync(rankApplauseSound = new PoolableSkinnableSample(new SampleInfo(applauseSamples.ToArray())), s =>
-            {
-                if (!this.IsCurrentScreen() || s != rankApplauseSound)
-                    return;
-
-                AddInternal(rankApplauseSound);
-
-                rankApplauseSound.VolumeTo(applause_volume);
-                rankApplauseSound.Play();
-            });
-        }
-
-        #endregion
-
-        /// <summary>
-        /// Fetches the next page of scores in the given direction.
-        /// </summary>
-        /// <param name="direction">The direction, or <c>null</c> to fetch any scores.</param>
-        private void fetchScores(int? direction)
-        {
-            Debug.Assert(direction == null || direction == -1 || direction == 1);
-
-            if (!lastFetchTask.IsCompleted)
-                return;
-
-            lastFetchTask = Task.Run(async () =>
-            {
-                ScoreInfo[] scores;
-
-                switch (direction)
+                if (nextPageRequest != null)
                 {
-                    default:
-                        scores = await FetchScores().ConfigureAwait(false);
-                        break;
-
-                    case -1:
-                    case 1:
-                        scores = await FetchNextPage(direction.Value).ConfigureAwait(false);
-                        break;
+                    lastFetchCompleted = false;
+                    api.Queue(nextPageRequest);
                 }
-
-                await addScores(scores).ConfigureAwait(false);
-            });
+            }
         }
 
         /// <summary>
         /// Performs a fetch/refresh of scores to be displayed.
         /// </summary>
-        protected virtual Task<ScoreInfo[]> FetchScores() => Task.FromResult<ScoreInfo[]>([]);
+        /// <param name="scoresCallback">A callback which should be called when fetching is completed. Scheduling is not required.</param>
+        /// <returns>An <see cref="APIRequest"/> responsible for the fetch operation. This will be queued and performed automatically.</returns>
+        protected virtual APIRequest? FetchScores(Action<IEnumerable<ScoreInfo>> scoresCallback) => null;
 
         /// <summary>
-        /// Performs a fetch of the next page of scores. This is invoked every frame.
+        /// Performs a fetch of the next page of scores. This is invoked every frame until a non-null <see cref="APIRequest"/> is returned.
         /// </summary>
         /// <param name="direction">The fetch direction. -1 to fetch scores greater than the current start of the list, and 1 to fetch scores lower than the current end of the list.</param>
-        protected virtual Task<ScoreInfo[]> FetchNextPage(int direction) => Task.FromResult<ScoreInfo[]>([]);
-
-        private Task addScores(ScoreInfo[] scores)
-        {
-            var tcs = new TaskCompletionSource();
-
-            Schedule(() =>
-            {
-                foreach (var s in scores)
-                {
-                    var panel = ScorePanelList.AddScore(s);
-                    if (detachedPanel != null)
-                        panel.Alpha = 0;
-                }
-
-                // allow a frame for scroll container to adjust its dimensions with the added scores before fetching again.
-                Schedule(() => tcs.SetResult());
-
-                if (ScorePanelList.IsEmpty)
-                {
-                    // This can happen if for example a beatmap that is part of a playlist hasn't been played yet.
-                    VerticalScrollContent.Add(new MessagePlaceholder(LeaderboardStrings.NoRecordsYet));
-                }
-
-                OnScoresAdded(scores);
-            });
-
-            return tcs.Task;
-        }
+        /// <param name="scoresCallback">A callback which should be called when fetching is completed. Scheduling is not required.</param>
+        /// <returns>An <see cref="APIRequest"/> responsible for the fetch operation. This will be queued and performed automatically.</returns>
+        protected virtual APIRequest? FetchNextPage(int direction, Action<IEnumerable<ScoreInfo>> scoresCallback) => null;
 
         /// <summary>
-        /// Invoked after online scores are fetched and added to the list.
+        /// Creates the <see cref="Statistics.StatisticsPanel"/> to be used to display extended information about scores.
         /// </summary>
-        /// <param name="scores">The scores that were added.</param>
-        protected virtual void OnScoresAdded(ScoreInfo[] scores)
+        private StatisticsPanel createStatisticsPanel()
         {
+            return ShowUserStatistics && Score != null
+                ? new UserStatisticsPanel(Score)
+                : new StatisticsPanel();
         }
+
+        private void fetchScoresCallback(IEnumerable<ScoreInfo> scores) => Schedule(() =>
+        {
+            foreach (var s in scores)
+                addScore(s);
+
+            // allow a frame for scroll container to adjust its dimensions with the added scores before fetching again.
+            Schedule(() => lastFetchCompleted = true);
+
+            if (ScorePanelList.IsEmpty)
+            {
+                // This can happen if for example a beatmap that is part of a playlist hasn't been played yet.
+                VerticalScrollContent.Add(new MessagePlaceholder(LeaderboardStrings.NoRecordsYet));
+            }
+        });
 
         public override void OnEntering(ScreenTransitionEvent e)
         {
@@ -414,10 +302,7 @@ namespace osu.Game.Screens.Ranking
             // HitObject references from HitEvent.
             Score?.HitEvents.Clear();
 
-            if (!skipExitTransition)
-                this.FadeOut(100);
-
-            rankApplauseSound?.Stop();
+            this.FadeOut(100);
             return false;
         }
 
@@ -430,6 +315,14 @@ namespace osu.Game.Screens.Ranking
             }
 
             return false;
+        }
+
+        private void addScore(ScoreInfo score)
+        {
+            var panel = ScorePanelList.AddScore(score);
+
+            if (detachedPanel != null)
+                panel.Alpha = 0;
         }
 
         private ScorePanel? detachedPanel;
@@ -518,23 +411,11 @@ namespace osu.Game.Screens.Ranking
         {
         }
 
-        protected override bool OnScroll(ScrollEvent e)
-        {
-            // Match stable behaviour of only alt-scroll adjusting volume.
-            // This is the same behaviour as the song selection screen.
-            if (!e.CurrentState.Keyboard.AltPressed)
-                return true;
-
-            return base.OnScroll(e);
-        }
-
         protected partial class VerticalScrollContainer : OsuScrollContainer
         {
             protected override Container<Drawable> Content => content;
 
             private readonly Container content;
-
-            protected override bool OnScroll(ScrollEvent e) => !e.ControlPressed && !e.AltPressed && !e.ShiftPressed && !e.SuperPressed;
 
             public VerticalScrollContainer()
             {

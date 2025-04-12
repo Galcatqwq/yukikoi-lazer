@@ -21,7 +21,7 @@ namespace osu.Game.Rulesets.Mania.Tests.Skinning
     public abstract partial class ManiaSkinnableTestScene : SkinnableTestScene
     {
         [Cached(Type = typeof(IScrollingInfo))]
-        protected readonly TestScrollingInfo ScrollingInfo = new TestScrollingInfo();
+        private readonly TestScrollingInfo scrollingInfo = new TestScrollingInfo();
 
         [Cached]
         private readonly StageDefinition stage = new StageDefinition(4);
@@ -30,7 +30,7 @@ namespace osu.Game.Rulesets.Mania.Tests.Skinning
 
         protected ManiaSkinnableTestScene()
         {
-            ScrollingInfo.Direction.Value = ScrollingDirection.Down;
+            scrollingInfo.Direction.Value = ScrollingDirection.Down;
 
             Add(new Box
             {
@@ -43,16 +43,16 @@ namespace osu.Game.Rulesets.Mania.Tests.Skinning
         [Test]
         public void TestScrollingDown()
         {
-            AddStep("change direction to down", () => ScrollingInfo.Direction.Value = ScrollingDirection.Down);
+            AddStep("change direction to down", () => scrollingInfo.Direction.Value = ScrollingDirection.Down);
         }
 
         [Test]
         public void TestScrollingUp()
         {
-            AddStep("change direction to up", () => ScrollingInfo.Direction.Value = ScrollingDirection.Up);
+            AddStep("change direction to up", () => scrollingInfo.Direction.Value = ScrollingDirection.Up);
         }
 
-        protected class TestScrollingInfo : IScrollingInfo
+        private class TestScrollingInfo : IScrollingInfo
         {
             public readonly Bindable<ScrollingDirection> Direction = new Bindable<ScrollingDirection>();
 

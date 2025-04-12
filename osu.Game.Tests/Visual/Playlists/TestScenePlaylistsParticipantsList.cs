@@ -1,7 +1,6 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using System.Linq;
 using NUnit.Framework;
 using osu.Framework.Graphics;
 using osu.Game.Online.API.Requests.Responses;
@@ -14,24 +13,23 @@ namespace osu.Game.Tests.Visual.Playlists
 {
     public partial class TestScenePlaylistsParticipantsList : OnlinePlayTestScene
     {
-        private Room room = null!;
-
         public override void SetUpSteps()
         {
             base.SetUpSteps();
 
-            AddStep("create room", () =>
+            AddStep("create list", () =>
             {
-                room = new Room
+                SelectedRoom.Value = new Room { RoomID = { Value = 7 } };
+
+                for (int i = 0; i < 50; i++)
                 {
-                    RoomID = 7,
-                    RecentParticipants = Enumerable.Range(0, 50).Select(_ => new APIUser
+                    SelectedRoom.Value.RecentParticipants.Add(new APIUser
                     {
                         Username = "peppy",
                         Statistics = new UserStatistics { GlobalRank = 1234 },
                         Id = 2
-                    }).ToArray()
-                };
+                    });
+                }
             });
         }
 
@@ -40,7 +38,7 @@ namespace osu.Game.Tests.Visual.Playlists
         {
             AddStep("create component", () =>
             {
-                Child = new ParticipantsDisplay(room, Direction.Horizontal)
+                Child = new ParticipantsDisplay(Direction.Horizontal)
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
@@ -54,7 +52,7 @@ namespace osu.Game.Tests.Visual.Playlists
         {
             AddStep("create component", () =>
             {
-                Child = new ParticipantsDisplay(room, Direction.Vertical)
+                Child = new ParticipantsDisplay(Direction.Vertical)
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,

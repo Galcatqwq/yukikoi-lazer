@@ -165,7 +165,7 @@ namespace osu.Game.Scoring
         }
 
         [UsedImplicitly] // Realm
-        protected ScoreInfo()
+        private ScoreInfo()
         {
         }
 

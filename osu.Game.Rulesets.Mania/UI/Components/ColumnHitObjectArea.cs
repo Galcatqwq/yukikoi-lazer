@@ -3,12 +3,13 @@
 
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Game.Rulesets.UI;
 using osu.Game.Rulesets.UI.Scrolling;
 using osu.Game.Skinning;
 
 namespace osu.Game.Rulesets.Mania.UI.Components
 {
-    public partial class ColumnHitObjectArea : HitPositionPaddedContainer
+    public partial class ColumnHitObjectArea : HitObjectArea
     {
         public readonly Container Explosions;
 
@@ -16,29 +17,25 @@ namespace osu.Game.Rulesets.Mania.UI.Components
 
         private readonly Drawable hitTarget;
 
-        protected override Container<Drawable> Content => content;
-
-        private readonly Container content;
-
-        public ColumnHitObjectArea()
+        public ColumnHitObjectArea(HitObjectContainer hitObjectContainer)
+            : base(hitObjectContainer)
         {
             AddRangeInternal(new[]
             {
                 UnderlayElements = new Container
                 {
                     RelativeSizeAxes = Axes.Both,
+                    Depth = 2,
                 },
                 hitTarget = new SkinnableDrawable(new ManiaSkinComponentLookup(ManiaSkinComponents.HitTarget), _ => new DefaultHitTarget())
                 {
                     RelativeSizeAxes = Axes.X,
-                },
-                content = new Container
-                {
-                    RelativeSizeAxes = Axes.Both,
+                    Depth = 1
                 },
                 Explosions = new Container
                 {
                     RelativeSizeAxes = Axes.Both,
+                    Depth = -1,
                 }
             });
         }

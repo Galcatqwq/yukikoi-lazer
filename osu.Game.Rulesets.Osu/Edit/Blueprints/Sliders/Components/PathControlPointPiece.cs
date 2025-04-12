@@ -40,7 +40,7 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders.Components
         public readonly PathControlPoint ControlPoint;
 
         private readonly T hitObject;
-        private readonly FastCircle circle;
+        private readonly Circle circle;
         private readonly Drawable markerRing;
 
         [Resolved]
@@ -62,7 +62,7 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders.Components
 
             InternalChildren = new[]
             {
-                circle = new FastCircle
+                circle = new Circle
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,

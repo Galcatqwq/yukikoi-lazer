@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Threading;
 using osu.Game.Audio;
 using osu.Game.Rulesets.Judgements;
-using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Types;
 using osu.Game.Rulesets.Scoring;
 
@@ -92,10 +91,6 @@ namespace osu.Game.Rulesets.Mania.Objects
         {
             base.CreateNestedHitObjects(cancellationToken);
 
-            // Generally node samples will be populated by ManiaBeatmapConverter, but in a case like the editor they may not be.
-            // Ensure they are set to a sane default here.
-            NodeSamples ??= CreateDefaultNodeSamples(this);
-
             AddNested(Head = new HeadNote
             {
                 StartTime = StartTime,
@@ -107,7 +102,7 @@ namespace osu.Game.Rulesets.Mania.Objects
             {
                 StartTime = EndTime,
                 Column = Column,
-                Samples = GetNodeSamples(NodeSamples.Count - 1),
+                Samples = GetNodeSamples((NodeSamples?.Count - 1) ?? 1),
             });
 
             AddNested(Body = new HoldNoteBody
@@ -121,20 +116,7 @@ namespace osu.Game.Rulesets.Mania.Objects
 
         protected override HitWindows CreateHitWindows() => HitWindows.Empty;
 
-        public IList<HitSampleInfo> GetNodeSamples(int nodeIndex) => nodeIndex < NodeSamples?.Count ? NodeSamples[nodeIndex] : Samples;
-
-        /// <summary>
-        /// Create the default note samples for a hold note, based off their main sample.
-        /// </summary>
-        /// <remarks>
-        /// By default, osu!mania beatmaps in only play samples at the start of the hold note.
-        /// </remarks>
-        /// <param name="obj">The object to use as a basis for the head sample.</param>
-        /// <returns>Defaults for assigning to <see cref="HoldNote.NodeSamples"/>.</returns>
-        public static List<IList<HitSampleInfo>> CreateDefaultNodeSamples(HitObject obj) => new List<IList<HitSampleInfo>>
-        {
-            obj.Samples,
-            new List<HitSampleInfo>(),
-        };
+        public IList<HitSampleInfo> GetNodeSamples(int nodeIndex) =>
+            nodeIndex < NodeSamples?.Count ? NodeSamples[nodeIndex] : Samples;
     }
 }

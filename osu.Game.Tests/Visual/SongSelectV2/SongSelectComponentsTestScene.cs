@@ -6,17 +6,16 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Testing;
-using osu.Game.Graphics.Cursor;
 using osu.Game.Overlays;
 
 namespace osu.Game.Tests.Visual.SongSelectV2
 {
-    public abstract partial class SongSelectComponentsTestScene : OsuManualInputManagerTestScene
+    public abstract partial class SongSelectComponentsTestScene : OsuTestScene
     {
         [Cached]
         protected readonly OverlayColourProvider ColourProvider = new OverlayColourProvider(OverlayColourScheme.Aquamarine);
 
-        protected override Container<Drawable> Content { get; } = new OsuContextMenuContainer
+        protected override Container<Drawable> Content { get; } = new Container
         {
             RelativeSizeAxes = Axes.X,
             AutoSizeAxes = Axes.Y,

@@ -26,7 +26,7 @@ namespace osu.Game.Tests.Visual.Menus
 
         protected OsuScreenStack IntroStack;
 
-        protected IntroScreen Intro { get; private set; }
+        private IntroScreen intro;
 
         [Cached(typeof(INotificationOverlay))]
         private NotificationOverlay notifications;
@@ -62,9 +62,22 @@ namespace osu.Game.Tests.Visual.Menus
         [Test]
         public virtual void TestPlayIntro()
         {
-            RestartIntro();
+            AddStep("restart sequence", () =>
+            {
+                logo.FinishTransforms();
+                logo.IsTracking = false;
 
-            WaitForMenu();
+                IntroStack?.Expire();
+
+                Add(IntroStack = new OsuScreenStack
+                {
+                    RelativeSizeAxes = Axes.Both,
+                });
+
+                IntroStack.Push(intro = CreateScreen());
+            });
+
+            AddUntilStep("wait for menu", () => intro.DidLoadMenu);
         }
 
         [Test]
@@ -90,46 +103,23 @@ namespace osu.Game.Tests.Visual.Menus
                     RelativeSizeAxes = Axes.Both,
                 });
 
-                IntroStack.Push(Intro = CreateScreen());
+                IntroStack.Push(intro = CreateScreen());
             });
 
             AddStep("trigger failure", () =>
             {
                 trackResetDelegate = Scheduler.AddDelayed(() =>
                 {
-                    Intro.Beatmap.Value.Track.Seek(0);
+                    intro.Beatmap.Value.Track.Seek(0);
                 }, 0, true);
             });
 
-            WaitForMenu();
+            AddUntilStep("wait for menu", () => intro.DidLoadMenu);
 
             if (IntroReliesOnTrack)
                 AddUntilStep("wait for notification", () => notifications.UnreadCount.Value == 1);
 
             AddStep("uninstall delegate", () => trackResetDelegate?.Cancel());
-        }
-
-        protected void RestartIntro()
-        {
-            AddStep("restart sequence", () =>
-            {
-                logo.FinishTransforms();
-                logo.IsTracking = false;
-
-                IntroStack?.Expire();
-
-                Add(IntroStack = new OsuScreenStack
-                {
-                    RelativeSizeAxes = Axes.Both,
-                });
-
-                IntroStack.Push(Intro = CreateScreen());
-            });
-        }
-
-        protected void WaitForMenu()
-        {
-            AddUntilStep("wait for menu", () => Intro.DidLoadMenu);
         }
 
         protected abstract IntroScreen CreateScreen();

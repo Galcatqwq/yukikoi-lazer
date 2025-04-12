@@ -10,21 +10,17 @@ namespace osu.Game.Screens.Edit.Compose
     public interface IPlacementHandler
     {
         /// <summary>
-        /// Notifies that a placement blueprint became visible on the screen.
+        /// Notifies that a placement has begun.
         /// </summary>
-        /// <param name="hitObject">The <see cref="HitObject"/> representing the placement.</param>
-        void ShowPlacement(HitObject hitObject);
+        /// <param name="hitObject">The <see cref="HitObject"/> being placed.</param>
+        void BeginPlacement(HitObject hitObject);
 
         /// <summary>
-        /// Notifies that a visible placement blueprint has been hidden.
-        /// </summary>
-        void HidePlacement();
-
-        /// <summary>
-        /// Notifies that a placement has been committed.
+        /// Notifies that a placement has finished.
         /// </summary>
         /// <param name="hitObject">The <see cref="HitObject"/> that has been placed.</param>
-        void CommitPlacement(HitObject hitObject);
+        /// <param name="commit">Whether the object should be committed.</param>
+        void EndPlacement(HitObject hitObject, bool commit);
 
         /// <summary>
         /// Deletes a <see cref="HitObject"/>.

@@ -28,10 +28,8 @@ namespace osu.Game.Rulesets.Osu.Mods
         public override Type[] IncompatibleMods => new[]
         {
             typeof(OsuModSpunOut),
-            typeof(ModRelax),
             typeof(ModAutoplay),
             typeof(OsuModMagnetised),
-            typeof(OsuModRepel),
             typeof(ModTouchDevice)
         };
 

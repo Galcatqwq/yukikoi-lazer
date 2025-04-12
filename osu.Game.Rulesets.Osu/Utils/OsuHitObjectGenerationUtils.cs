@@ -3,6 +3,7 @@
 
 using System;
 using System.Linq;
+using osu.Framework.Extensions.IEnumerableExtensions;
 using osu.Game.Rulesets.Osu.UI;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Osu.Beatmaps;
@@ -116,9 +117,10 @@ namespace osu.Game.Rulesets.Osu.Utils
             if (osuObject is not Slider slider)
                 return;
 
+            void reflectNestedObject(OsuHitObject nested) => nested.Position = new Vector2(OsuPlayfield.BASE_SIZE.X - nested.Position.X, nested.Position.Y);
             static void reflectControlPoint(PathControlPoint point) => point.Position = new Vector2(-point.Position.X, point.Position.Y);
 
-            modifySlider(slider, reflectControlPoint);
+            modifySlider(slider, reflectNestedObject, reflectControlPoint);
         }
 
         /// <summary>
@@ -132,9 +134,10 @@ namespace osu.Game.Rulesets.Osu.Utils
             if (osuObject is not Slider slider)
                 return;
 
+            void reflectNestedObject(OsuHitObject nested) => nested.Position = new Vector2(nested.Position.X, OsuPlayfield.BASE_SIZE.Y - nested.Position.Y);
             static void reflectControlPoint(PathControlPoint point) => point.Position = new Vector2(point.Position.X, -point.Position.Y);
 
-            modifySlider(slider, reflectControlPoint);
+            modifySlider(slider, reflectNestedObject, reflectControlPoint);
         }
 
         /// <summary>
@@ -143,9 +146,10 @@ namespace osu.Game.Rulesets.Osu.Utils
         /// <param name="slider">The slider to be flipped.</param>
         public static void FlipSliderInPlaceHorizontally(Slider slider)
         {
+            void flipNestedObject(OsuHitObject nested) => nested.Position = new Vector2(slider.X - (nested.X - slider.X), nested.Y);
             static void flipControlPoint(PathControlPoint point) => point.Position = new Vector2(-point.Position.X, point.Position.Y);
 
-            modifySlider(slider, flipControlPoint);
+            modifySlider(slider, flipNestedObject, flipControlPoint);
         }
 
         /// <summary>
@@ -155,13 +159,18 @@ namespace osu.Game.Rulesets.Osu.Utils
         /// <param name="rotation">The angle, measured in radians, to rotate the slider by.</param>
         public static void RotateSlider(Slider slider, float rotation)
         {
+            void rotateNestedObject(OsuHitObject nested) => nested.Position = rotateVector(nested.Position - slider.Position, rotation) + slider.Position;
             void rotateControlPoint(PathControlPoint point) => point.Position = rotateVector(point.Position, rotation);
 
-            modifySlider(slider, rotateControlPoint);
+            modifySlider(slider, rotateNestedObject, rotateControlPoint);
         }
 
-        private static void modifySlider(Slider slider, Action<PathControlPoint> modifyControlPoint)
+        private static void modifySlider(Slider slider, Action<OsuHitObject> modifyNestedObject, Action<PathControlPoint> modifyControlPoint)
         {
+            // No need to update the head and tail circles, since slider handles that when the new slider path is set
+            slider.NestedHitObjects.OfType<SliderTick>().ForEach(modifyNestedObject);
+            slider.NestedHitObjects.OfType<SliderRepeat>().ForEach(modifyNestedObject);
+
             var controlPoints = slider.Path.ControlPoints.Select(p => new PathControlPoint(p.Position, p.Type)).ToArray();
             foreach (var point in controlPoints)
                 modifyControlPoint(point);

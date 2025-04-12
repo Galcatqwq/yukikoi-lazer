@@ -9,7 +9,7 @@ using osu.Game.Rulesets.Mania.Edit.Blueprints;
 
 namespace osu.Game.Rulesets.Mania.Edit
 {
-    public class HoldNoteCompositionTool : CompositionTool
+    public class HoldNoteCompositionTool : HitObjectCompositionTool
     {
         public HoldNoteCompositionTool()
             : base("Hold")
@@ -18,6 +18,6 @@ namespace osu.Game.Rulesets.Mania.Edit
 
         public override Drawable CreateIcon() => new BeatmapStatisticIcon(BeatmapStatisticsIconType.Sliders);
 
-        public override HitObjectPlacementBlueprint CreatePlacementBlueprint() => new HoldNotePlacementBlueprint();
+        public override PlacementBlueprint CreatePlacementBlueprint() => new HoldNotePlacementBlueprint();
     }
 }

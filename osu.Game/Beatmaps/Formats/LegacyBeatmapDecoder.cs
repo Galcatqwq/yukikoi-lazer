@@ -16,8 +16,6 @@ using osu.Game.Rulesets;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Legacy;
 using osu.Game.Rulesets.Objects.Types;
-using osu.Game.Screens.Edit;
-using osu.Game.Utils;
 
 namespace osu.Game.Beatmaps.Formats
 {
@@ -36,15 +34,11 @@ namespace osu.Game.Beatmaps.Formats
         /// </remarks>
         public const double CONTROL_POINT_LENIENCY = 5;
 
-        /// <summary>
-        /// The maximum allowed number of keys in mania beatmaps.
-        /// </summary>
-        public const int MAX_MANIA_KEY_COUNT = 18;
-
         internal static RulesetStore? RulesetStore;
 
         private Beatmap beatmap = null!;
-        private ConvertHitObjectParser parser = null!;
+
+        private ConvertHitObjectParser? parser;
 
         private LegacySampleBank defaultSampleBank;
         private int defaultSampleVolume = 100;
@@ -56,7 +50,7 @@ namespace osu.Game.Beatmaps.Formats
         }
 
         /// <summary>
-        /// Whether beatmap or runtime offsets should be applied. Defaults on; only disable for testing purposes.
+        /// Whether or not beatmap or runtime offsets should be applied. Defaults on; only disable for testing purposes.
         /// </summary>
         public bool ApplyOffsets = true;
 
@@ -84,10 +78,9 @@ namespace osu.Game.Beatmaps.Formats
         protected override void ParseStreamInto(LineBufferedReader stream, Beatmap beatmap)
         {
             this.beatmap = beatmap;
-            this.beatmap.BeatmapVersion = FormatVersion;
-            parser = new ConvertHitObjectParser(getOffsetTime(), FormatVersion);
+            this.beatmap.BeatmapInfo.BeatmapVersion = FormatVersion;
 
-            ApplyLegacyDefaults(this.beatmap);
+            applyLegacyDefaults(this.beatmap.BeatmapInfo);
 
             base.ParseStreamInto(stream, beatmap);
 
@@ -121,7 +114,7 @@ namespace osu.Game.Beatmaps.Formats
             // mania uses "circle size" for key count, thus different allowable range
             difficulty.CircleSize = beatmap.BeatmapInfo.Ruleset.OnlineID != 3
                 ? Math.Clamp(difficulty.CircleSize, 0, 10)
-                : Math.Clamp(difficulty.CircleSize, 1, MAX_MANIA_KEY_COUNT);
+                : Math.Clamp(difficulty.CircleSize, 1, 18);
 
             difficulty.OverallDifficulty = Math.Clamp(difficulty.OverallDifficulty, 0, 10);
             difficulty.ApproachRate = Math.Clamp(difficulty.ApproachRate, 0, 10);
@@ -168,8 +161,7 @@ namespace osu.Game.Beatmaps.Formats
         {
             if (hitObject is IHasRepeats hasRepeats)
             {
-                SampleControlPoint sampleControlPoint = (beatmap.ControlPointInfo as LegacyControlPointInfo)?.SamplePointAt(hitObject.StartTime + CONTROL_POINT_LENIENCY + 1)
-                                                        ?? SampleControlPoint.DEFAULT;
+                SampleControlPoint sampleControlPoint = (beatmap.ControlPointInfo as LegacyControlPointInfo)?.SamplePointAt(hitObject.StartTime + CONTROL_POINT_LENIENCY + 1) ?? SampleControlPoint.DEFAULT;
                 hitObject.Samples = hitObject.Samples.Select(o => sampleControlPoint.ApplyTo(o)).ToList();
 
                 for (int i = 0; i < hasRepeats.NodeSamples.Count; i++)
@@ -182,8 +174,7 @@ namespace osu.Game.Beatmaps.Formats
             }
             else
             {
-                SampleControlPoint sampleControlPoint = (beatmap.ControlPointInfo as LegacyControlPointInfo)?.SamplePointAt(hitObject.GetEndTime() + CONTROL_POINT_LENIENCY)
-                                                        ?? SampleControlPoint.DEFAULT;
+                SampleControlPoint sampleControlPoint = (beatmap.ControlPointInfo as LegacyControlPointInfo)?.SamplePointAt(hitObject.GetEndTime() + CONTROL_POINT_LENIENCY) ?? SampleControlPoint.DEFAULT;
                 hitObject.Samples = hitObject.Samples.Select(o => sampleControlPoint.ApplyTo(o)).ToList();
             }
         }
@@ -195,13 +186,10 @@ namespace osu.Game.Beatmaps.Formats
         /// This method's intention is to restore those legacy defaults.
         /// See also: https://osu.ppy.sh/wiki/en/Client/File_formats/Osu_%28file_format%29
         /// </summary>
-        internal static void ApplyLegacyDefaults(Beatmap beatmap)
+        private static void applyLegacyDefaults(BeatmapInfo beatmapInfo)
         {
-            beatmap.WidescreenStoryboard = false;
-            // in a perfect world this would throw if osu! ruleset couldn't be found,
-            // but unfortunately there are "legitimate" cases where it's not there (i.e. ruleset test projects),
-            // so attempt to trudge on with whatever it is that's in `BeatmapInfo` if the lookup fails.
-            beatmap.BeatmapInfo.Ruleset = RulesetStore?.GetRuleset(0) ?? beatmap.BeatmapInfo.Ruleset;
+            beatmapInfo.WidescreenStoryboard = false;
+            beatmapInfo.SamplesMatchPlaybackRate = false;
         }
 
         protected override void ParseLine(Beatmap beatmap, Section section, string line)
@@ -253,7 +241,7 @@ namespace osu.Game.Beatmaps.Formats
                     break;
 
                 case @"AudioLeadIn":
-                    beatmap.AudioLeadIn = Parsing.ParseInt(pair.Value);
+                    beatmap.BeatmapInfo.AudioLeadIn = Parsing.ParseInt(pair.Value);
                     break;
 
                 case @"PreviewTime":
@@ -270,39 +258,61 @@ namespace osu.Game.Beatmaps.Formats
                     break;
 
                 case @"StackLeniency":
-                    beatmap.StackLeniency = Parsing.ParseFloat(pair.Value);
+                    beatmap.BeatmapInfo.StackLeniency = Parsing.ParseFloat(pair.Value);
                     break;
 
                 case @"Mode":
-                    beatmap.BeatmapInfo.Ruleset = RulesetStore?.GetRuleset(Parsing.ParseInt(pair.Value)) ?? throw new ArgumentException("Ruleset is not available locally.");
+                    int rulesetID = Parsing.ParseInt(pair.Value);
+
+                    beatmap.BeatmapInfo.Ruleset = RulesetStore?.GetRuleset(rulesetID) ?? throw new ArgumentException("Ruleset is not available locally.");
+
+                    switch (rulesetID)
+                    {
+                        case 0:
+                            parser = new Rulesets.Objects.Legacy.Osu.ConvertHitObjectParser(getOffsetTime(), FormatVersion);
+                            break;
+
+                        case 1:
+                            parser = new Rulesets.Objects.Legacy.Taiko.ConvertHitObjectParser(getOffsetTime(), FormatVersion);
+                            break;
+
+                        case 2:
+                            parser = new Rulesets.Objects.Legacy.Catch.ConvertHitObjectParser(getOffsetTime(), FormatVersion);
+                            break;
+
+                        case 3:
+                            parser = new Rulesets.Objects.Legacy.Mania.ConvertHitObjectParser(getOffsetTime(), FormatVersion);
+                            break;
+                    }
+
                     break;
 
                 case @"LetterboxInBreaks":
-                    beatmap.LetterboxInBreaks = Parsing.ParseInt(pair.Value) == 1;
+                    beatmap.BeatmapInfo.LetterboxInBreaks = Parsing.ParseInt(pair.Value) == 1;
                     break;
 
                 case @"SpecialStyle":
-                    beatmap.SpecialStyle = Parsing.ParseInt(pair.Value) == 1;
+                    beatmap.BeatmapInfo.SpecialStyle = Parsing.ParseInt(pair.Value) == 1;
                     break;
 
                 case @"WidescreenStoryboard":
-                    beatmap.WidescreenStoryboard = Parsing.ParseInt(pair.Value) == 1;
+                    beatmap.BeatmapInfo.WidescreenStoryboard = Parsing.ParseInt(pair.Value) == 1;
                     break;
 
                 case @"EpilepsyWarning":
-                    beatmap.EpilepsyWarning = Parsing.ParseInt(pair.Value) == 1;
+                    beatmap.BeatmapInfo.EpilepsyWarning = Parsing.ParseInt(pair.Value) == 1;
                     break;
 
                 case @"SamplesMatchPlaybackRate":
-                    beatmap.SamplesMatchPlaybackRate = Parsing.ParseInt(pair.Value) == 1;
+                    beatmap.BeatmapInfo.SamplesMatchPlaybackRate = Parsing.ParseInt(pair.Value) == 1;
                     break;
 
                 case @"Countdown":
-                    beatmap.Countdown = Enum.Parse<CountdownType>(pair.Value);
+                    beatmap.BeatmapInfo.Countdown = Enum.Parse<CountdownType>(pair.Value);
                     break;
 
                 case @"CountdownOffset":
-                    beatmap.CountdownOffset = Parsing.ParseInt(pair.Value);
+                    beatmap.BeatmapInfo.CountdownOffset = Parsing.ParseInt(pair.Value);
                     break;
             }
         }
@@ -314,7 +324,7 @@ namespace osu.Game.Beatmaps.Formats
             switch (pair.Key)
             {
                 case @"Bookmarks":
-                    beatmap.Bookmarks = pair.Value.Split(',').Select(v =>
+                    beatmap.BeatmapInfo.Bookmarks = pair.Value.Split(',').Select(v =>
                     {
                         bool result = int.TryParse(v, out int val);
                         return new { result, val };
@@ -322,19 +332,19 @@ namespace osu.Game.Beatmaps.Formats
                     break;
 
                 case @"DistanceSpacing":
-                    beatmap.DistanceSpacing = Math.Max(0, Parsing.ParseDouble(pair.Value));
+                    beatmap.BeatmapInfo.DistanceSpacing = Math.Max(0, Parsing.ParseDouble(pair.Value));
                     break;
 
                 case @"BeatDivisor":
-                    beatmap.BeatmapInfo.BeatDivisor = Math.Clamp(Parsing.ParseInt(pair.Value), BindableBeatDivisor.MINIMUM_DIVISOR, BindableBeatDivisor.MAXIMUM_DIVISOR);
+                    beatmap.BeatmapInfo.BeatDivisor = Parsing.ParseInt(pair.Value);
                     break;
 
                 case @"GridSize":
-                    beatmap.GridSize = Parsing.ParseInt(pair.Value);
+                    beatmap.BeatmapInfo.GridSize = Parsing.ParseInt(pair.Value);
                     break;
 
                 case @"TimelineZoom":
-                    beatmap.TimelineZoom = Math.Max(0, Parsing.ParseDouble(pair.Value));
+                    beatmap.BeatmapInfo.TimelineZoom = Math.Max(0, Parsing.ParseDouble(pair.Value));
                     break;
             }
         }
@@ -456,7 +466,7 @@ namespace osu.Game.Beatmaps.Formats
                         // Some very old beatmaps had incorrect type specifications for their backgrounds (ie. using 1 for VIDEO
                         // instead of 0 for BACKGROUND). To handle this gracefully, check the file extension against known supported
                         // video extensions and handle similar to a background if it doesn't match.
-                        if (!SupportedExtensions.VIDEO_EXTENSIONS.Contains(Path.GetExtension(filename).ToLowerInvariant()))
+                        if (!OsuGameBase.VIDEO_EXTENSIONS.Contains(Path.GetExtension(filename).ToLowerInvariant()))
                         {
                             beatmap.BeatmapInfo.Metadata.BackgroundFile = filename;
                             lineSupportedByEncoder = true;
@@ -606,10 +616,17 @@ namespace osu.Game.Beatmaps.Formats
 
         private void handleHitObject(string line)
         {
-            var obj = parser.Parse(line);
-            obj.ApplyDefaults(beatmap.ControlPointInfo, beatmap.Difficulty);
+            // If the ruleset wasn't specified, assume the osu!standard ruleset.
+            parser ??= new Rulesets.Objects.Legacy.Osu.ConvertHitObjectParser(getOffsetTime(), FormatVersion);
 
-            beatmap.HitObjects.Add(obj);
+            var obj = parser.Parse(line);
+
+            if (obj != null)
+            {
+                obj.ApplyDefaults(beatmap.ControlPointInfo, beatmap.Difficulty);
+
+                beatmap.HitObjects.Add(obj);
+            }
         }
 
         private int getOffsetTime(int time) => time + (ApplyOffsets ? offset : 0);

@@ -176,6 +176,12 @@ namespace osu.Game.Updater
                 Text = NotificationsStrings.DownloadingUpdate;
             }
 
+            public void StartInstall()
+            {
+                Progress = 0;
+                Text = NotificationsStrings.InstallingUpdate;
+            }
+
             public void FailDownload()
             {
                 State = ProgressNotificationState.Cancelled;

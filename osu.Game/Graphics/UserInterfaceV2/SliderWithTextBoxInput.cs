@@ -32,11 +32,6 @@ namespace osu.Game.Graphics.UserInterfaceV2
             set => slider.Current = value;
         }
 
-        public CompositeDrawable TabbableContentContainer
-        {
-            set => textBox.TabbableContentContainer = value;
-        }
-
         private bool instantaneous;
 
         /// <summary>
@@ -74,7 +69,6 @@ namespace osu.Game.Graphics.UserInterfaceV2
                         textBox = new LabelledTextBox
                         {
                             Label = labelText,
-                            SelectAllOnFocus = true,
                         },
                         slider = new SettingsSlider<T>
                         {
@@ -92,6 +86,8 @@ namespace osu.Game.Graphics.UserInterfaceV2
         }
 
         public bool TakeFocus() => GetContainingFocusManager()?.ChangeFocus(textBox) == true;
+
+        public bool SelectAll() => textBox.SelectAll();
 
         private bool updatingFromTextBox;
 

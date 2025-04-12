@@ -27,12 +27,12 @@ namespace osu.Game.Rulesets.Scoring
         /// <remarks>
         /// If a custom implementation overrides <see cref="GetComboScoreChange"/> this may not be relevant.
         /// </remarks>
-        public const double COMBO_EXPONENT = 0.5;
+        public const double COMBO_EXPONENT = 1;
 
-        public const double MAX_SCORE = 1000000;
+        public const double MAX_SCORE = 10000000;
 
         private const double accuracy_cutoff_x = 1;
-        private const double accuracy_cutoff_s = 0.95;
+        private const double accuracy_cutoff_s = 0.94;
         private const double accuracy_cutoff_a = 0.9;
         private const double accuracy_cutoff_b = 0.8;
         private const double accuracy_cutoff_c = 0.7;
@@ -120,11 +120,6 @@ namespace osu.Game.Rulesets.Scoring
         public long MaximumTotalScore { get; private set; }
 
         /// <summary>
-        /// The maximum achievable combo.
-        /// </summary>
-        public int MaximumCombo { get; private set; }
-
-        /// <summary>
         /// The maximum sum of accuracy-affecting judgements at the current point in time.
         /// </summary>
         /// <remarks>
@@ -185,8 +180,6 @@ namespace osu.Game.Rulesets.Scoring
                 return new Dictionary<HitResult, int>(MaximumResultCounts);
             }
         }
-
-        public IReadOnlyDictionary<HitResult, int> Statistics => ScoreResultCounts;
 
         private bool beatmapApplied;
 
@@ -354,10 +347,10 @@ namespace osu.Game.Rulesets.Scoring
                     return 300;
 
                 case HitResult.SmallBonus:
-                    return 10;
+                    return 100;
 
                 case HitResult.LargeBonus:
-                    return 50;
+                    return 1000;
             }
         }
 
@@ -398,8 +391,8 @@ namespace osu.Game.Rulesets.Scoring
 
         protected virtual double ComputeTotalScore(double comboProgress, double accuracyProgress, double bonusPortion)
         {
-            return 500000 * Accuracy.Value * comboProgress +
-                   500000 * Math.Pow(Accuracy.Value, 5) * accuracyProgress +
+            return 10000000 * comboProgress +
+                   1.42 * Math.Pow(Accuracy.Value, 5) * accuracyProgress +
                    bonusPortion;
         }
 
@@ -428,7 +421,6 @@ namespace osu.Game.Rulesets.Scoring
                 MaximumResultCounts.AddRange(ScoreResultCounts);
 
                 MaximumTotalScore = TotalScore.Value;
-                MaximumCombo = HighestCombo.Value;
             }
 
             ScoreResultCounts.Clear();

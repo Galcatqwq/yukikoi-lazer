@@ -35,7 +35,7 @@ namespace osu.Game.Tests.Visual.Mods
                     MinimumAccuracy = { Value = 0.6 }
                 },
                 Autoplay = false,
-                CreateBeatmap = () => new Beatmap
+                Beatmap = new Beatmap
                 {
                     HitObjects = Enumerable.Range(0, 5).Select(i => new HitCircle
                     {
@@ -56,7 +56,7 @@ namespace osu.Game.Tests.Visual.Mods
                     AccuracyJudgeMode = { Value = ModAccuracyChallenge.AccuracyMode.Standard }
                 },
                 Autoplay = false,
-                CreateBeatmap = () => new Beatmap
+                Beatmap = new Beatmap
                 {
                     HitObjects = Enumerable.Range(0, 5).Select(i => new HitCircle
                     {

@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using osu.Framework.Graphics;
-using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Input.Bindings;
 using osu.Framework.Localisation;
@@ -40,7 +39,6 @@ using osu.Game.Scoring;
 using osu.Game.Screens.Edit.Setup;
 using osu.Game.Screens.Ranking.Statistics;
 using osu.Game.Skinning;
-using osuTK;
 
 namespace osu.Game.Rulesets.Osu
 {
@@ -159,6 +157,7 @@ namespace osu.Game.Rulesets.Osu
                 case ModType.DifficultyReduction:
                     return new Mod[]
                     {
+                        new OsuModRelax(),
                         new OsuModEasy(),
                         new OsuModNoFail(),
                         new MultiMod(new OsuModHalfTime(), new OsuModDaycore()),
@@ -171,7 +170,7 @@ namespace osu.Game.Rulesets.Osu
                         new MultiMod(new OsuModSuddenDeath(), new OsuModPerfect()),
                         new MultiMod(new OsuModDoubleTime(), new OsuModNightcore()),
                         new OsuModHidden(),
-                        new MultiMod(new OsuModFlashlight(), new OsuModBlinds()),
+                        new MultiMod(new OsuModFlashlight(), new OsuModBlinds(), new OsuModTraceable()),
                         new OsuModStrictTracking(),
                         new OsuModAccuracyChallenge(),
                     };
@@ -183,7 +182,6 @@ namespace osu.Game.Rulesets.Osu
                         new OsuModDifficultyAdjust(),
                         new OsuModClassic(),
                         new OsuModRandom(),
-                        new OsuModMirror(),
                         new MultiMod(new OsuModAlternate(), new OsuModSingleTap())
                     };
 
@@ -191,31 +189,18 @@ namespace osu.Game.Rulesets.Osu
                     return new Mod[]
                     {
                         new MultiMod(new OsuModAutoplay(), new OsuModCinema()),
-                        new OsuModRelax(),
+
                         new OsuModAutopilot(),
                         new OsuModSpunOut(),
+                        new OsuModFlower()
                     };
 
                 case ModType.Fun:
                     return new Mod[]
                     {
-                        new OsuModTransform(),
-                        new OsuModWiggle(),
-                        new OsuModSpinIn(),
-                        new MultiMod(new OsuModGrow(), new OsuModDeflate()),
-                        new MultiMod(new ModWindUp(), new ModWindDown()),
-                        new OsuModTraceable(),
-                        new OsuModBarrelRoll(),
-                        new OsuModApproachDifferent(),
-                        new OsuModMuted(),
                         new OsuModNoScope(),
-                        new MultiMod(new OsuModMagnetised(), new OsuModRepel()),
-                        new ModAdaptiveSpeed(),
-                        new OsuModFreezeFrame(),
-                        new OsuModBubbles(),
-                        new OsuModSynesthesia(),
-                        new OsuModDepth(),
-                        new OsuModBloom()
+                        new MultiMod(new OsuModMagnetised()),
+                        new OsuModDepth()
                     };
 
                 case ModType.System:
@@ -339,28 +324,10 @@ namespace osu.Game.Rulesets.Osu
             };
         }
 
-        public override IEnumerable<Drawable> CreateEditorSetupSections() =>
+        public override IEnumerable<SetupSection> CreateEditorSetupSections() =>
         [
-            new MetadataSection(),
             new OsuDifficultySection(),
-            new FillFlowContainer
-            {
-                AutoSizeAxes = Axes.Y,
-                Direction = FillDirection.Vertical,
-                Spacing = new Vector2(SetupScreen.SPACING),
-                Children = new Drawable[]
-                {
-                    new ResourcesSection
-                    {
-                        RelativeSizeAxes = Axes.X,
-                    },
-                    new ColoursSection
-                    {
-                        RelativeSizeAxes = Axes.X,
-                    }
-                }
-            },
-            new DesignSection(),
+            new ColoursSection(),
         ];
 
         /// <seealso cref="OsuHitObject.ApplyDefaultsToSelf"/>
@@ -380,7 +347,5 @@ namespace osu.Game.Rulesets.Osu
 
             return adjustedDifficulty;
         }
-
-        public override bool EditorShowScrollSpeed => false;
     }
 }

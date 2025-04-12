@@ -2,7 +2,6 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System.Linq;
-using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -16,8 +15,6 @@ namespace osu.Game.Screens.Edit.Components.Timelines.Summary.Parts
 
         private readonly IBindableList<ControlPoint> controlPoints = new BindableList<ControlPoint>();
 
-        private bool showScrollSpeed;
-
         public GroupVisualisation(ControlPointGroup group)
         {
             RelativePositionAxes = Axes.X;
@@ -27,13 +24,8 @@ namespace osu.Game.Screens.Edit.Components.Timelines.Summary.Parts
 
             Group = group;
             X = (float)group.Time;
-        }
 
-        [BackgroundDependencyLoader]
-        private void load(EditorBeatmap beatmap)
-        {
-            showScrollSpeed = beatmap.BeatmapInfo.Ruleset.CreateInstance().EditorShowScrollSpeed;
-
+            // Run in constructor so IsRedundant calls can work correctly.
             controlPoints.BindTo(Group.ControlPoints);
             controlPoints.BindCollectionChanged((_, _) =>
             {
@@ -55,15 +47,8 @@ namespace osu.Game.Screens.Edit.Components.Timelines.Summary.Parts
                             });
                             break;
 
-                        case EffectControlPoint:
-                            if (!showScrollSpeed)
-                                return;
-
-                            AddInternal(new ControlPointVisualisation(point)
-                            {
-                                // importantly, override the x position being set since we do that above.
-                                X = 0,
-                            });
+                        case EffectControlPoint effect:
+                            AddInternal(new EffectPointVisualisation(effect));
                             break;
                     }
                 }

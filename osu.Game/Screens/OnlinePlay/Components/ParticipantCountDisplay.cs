@@ -1,36 +1,33 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using System.ComponentModel;
+#nullable disable
+
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Sprites;
-using osu.Game.Online.Rooms;
 
 namespace osu.Game.Screens.OnlinePlay.Components
 {
-    public partial class ParticipantCountDisplay : CompositeDrawable
+    public partial class ParticipantCountDisplay : OnlinePlayComposite
     {
         private const float text_size = 30;
         private const float transition_duration = 100;
 
-        private readonly Room room;
+        private OsuSpriteText slash, maxText;
 
-        private OsuSpriteText slash = null!;
-        private OsuSpriteText maxText = null!;
-        private OsuSpriteText count = null!;
-
-        public ParticipantCountDisplay(Room room)
+        public ParticipantCountDisplay()
         {
-            this.room = room;
             AutoSizeAxes = Axes.Both;
         }
 
         [BackgroundDependencyLoader]
         private void load()
         {
+            OsuSpriteText count;
+
             InternalChild = new FillFlowContainer
             {
                 AutoSizeAxes = Axes.Both,
@@ -53,33 +50,14 @@ namespace osu.Game.Screens.OnlinePlay.Components
                     },
                 }
             };
+
+            MaxParticipants.BindValueChanged(_ => updateMax(), true);
+            ParticipantCount.BindValueChanged(c => count.Text = c.NewValue.ToString("#,0"), true);
         }
 
-        protected override void LoadComplete()
+        private void updateMax()
         {
-            base.LoadComplete();
-
-            room.PropertyChanged += onRoomPropertyChanged;
-            updateRoomParticipantCount();
-        }
-
-        private void onRoomPropertyChanged(object? sender, PropertyChangedEventArgs e)
-        {
-            switch (e.PropertyName)
-            {
-                case nameof(Room.MaxParticipants):
-                    updateRoomMaxParticipants();
-                    break;
-
-                case nameof(Room.ParticipantCount):
-                    updateRoomParticipantCount();
-                    break;
-            }
-        }
-
-        private void updateRoomMaxParticipants()
-        {
-            if (room.MaxParticipants == null)
+            if (MaxParticipants.Value == null)
             {
                 slash.FadeOut(transition_duration);
                 maxText.FadeOut(transition_duration);
@@ -87,18 +65,9 @@ namespace osu.Game.Screens.OnlinePlay.Components
             else
             {
                 slash.FadeIn(transition_duration);
-                maxText.Text = room.MaxParticipants.ToString()!;
+                maxText.Text = MaxParticipants.Value.ToString();
                 maxText.FadeIn(transition_duration);
             }
-        }
-
-        private void updateRoomParticipantCount()
-            => count.Text = room.ParticipantCount.ToString("#,0");
-
-        protected override void Dispose(bool isDisposing)
-        {
-            base.Dispose(isDisposing);
-            room.PropertyChanged -= onRoomPropertyChanged;
         }
     }
 }

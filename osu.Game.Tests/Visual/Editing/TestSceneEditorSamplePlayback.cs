@@ -24,7 +24,12 @@ namespace osu.Game.Tests.Visual.Editing
             PoolableSkinnableSample[] loopingSamples = null;
             PoolableSkinnableSample[] onceOffSamples = null;
 
-            AddStep("get first slider", () => slider = Editor.ChildrenOfType<DrawableSlider>().OrderBy(s => s.HitObject.StartTime).First());
+            AddStep("get first slider", () =>
+            {
+                slider = Editor.ChildrenOfType<DrawableSlider>().OrderBy(s => s.HitObject.StartTime).First();
+                onceOffSamples = slider.ChildrenOfType<PoolableSkinnableSample>().Where(s => !s.Looping).ToArray();
+                loopingSamples = slider.ChildrenOfType<PoolableSkinnableSample>().Where(s => s.Looping).ToArray();
+            });
 
             AddStep("start playback", () => EditorClock.Start());
 
@@ -32,9 +37,6 @@ namespace osu.Game.Tests.Visual.Editing
             {
                 if (!slider.Tracking.Value)
                     return false;
-
-                onceOffSamples = slider.ChildrenOfType<PoolableSkinnableSample>().Where(s => !s.Looping).ToArray();
-                loopingSamples = slider.ChildrenOfType<PoolableSkinnableSample>().Where(s => s.Looping).ToArray();
 
                 if (!loopingSamples.Any(s => s.Playing))
                     return false;

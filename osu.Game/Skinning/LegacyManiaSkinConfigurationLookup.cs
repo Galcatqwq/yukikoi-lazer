@@ -70,9 +70,6 @@ namespace osu.Game.Skinning
         RightStageImage,
         BottomStageImage,
 
-        BarLineHeight,
-        BarLineColour,
-
         // ReSharper disable once InconsistentNaming
         Hit300g,
 

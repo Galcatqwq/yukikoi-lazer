@@ -356,9 +356,6 @@ namespace osu.Game.Online.Leaderboards
                 case LeaderboardState.NotSupporter:
                     return new MessagePlaceholder(LeaderboardStrings.PleaseInvestInAnOsuSupporterTagToViewThisLeaderboard);
 
-                case LeaderboardState.NoTeam:
-                    return new MessagePlaceholder(LeaderboardStrings.NoTeam);
-
                 case LeaderboardState.Retrieving:
                     return null;
 
@@ -366,7 +363,7 @@ namespace osu.Game.Online.Leaderboards
                     return null;
 
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(state));
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -378,8 +375,8 @@ namespace osu.Game.Online.Leaderboards
         {
             base.UpdateAfterChildren();
 
-            float fadeBottom = (float)(scrollContainer.Current + scrollContainer.DrawHeight);
-            float fadeTop = (float)(scrollContainer.Current + LeaderboardScore.HEIGHT);
+            float fadeBottom = scrollContainer.Current + scrollContainer.DrawHeight;
+            float fadeTop = scrollContainer.Current + LeaderboardScore.HEIGHT;
 
             if (!scrollContainer.IsScrolledToEnd())
                 fadeBottom -= LeaderboardScore.HEIGHT;

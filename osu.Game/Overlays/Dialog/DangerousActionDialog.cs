@@ -30,9 +30,9 @@ namespace osu.Game.Overlays.Dialog
 
         protected DangerousActionDialog()
         {
-            HeaderText = DialogStrings.CautionHeaderText;
+            HeaderText = DialogStrings.Caution;
 
-            Icon = FontAwesome.Solid.ExclamationTriangle;
+            Icon = FontAwesome.Regular.TrashAlt;
 
             Buttons = new PopupDialogButton[]
             {

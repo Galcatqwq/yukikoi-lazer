@@ -100,6 +100,7 @@ namespace osu.Game.Screens.Menu
 
                     t.Padding = new MarginPadding { Left = 5, Top = 1 };
                     t.Font = t.Font.With(size: font_size);
+                    t.Origin = Anchor.Centre;
                     t.Colour = colours.Pink;
 
                     Schedule(() =>

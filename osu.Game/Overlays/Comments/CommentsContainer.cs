@@ -20,7 +20,6 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 using osu.Framework.Localisation;
 using osu.Framework.Logging;
-using osu.Game.Extensions;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Resources.Localisation.Web;
 using osu.Game.Users.Drawables;
@@ -50,7 +49,6 @@ namespace osu.Game.Overlays.Comments
         private int currentPage;
 
         private FillFlowContainer pinnedContent;
-        private NewCommentEditor newCommentEditor;
         private FillFlowContainer content;
         private DeletedCommentsCounter deletedCommentsCounter;
         private CommentsShowMoreButton moreButton;
@@ -116,7 +114,7 @@ namespace osu.Game.Overlays.Comments
                                     Padding = new MarginPadding { Left = 60 },
                                     RelativeSizeAxes = Axes.X,
                                     AutoSizeAxes = Axes.Y,
-                                    Child = newCommentEditor = new NewCommentEditor
+                                    Child = new NewCommentEditor
                                     {
                                         OnPost = prependPostedComments
                                     }
@@ -244,7 +242,6 @@ namespace osu.Game.Overlays.Comments
         protected void OnSuccess(CommentBundle response)
         {
             commentCounter.Current.Value = response.Total;
-            newCommentEditor.CommentableMeta.Value = response.CommentableMeta.SingleOrDefault(m => m.Id == id.Value && string.Equals(m.Type, type.Value.ToString().ToSnakeCase(), StringComparison.OrdinalIgnoreCase));
 
             if (!response.Comments.Any())
             {
@@ -416,7 +413,8 @@ namespace osu.Game.Overlays.Comments
             protected override LocalisableString GetButtonText(bool isLoggedIn) =>
                 isLoggedIn ? CommonStrings.ButtonsPost : CommentsStrings.GuestButtonNew;
 
-            protected override LocalisableString GetPlaceholderText() => CommentsStrings.PlaceholderNew;
+            protected override LocalisableString GetPlaceholderText(bool isLoggedIn) =>
+                isLoggedIn ? CommentsStrings.PlaceholderNew : AuthorizationStrings.RequireLogin;
 
             protected override void OnCommit(string text)
             {

@@ -116,7 +116,7 @@ namespace osu.Game.Rulesets.Catch.UI
         /// <summary>
         /// Width of the area that can be used to attempt catches during gameplay.
         /// </summary>
-        public float CatchWidth { get; private set; }
+        public readonly float CatchWidth;
 
         private readonly SkinnableCatcher body;
 
@@ -142,7 +142,10 @@ namespace osu.Game.Rulesets.Catch.UI
 
             Size = new Vector2(BASE_SIZE);
 
-            ApplyDifficulty(difficulty);
+            if (difficulty != null)
+                Scale = calculateScale(difficulty);
+
+            CatchWidth = CalculateCatchWidth(Scale);
 
             InternalChildren = new Drawable[]
             {
@@ -307,17 +310,6 @@ namespace osu.Game.Rulesets.Catch.UI
 
                 lastHyperDashStartTime = Time.Current;
             }
-        }
-
-        /// <summary>
-        /// Set the scale and catch width.
-        /// </summary>
-        public void ApplyDifficulty(IBeatmapDifficultyInfo? difficulty)
-        {
-            if (difficulty != null)
-                Scale = calculateScale(difficulty);
-
-            CatchWidth = CalculateCatchWidth(Scale);
         }
 
         /// <summary>

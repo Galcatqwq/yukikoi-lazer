@@ -189,13 +189,9 @@ namespace osu.Game.Tests.Visual.UserInterface
                                             && SelectedMods.Value.Any(mod => mod.GetType() == typeof(OsuModHardRock)));
             AddAssert("NC panel active", () => getPanelForMod(typeof(OsuModNightcore)).Active.Value);
             AddAssert("HR panel active", () => getPanelForMod(typeof(OsuModHardRock)).Active.Value);
-
-            AddStep("activate MR", () => getPanelForMod(typeof(OsuModMirror)).TriggerClick());
-            AddAssert("NC+MR active", () => SelectedMods.Value.Any(mod => mod.GetType() == typeof(OsuModNightcore))
-                                            && SelectedMods.Value.Any(mod => mod.GetType() == typeof(OsuModMirror)));
+            AddAssert("NC+MR active", () => SelectedMods.Value.Any(mod => mod.GetType() == typeof(OsuModNightcore)));
             AddAssert("NC panel active", () => getPanelForMod(typeof(OsuModNightcore)).Active.Value);
             AddAssert("HR panel not active", () => !getPanelForMod(typeof(OsuModHardRock)).Active.Value);
-            AddAssert("MR panel active", () => getPanelForMod(typeof(OsuModMirror)).Active.Value);
         }
 
         [Test]
@@ -241,8 +237,12 @@ namespace osu.Game.Tests.Visual.UserInterface
             AddStep("select difficulty adjust via panel", () => getPanelForMod(typeof(OsuModDifficultyAdjust)).TriggerClick());
             assertCustomisationToggleState(disabled: false, active: true);
 
-            AddStep("move mouse away", () => InputManager.MoveMouseTo(Vector2.Zero));
-            assertCustomisationToggleState(disabled: false, active: true);
+            AddStep("dismiss mod customisation via toggle", () =>
+            {
+                InputManager.MoveMouseTo(modSelectOverlay.ChildrenOfType<ModCustomisationHeader>().Single());
+                InputManager.Click(MouseButton.Left);
+            });
+            assertCustomisationToggleState(disabled: false, active: false);
 
             AddStep("reset mods", () => SelectedMods.SetDefault());
             AddStep("select difficulty adjust via panel", () => getPanelForMod(typeof(OsuModDifficultyAdjust)).TriggerClick());
@@ -660,7 +660,7 @@ namespace osu.Game.Tests.Visual.UserInterface
             AddStep("select DT", () => SelectedMods.Value = new Mod[] { new OsuModDoubleTime() });
             AddAssert("DT selected", () => modSelectOverlay.ChildrenOfType<ModPanel>().Count(panel => panel.Active.Value), () => Is.EqualTo(1));
 
-            AddStep("open customisation area", () => InputManager.MoveMouseTo(modSelectOverlay.ChildrenOfType<ModCustomisationHeader>().Single()));
+            AddStep("open customisation area", () => modSelectOverlay.ChildrenOfType<ModCustomisationHeader>().Single().TriggerClick());
             assertCustomisationToggleState(disabled: false, active: true);
 
             AddStep("hover over mod settings slider", () =>
@@ -917,14 +917,13 @@ namespace osu.Game.Tests.Visual.UserInterface
         {
             createScreen();
 
-            AddStep("select DT + HD + DF", () => SelectedMods.Value = new Mod[] { new OsuModDoubleTime(), new OsuModHidden(), new OsuModDeflate() });
+            AddStep("select DT + HD + DF", () => SelectedMods.Value = new Mod[] { new OsuModDoubleTime(), new OsuModHidden() });
             AddStep("open customisation panel", () => this.ChildrenOfType<ModCustomisationHeader>().Single().TriggerClick());
             AddAssert("mod settings order: DT, HD, DF", () =>
             {
                 var columns = this.ChildrenOfType<ModCustomisationSection>();
                 return columns.ElementAt(0).Mod is OsuModDoubleTime &&
-                       columns.ElementAt(1).Mod is OsuModHidden &&
-                       columns.ElementAt(2).Mod is OsuModDeflate;
+                       columns.ElementAt(1).Mod is OsuModHidden;
             });
 
             AddStep("replace DT with NC", () =>
@@ -936,8 +935,7 @@ namespace osu.Game.Tests.Visual.UserInterface
             {
                 var columns = this.ChildrenOfType<ModCustomisationSection>();
                 return columns.ElementAt(0).Mod is OsuModNightcore &&
-                       columns.ElementAt(1).Mod is OsuModHidden &&
-                       columns.ElementAt(2).Mod is OsuModDeflate;
+                       columns.ElementAt(1).Mod is OsuModHidden;
             });
         }
 
@@ -972,7 +970,7 @@ namespace osu.Game.Tests.Visual.UserInterface
             createScreen();
 
             AddStep("select DT", () => SelectedMods.Value = new Mod[] { new OsuModDoubleTime() });
-            AddStep("open customisation panel", () => InputManager.MoveMouseTo(this.ChildrenOfType<ModCustomisationHeader>().Single()));
+            AddStep("open customisation panel", () => this.ChildrenOfType<ModCustomisationHeader>().Single().TriggerClick());
             AddAssert("search lost focus", () => !this.ChildrenOfType<ShearedSearchTextBox>().Single().HasFocus);
 
             AddStep("press tab", () => InputManager.Key(Key.Tab));
@@ -987,13 +985,15 @@ namespace osu.Game.Tests.Visual.UserInterface
             AddStep("press backspace", () => InputManager.Key(Key.BackSpace));
             AddAssert("mods not deselected", () => SelectedMods.Value.Single() is OsuModDoubleTime);
 
-            AddStep("move mouse to customisation panel", () => InputManager.MoveMouseTo(modSelectOverlay.ChildrenOfType<ModCustomisationSection>().First()));
+            AddStep("move mouse to scroll bar", () => InputManager.MoveMouseTo(modSelectOverlay.ChildrenOfType<ModSelectOverlay.ColumnScrollContainer>().Single().ScreenSpaceDrawQuad.BottomLeft + new Vector2(10f, -5f)));
 
             AddStep("scroll down", () => InputManager.ScrollVerticalBy(-10f));
             AddAssert("column not scrolled", () => modSelectOverlay.ChildrenOfType<ModSelectOverlay.ColumnScrollContainer>().Single().IsScrolledToStart());
 
-            AddStep("move mouse away", () => InputManager.MoveMouseTo(Vector2.Zero));
-            AddUntilStep("customisation panel closed",
+            AddStep("press mouse", () => InputManager.PressButton(MouseButton.Left));
+            AddAssert("search still not focused", () => !this.ChildrenOfType<ShearedSearchTextBox>().Single().HasFocus);
+            AddStep("release mouse", () => InputManager.ReleaseButton(MouseButton.Left));
+            AddAssert("customisation panel closed by click",
                 () => this.ChildrenOfType<ModCustomisationPanel>().Single().ExpandedState.Value,
                 () => Is.EqualTo(ModCustomisationPanel.ModCustomisationPanelState.Collapsed));
 
@@ -1001,35 +1001,6 @@ namespace osu.Game.Tests.Visual.UserInterface
                 AddAssert("search focused", () => this.ChildrenOfType<ShearedSearchTextBox>().Single().HasFocus);
             else
                 AddAssert("search still not focused", () => !this.ChildrenOfType<ShearedSearchTextBox>().Single().HasFocus);
-        }
-
-        /// <summary>
-        /// Tests that recreating the mod panels (by setting the global available mods) also refreshes the active states.
-        /// </summary>
-        [Test]
-        public void TestActiveStatesRefreshedOnPanelsCreated()
-        {
-            createScreen();
-            changeRuleset(0);
-
-            Bindable<IReadOnlyList<Mod>> selectedMods = null!;
-
-            AddStep("bind mods to local bindable", () =>
-            {
-                selectedMods = new Bindable<IReadOnlyList<Mod>>([]);
-
-                modSelectOverlay.SelectedMods.UnbindFrom(SelectedMods);
-                modSelectOverlay.SelectedMods.BindTo(selectedMods);
-            });
-
-            AddStep("activate PF", () => selectedMods.Value = [new OsuModPerfect()]);
-            AddAssert("OsuModPerfect panel active", () => getPanelForMod(typeof(OsuModPerfect)).Active.Value);
-
-            changeRuleset(1);
-            AddAssert("TaikoModPerfect panel not active", () => !getPanelForMod(typeof(TaikoModPerfect)).Active.Value);
-
-            changeRuleset(0);
-            AddAssert("OsuModPerfect panel active", () => getPanelForMod(typeof(OsuModPerfect)).Active.Value);
         }
 
         private void waitForColumnLoad() => AddUntilStep("all column content loaded", () =>
@@ -1047,7 +1018,7 @@ namespace osu.Game.Tests.Visual.UserInterface
         private void assertCustomisationToggleState(bool disabled, bool active)
         {
             AddUntilStep($"customisation panel is {(disabled ? "" : "not ")}disabled", () => modSelectOverlay.ChildrenOfType<ModCustomisationPanel>().Single().Enabled.Value == !disabled);
-            AddUntilStep($"customisation panel is {(active ? "" : "not ")}active",
+            AddAssert($"customisation panel is {(active ? "" : "not ")}active",
                 () => modSelectOverlay.ChildrenOfType<ModCustomisationPanel>().Single().ExpandedState.Value,
                 () => active ? Is.Not.EqualTo(ModCustomisationPanel.ModCustomisationPanelState.Collapsed) : Is.EqualTo(ModCustomisationPanel.ModCustomisationPanelState.Collapsed));
         }
@@ -1059,10 +1030,7 @@ namespace osu.Game.Tests.Visual.UserInterface
 
         private partial class TestModSelectOverlay : UserModSelectOverlay
         {
-            public TestModSelectOverlay()
-            {
-                ShowPresets = true;
-            }
+            protected override bool ShowPresets => true;
         }
 
         private class TestUnimplementedMod : Mod

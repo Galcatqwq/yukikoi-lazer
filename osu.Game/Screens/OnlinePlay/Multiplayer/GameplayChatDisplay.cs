@@ -1,6 +1,9 @@
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
+#nullable disable
+
+using JetBrains.Annotations;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
@@ -17,13 +20,12 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer
     public partial class GameplayChatDisplay : MatchChatDisplay, IKeyBindingHandler<GlobalAction>
     {
         [Resolved(CanBeNull = true)]
-        private ILocalUserPlayInfo? localUserInfo { get; set; }
+        [CanBeNull]
+        private ILocalUserPlayInfo localUserInfo { get; set; }
 
-        protected new ChatTextBox TextBox => base.TextBox!;
+        private readonly IBindable<bool> localUserPlaying = new Bindable<bool>();
 
-        private readonly IBindable<LocalUserPlayingState> localUserPlaying = new Bindable<LocalUserPlayingState>();
-
-        public override bool PropagatePositionalInputSubTree => localUserPlaying.Value != LocalUserPlayingState.Playing;
+        public override bool PropagatePositionalInputSubTree => !localUserPlaying.Value;
 
         public Bindable<bool> Expanded = new Bindable<bool>();
 
@@ -56,16 +58,16 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer
             base.LoadComplete();
 
             if (localUserInfo != null)
-                localUserPlaying.BindTo(localUserInfo.PlayingState);
+                localUserPlaying.BindTo(localUserInfo.IsPlaying);
 
             localUserPlaying.BindValueChanged(playing =>
             {
-                // for now let's never hold focus. this avoids misdirected gameplay keys entering chat.
+                // for now let's never hold focus. this avoid misdirected gameplay keys entering chat.
                 // note that this is done within this callback as it triggers an un-focus as well.
                 TextBox.HoldFocus = false;
 
                 // only hold focus (after sending a message) during breaks
-                TextBox.ReleaseFocusOnCommit = playing.NewValue == LocalUserPlayingState.Playing;
+                TextBox.ReleaseFocusOnCommit = playing.NewValue;
             }, true);
 
             Expanded.BindValueChanged(_ => updateExpandedState(), true);

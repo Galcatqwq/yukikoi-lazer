@@ -9,7 +9,7 @@ using osu.Game.Graphics;
 
 namespace osu.Game.Rulesets.Edit.Tools
 {
-    public class SelectTool : CompositionTool
+    public class SelectTool : HitObjectCompositionTool
     {
         public SelectTool()
             : base("Select")
@@ -18,6 +18,6 @@ namespace osu.Game.Rulesets.Edit.Tools
 
         public override Drawable CreateIcon() => new SpriteIcon { Icon = OsuIcon.EditorSelect };
 
-        public override HitObjectPlacementBlueprint CreatePlacementBlueprint() => null;
+        public override PlacementBlueprint CreatePlacementBlueprint() => null;
     }
 }

@@ -4,8 +4,10 @@
 using System;
 using System.Collections.Generic;
 using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Game.Database;
+using osu.Game.Online.Rooms;
 using osu.Game.Overlays;
 using osu.Game.Screens.OnlinePlay;
 
@@ -16,7 +18,10 @@ namespace osu.Game.Tests.Visual.OnlinePlay
     /// </summary>
     public class OnlinePlayTestSceneDependencies : IReadOnlyDependencyContainer, IOnlinePlayTestSceneDependencies
     {
+        public Bindable<Room> SelectedRoom { get; }
+        public IRoomManager RoomManager { get; }
         public OngoingOperationTracker OngoingOperationTracker { get; }
+        public OnlinePlayBeatmapAvailabilityTracker AvailabilityTracker { get; }
         public TestRoomRequestsHandler RequestsHandler { get; }
         public TestUserLookupCache UserLookupCache { get; }
         public BeatmapLookupCache BeatmapLookupCache { get; }
@@ -31,15 +36,21 @@ namespace osu.Game.Tests.Visual.OnlinePlay
 
         public OnlinePlayTestSceneDependencies()
         {
+            SelectedRoom = new Bindable<Room>();
             RequestsHandler = new TestRoomRequestsHandler();
             OngoingOperationTracker = new OngoingOperationTracker();
+            AvailabilityTracker = new OnlinePlayBeatmapAvailabilityTracker();
+            RoomManager = CreateRoomManager();
             UserLookupCache = new TestUserLookupCache();
             BeatmapLookupCache = new BeatmapLookupCache();
 
-            dependencies = new DependencyContainer();
+            dependencies = new DependencyContainer(new CachedModelDependencyContainer<Room>(null) { Model = { BindTarget = SelectedRoom } });
 
             CacheAs(RequestsHandler);
+            CacheAs(SelectedRoom);
+            CacheAs(RoomManager);
             CacheAs(OngoingOperationTracker);
+            CacheAs(AvailabilityTracker);
             CacheAs(new OverlayColourProvider(OverlayColourScheme.Plum));
             CacheAs<UserLookupCache>(UserLookupCache);
             CacheAs(BeatmapLookupCache);
@@ -69,5 +80,7 @@ namespace osu.Game.Tests.Visual.OnlinePlay
             if (instance is Drawable drawable)
                 drawableComponents.Add(drawable);
         }
+
+        protected virtual IRoomManager CreateRoomManager() => new TestRoomManager();
     }
 }

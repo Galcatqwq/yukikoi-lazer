@@ -23,15 +23,15 @@ namespace osu.Game.Rulesets.Mods
 {
     public abstract class ModNightcore : ModRateAdjust
     {
-        public override string Name => "Nightcore";
+        public override string Name => "夜核";
         public override string Acronym => "NC";
         public override IconUsage? Icon => OsuIcon.ModNightcore;
         public override ModType Type => ModType.DifficultyIncrease;
-        public override LocalisableString Description => "Uguuuuuuuu...";
+        public override LocalisableString Description => "动次打次动次打次~~~~";
         public override bool Ranked => UsesDefaultConfiguration;
 
         [SettingSource("Speed increase", "The actual increase to apply", SettingControlType = typeof(MultiplierSettingsSlider))]
-        public override BindableNumber<double> SpeedChange { get; } = new BindableDouble(1.5)
+        public override BindableNumber<double> SpeedChange { get; } = new BindableDouble(2.0)
         {
             MinValue = 1.01,
             MaxValue = 2,

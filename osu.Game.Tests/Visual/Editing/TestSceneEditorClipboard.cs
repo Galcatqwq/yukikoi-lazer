@@ -58,7 +58,7 @@ namespace osu.Game.Tests.Visual.Editing
 
             AddAssert("is one object", () => EditorBeatmap.HitObjects.Count == 1);
 
-            AddAssert("new object selected", () => EditorBeatmap.SelectedHitObjects.Single().StartTime == EditorBeatmap.SnapTime(newTime, null));
+            AddAssert("new object selected", () => EditorBeatmap.SelectedHitObjects.Single().StartTime == newTime);
         }
 
         [Test]
@@ -122,8 +122,6 @@ namespace osu.Game.Tests.Visual.Editing
         [TestCase(true)]
         public void TestCopyPaste(bool deselectAfterCopy)
         {
-            const int paste_time = 2000;
-
             var addedObject = new HitCircle { StartTime = 1000 };
 
             AddStep("add hitobject", () => EditorBeatmap.Add(addedObject));
@@ -132,7 +130,7 @@ namespace osu.Game.Tests.Visual.Editing
 
             AddStep("copy hitobject", () => Editor.Copy());
 
-            AddStep("move forward in time", () => EditorClock.Seek(paste_time));
+            AddStep("move forward in time", () => EditorClock.Seek(2000));
 
             if (deselectAfterCopy)
             {
@@ -146,7 +144,7 @@ namespace osu.Game.Tests.Visual.Editing
 
             AddAssert("are two objects", () => EditorBeatmap.HitObjects.Count == 2);
 
-            AddAssert("new object selected", () => EditorBeatmap.SelectedHitObjects.Single().StartTime == EditorBeatmap.SnapTime(paste_time, null));
+            AddAssert("new object selected", () => EditorBeatmap.SelectedHitObjects.Single().StartTime == 2000);
 
             AddUntilStep("timeline selection box is visible", () => Editor.ChildrenOfType<Timeline>().First().ChildrenOfType<EditorSelectionHandler>().First().Alpha > 0);
             AddUntilStep("composer selection box is visible", () => Editor.ChildrenOfType<HitObjectComposer>().First().ChildrenOfType<EditorSelectionHandler>().First().Alpha > 0);

@@ -2,7 +2,6 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
-using System.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
@@ -150,25 +149,13 @@ namespace osu.Game.Screens.Edit.Compose.Components
             switch (e.Key)
             {
                 case Key.G:
-                    if (!CanReverse || reverseButton == null)
-                        return false;
-
-                    reverseButton.TriggerAction();
-                    return true;
+                    return CanReverse && reverseButton?.TriggerClick() == true;
 
                 case Key.Comma:
-                    if (!canRotate.Value || rotateCounterClockwiseButton == null)
-                        return false;
-
-                    rotateCounterClockwiseButton.TriggerAction();
-                    return true;
+                    return canRotate.Value && rotateCounterClockwiseButton?.TriggerClick() == true;
 
                 case Key.Period:
-                    if (!canRotate.Value || rotateClockwiseButton == null)
-                        return false;
-
-                    rotateClockwiseButton.TriggerAction();
-                    return true;
+                    return canRotate.Value && rotateClockwiseButton?.TriggerClick() == true;
             }
 
             return base.OnKeyDown(e);
@@ -297,12 +284,8 @@ namespace osu.Game.Screens.Edit.Compose.Components
                 Action = action
             };
 
-            button.Clicked += freezeButtonPosition;
-            button.HoverLost += unfreezeButtonPosition;
-
             button.OperationStarted += operationStarted;
             button.OperationEnded += operationEnded;
-
             buttons.Add(button);
 
             return button;
@@ -374,35 +357,9 @@ namespace osu.Game.Screens.Edit.Compose.Components
                 OperationStarted?.Invoke();
         }
 
-        private Vector2? frozenButtonsPosition;
-
-        private void freezeButtonPosition()
+        private void ensureButtonsOnScreen()
         {
-            frozenButtonsPosition = buttons.ScreenSpaceDrawQuad.TopLeft;
-        }
-
-        private void unfreezeButtonPosition()
-        {
-            if (frozenButtonsPosition != null)
-            {
-                frozenButtonsPosition = null;
-                ensureButtonsOnScreen(true);
-            }
-        }
-
-        private void ensureButtonsOnScreen(bool animated = false)
-        {
-            if (frozenButtonsPosition != null)
-            {
-                buttons.Anchor = Anchor.TopLeft;
-                buttons.Origin = Anchor.TopLeft;
-
-                buttons.Position = ToLocalSpace(frozenButtonsPosition.Value) - new Vector2(button_padding);
-                return;
-            }
-
-            if (!animated && buttons.Transforms.Any())
-                return;
+            buttons.Position = Vector2.Zero;
 
             var thisQuad = ScreenSpaceDrawQuad;
 
@@ -417,51 +374,24 @@ namespace osu.Game.Screens.Edit.Compose.Components
 
             float minHeight = buttons.ScreenSpaceDrawQuad.Height;
 
-            Anchor targetAnchor;
-            Anchor targetOrigin;
-            Vector2 targetPosition = Vector2.Zero;
-
             if (topExcess < minHeight && bottomExcess < minHeight)
             {
-                targetAnchor = Anchor.BottomCentre;
-                targetOrigin = Anchor.BottomCentre;
-                targetPosition.Y = Math.Min(0, ToLocalSpace(Parent!.ScreenSpaceDrawQuad.BottomLeft).Y - DrawHeight);
+                buttons.Anchor = Anchor.BottomCentre;
+                buttons.Origin = Anchor.BottomCentre;
+                buttons.Y = Math.Min(0, ToLocalSpace(Parent!.ScreenSpaceDrawQuad.BottomLeft).Y - DrawHeight);
             }
             else if (topExcess > bottomExcess)
             {
-                targetAnchor = Anchor.TopCentre;
-                targetOrigin = Anchor.BottomCentre;
+                buttons.Anchor = Anchor.TopCentre;
+                buttons.Origin = Anchor.BottomCentre;
             }
             else
             {
-                targetAnchor = Anchor.BottomCentre;
-                targetOrigin = Anchor.TopCentre;
+                buttons.Anchor = Anchor.BottomCentre;
+                buttons.Origin = Anchor.TopCentre;
             }
 
-            targetPosition.X += ToLocalSpace(thisQuad.TopLeft - new Vector2(Math.Min(0, leftExcess)) + new Vector2(Math.Min(0, rightExcess))).X;
-
-            if (animated)
-            {
-                var originalPosition = ToLocalSpace(buttons.ScreenSpaceDrawQuad.TopLeft);
-
-                buttons.Origin = targetOrigin;
-                buttons.Anchor = targetAnchor;
-                buttons.Position = targetPosition;
-
-                var newPosition = ToLocalSpace(buttons.ScreenSpaceDrawQuad.TopLeft);
-
-                var delta = newPosition - originalPosition;
-
-                buttons.Position -= delta;
-
-                buttons.MoveTo(targetPosition, 300, Easing.OutQuint);
-            }
-            else
-            {
-                buttons.Anchor = targetAnchor;
-                buttons.Origin = targetOrigin;
-                buttons.Position = targetPosition;
-            }
+            buttons.X += ToLocalSpace(thisQuad.TopLeft - new Vector2(Math.Min(0, leftExcess)) + new Vector2(Math.Min(0, rightExcess))).X;
         }
     }
 }

@@ -67,13 +67,13 @@ namespace osu.Game.Overlays.SkinEditor
 
             objectsInScale = selectedItems.Cast<Drawable>().ToDictionary(d => d, d => new OriginalDrawableState(d));
             OriginalSurroundingQuad = ToLocalSpace(GeometryUtils.GetSurroundingQuad(objectsInScale.SelectMany(d => d.Key.ScreenSpaceDrawQuad.GetVertices().ToArray())));
-            defaultOrigin = ToLocalSpace(GeometryUtils.MinimumEnclosingCircle(objectsInScale.SelectMany(d => d.Key.ScreenSpaceDrawQuad.GetVertices().ToArray())).Item1);
+            defaultOrigin = OriginalSurroundingQuad.Value.Centre;
 
             isFlippedX = false;
             isFlippedY = false;
         }
 
-        public override void Update(Vector2 scale, Vector2? origin = null, Axes adjustAxis = Axes.Both, float axisRotation = 0)
+        public override void Update(Vector2 scale, Vector2? origin = null, Axes adjustAxis = Axes.Both)
         {
             if (objectsInScale == null)
                 throw new InvalidOperationException($"Cannot {nameof(Update)} a scale operation without calling {nameof(Begin)} first!");

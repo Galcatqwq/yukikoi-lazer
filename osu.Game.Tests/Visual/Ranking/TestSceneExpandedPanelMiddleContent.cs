@@ -80,7 +80,7 @@ namespace osu.Game.Tests.Visual.Ranking
                 showPanel(TestResources.CreateTestScoreInfo(beatmap));
             });
 
-            AddUntilStep("pp display faded out", () =>
+            AddAssert("pp display faded out", () =>
             {
                 var ppDisplay = this.ChildrenOfType<PerformanceStatistic>().Single();
                 return ppDisplay.Alpha == 0.5 && ppDisplay.TooltipText == ResultsScreenStrings.NoPPForUnrankedBeatmaps;
@@ -97,7 +97,7 @@ namespace osu.Game.Tests.Visual.Ranking
                 showPanel(score);
             });
 
-            AddUntilStep("pp display faded out", () =>
+            AddAssert("pp display faded out", () =>
             {
                 var ppDisplay = this.ChildrenOfType<PerformanceStatistic>().Single();
                 return ppDisplay.Alpha == 0.5 && ppDisplay.TooltipText == ResultsScreenStrings.NoPPForUnrankedMods;
@@ -116,7 +116,7 @@ namespace osu.Game.Tests.Visual.Ranking
                 showPanel(score);
             });
 
-            AddUntilStep("pp display faded out", () => this.ChildrenOfType<PerformanceStatistic>().Single().Alpha == 1);
+            AddAssert("pp display faded out", () => this.ChildrenOfType<PerformanceStatistic>().Single().Alpha == 1);
         }
 
         [Test]

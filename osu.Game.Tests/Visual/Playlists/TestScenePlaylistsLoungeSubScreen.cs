@@ -1,8 +1,11 @@
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
+#nullable disable
+
 using System.Linq;
 using NUnit.Framework;
+using osu.Framework.Bindables;
 using osu.Framework.Screens;
 using osu.Framework.Testing;
 using osu.Game.Graphics.Containers;
@@ -16,22 +19,25 @@ namespace osu.Game.Tests.Visual.Playlists
 {
     public partial class TestScenePlaylistsLoungeSubScreen : OnlinePlayTestScene
     {
-        private PlaylistsLoungeSubScreen loungeScreen = null!;
+        protected new TestRoomManager RoomManager => (TestRoomManager)base.RoomManager;
+
+        private TestLoungeSubScreen loungeScreen;
 
         public override void SetUpSteps()
         {
             base.SetUpSteps();
 
-            AddStep("push screen", () => LoadScreen(loungeScreen = new PlaylistsLoungeSubScreen()));
+            AddStep("push screen", () => LoadScreen(loungeScreen = new TestLoungeSubScreen()));
+
             AddUntilStep("wait for present", () => loungeScreen.IsCurrentScreen());
         }
 
-        private RoomListing roomListing => loungeScreen.ChildrenOfType<RoomListing>().First();
+        private RoomsContainer roomsContainer => loungeScreen.ChildrenOfType<RoomsContainer>().First();
 
         [Test]
         public void TestManyRooms()
         {
-            createRooms(GenerateRooms(500));
+            AddStep("add rooms", () => RoomManager.AddRooms(500));
         }
 
         [Test]
@@ -39,41 +45,59 @@ namespace osu.Game.Tests.Visual.Playlists
         {
             AddStep("reset mouse", () => InputManager.ReleaseButton(MouseButton.Left));
 
-            createRooms(GenerateRooms(30));
+            AddStep("add rooms", () => RoomManager.AddRooms(30));
+            AddUntilStep("wait for rooms", () => roomsContainer.Rooms.Count == 30);
 
-            AddStep("move mouse to third room", () => InputManager.MoveMouseTo(roomListing.DrawableRooms[2]));
+            AddUntilStep("first room is not masked", () => checkRoomVisible(roomsContainer.Rooms[0]));
+
+            AddStep("move mouse to third room", () => InputManager.MoveMouseTo(roomsContainer.Rooms[2]));
             AddStep("hold down", () => InputManager.PressButton(MouseButton.Left));
-            AddStep("drag to top", () => InputManager.MoveMouseTo(roomListing.DrawableRooms[0]));
+            AddStep("drag to top", () => InputManager.MoveMouseTo(roomsContainer.Rooms[0]));
 
             AddAssert("first and second room masked", ()
-                => !checkRoomVisible(roomListing.DrawableRooms[0]) &&
-                   !checkRoomVisible(roomListing.DrawableRooms[1]));
+                => !checkRoomVisible(roomsContainer.Rooms[0]) &&
+                   !checkRoomVisible(roomsContainer.Rooms[1]));
         }
 
         [Test]
         public void TestScrollSelectedIntoView()
         {
-            createRooms(GenerateRooms(30));
+            AddStep("add rooms", () => RoomManager.AddRooms(30));
+            AddUntilStep("wait for rooms", () => roomsContainer.Rooms.Count == 30);
 
-            AddStep("select last room", () => roomListing.DrawableRooms[^1].TriggerClick());
+            AddUntilStep("first room is not masked", () => checkRoomVisible(roomsContainer.Rooms[0]));
 
-            AddUntilStep("first room is masked", () => !checkRoomVisible(roomListing.DrawableRooms[0]));
-            AddUntilStep("last room is not masked", () => checkRoomVisible(roomListing.DrawableRooms[^1]));
+            AddStep("select last room", () => roomsContainer.Rooms[^1].TriggerClick());
+
+            AddUntilStep("first room is masked", () => !checkRoomVisible(roomsContainer.Rooms[0]));
+            AddUntilStep("last room is not masked", () => checkRoomVisible(roomsContainer.Rooms[^1]));
         }
 
-        private bool checkRoomVisible(RoomPanel panel) =>
-            loungeScreen.ChildrenOfType<OsuScrollContainer>().First().ScreenSpaceDrawQuad
-                        .Contains(panel.ScreenSpaceDrawQuad.Centre);
-
-        private void createRooms(params Room[] rooms)
+        [Test]
+        public void TestEnteringRoomTakesLeaseOnSelection()
         {
-            AddStep("create rooms", () =>
-            {
-                foreach (var room in rooms)
-                    API.Queue(new CreateRoomRequest(room));
-            });
+            AddStep("add rooms", () => RoomManager.AddRooms(1));
 
-            AddStep("refresh lounge", () => loungeScreen.RefreshRooms());
+            AddAssert("selected room is not disabled", () => !loungeScreen.SelectedRoom.Disabled);
+
+            AddStep("select room", () => roomsContainer.Rooms[0].TriggerClick());
+            AddAssert("selected room is non-null", () => loungeScreen.SelectedRoom.Value != null);
+
+            AddStep("enter room", () => roomsContainer.Rooms[0].TriggerClick());
+
+            AddUntilStep("wait for match load", () => Stack.CurrentScreen is PlaylistsRoomSubScreen);
+
+            AddAssert("selected room is non-null", () => loungeScreen.SelectedRoom.Value != null);
+            AddAssert("selected room is disabled", () => loungeScreen.SelectedRoom.Disabled);
+        }
+
+        private bool checkRoomVisible(DrawableRoom room) =>
+            loungeScreen.ChildrenOfType<OsuScrollContainer>().First().ScreenSpaceDrawQuad
+                        .Contains(room.ScreenSpaceDrawQuad.Centre);
+
+        private partial class TestLoungeSubScreen : PlaylistsLoungeSubScreen
+        {
+            public new Bindable<Room> SelectedRoom => base.SelectedRoom;
         }
     }
 }

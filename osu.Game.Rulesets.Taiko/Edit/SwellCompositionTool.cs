@@ -10,7 +10,7 @@ using osu.Game.Rulesets.Taiko.Objects;
 
 namespace osu.Game.Rulesets.Taiko.Edit
 {
-    public class SwellCompositionTool : CompositionTool
+    public class SwellCompositionTool : HitObjectCompositionTool
     {
         public SwellCompositionTool()
             : base(nameof(Swell))
@@ -19,6 +19,6 @@ namespace osu.Game.Rulesets.Taiko.Edit
 
         public override Drawable CreateIcon() => new BeatmapStatisticIcon(BeatmapStatisticsIconType.Spinners);
 
-        public override HitObjectPlacementBlueprint CreatePlacementBlueprint() => new SwellPlacementBlueprint();
+        public override PlacementBlueprint CreatePlacementBlueprint() => new SwellPlacementBlueprint();
     }
 }

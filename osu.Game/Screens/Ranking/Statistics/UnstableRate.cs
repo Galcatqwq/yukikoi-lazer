@@ -15,10 +15,10 @@ namespace osu.Game.Screens.Ranking.Statistics
         /// Creates and computes an <see cref="UnstableRate"/> statistic.
         /// </summary>
         /// <param name="hitEvents">Sequence of <see cref="HitEvent"/>s to calculate the unstable rate based on.</param>
-        public UnstableRate(IReadOnlyList<HitEvent> hitEvents)
+        public UnstableRate(IEnumerable<HitEvent> hitEvents)
             : base("Unstable Rate")
         {
-            Value = hitEvents.CalculateUnstableRate()?.Result;
+            Value = hitEvents.CalculateUnstableRate();
         }
 
         protected override string DisplayValue(double? value) => value == null ? "(not available)" : value.Value.ToString(@"N2");

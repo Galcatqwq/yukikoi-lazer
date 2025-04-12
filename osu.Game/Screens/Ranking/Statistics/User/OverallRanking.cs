@@ -5,10 +5,8 @@ using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Game.Extensions;
 using osu.Game.Graphics.UserInterface;
 using osu.Game.Online;
-using osu.Game.Scoring;
 
 namespace osu.Game.Screens.Ranking.Statistics.User
 {
@@ -16,21 +14,13 @@ namespace osu.Game.Screens.Ranking.Statistics.User
     {
         private const float transition_duration = 300;
 
-        public Bindable<ScoreBasedUserStatisticsUpdate?> DisplayedUpdate { get; } = new Bindable<ScoreBasedUserStatisticsUpdate?>();
-        private readonly IBindable<ScoreBasedUserStatisticsUpdate?> latestGlobalStatisticsUpdate = new Bindable<ScoreBasedUserStatisticsUpdate?>();
-
-        private readonly ScoreInfo scoreInfo;
+        public Bindable<UserStatisticsUpdate?> StatisticsUpdate { get; } = new Bindable<UserStatisticsUpdate?>();
 
         private LoadingLayer loadingLayer = null!;
         private GridContainer content = null!;
 
-        public OverallRanking(ScoreInfo scoreInfo)
-        {
-            this.scoreInfo = scoreInfo;
-        }
-
         [BackgroundDependencyLoader]
-        private void load(UserStatisticsWatcher? userStatisticsWatcher)
+        private void load()
         {
             AutoSizeAxes = Axes.Y;
             AutoSizeEasing = Easing.OutQuint;
@@ -65,48 +55,38 @@ namespace osu.Game.Screens.Ranking.Statistics.User
                     {
                         new Drawable[]
                         {
-                            new GlobalRankChangeRow { StatisticsUpdate = { BindTarget = DisplayedUpdate } },
+                            new GlobalRankChangeRow { StatisticsUpdate = { BindTarget = StatisticsUpdate } },
                             new SimpleStatisticTable.Spacer(),
-                            new PerformancePointsChangeRow { StatisticsUpdate = { BindTarget = DisplayedUpdate } },
+                            new PerformancePointsChangeRow { StatisticsUpdate = { BindTarget = StatisticsUpdate } },
                         },
-                        [],
+                        new Drawable[] { },
                         new Drawable[]
                         {
-                            new MaximumComboChangeRow { StatisticsUpdate = { BindTarget = DisplayedUpdate } },
+                            new MaximumComboChangeRow { StatisticsUpdate = { BindTarget = StatisticsUpdate } },
                             new SimpleStatisticTable.Spacer(),
-                            new AccuracyChangeRow { StatisticsUpdate = { BindTarget = DisplayedUpdate } },
+                            new AccuracyChangeRow { StatisticsUpdate = { BindTarget = StatisticsUpdate } },
                         },
-                        [],
+                        new Drawable[] { },
                         new Drawable[]
                         {
-                            new RankedScoreChangeRow { StatisticsUpdate = { BindTarget = DisplayedUpdate } },
+                            new RankedScoreChangeRow { StatisticsUpdate = { BindTarget = StatisticsUpdate } },
                             new SimpleStatisticTable.Spacer(),
-                            new TotalScoreChangeRow { StatisticsUpdate = { BindTarget = DisplayedUpdate } },
+                            new TotalScoreChangeRow { StatisticsUpdate = { BindTarget = StatisticsUpdate } },
                         }
                     }
                 }
             };
-
-            if (userStatisticsWatcher != null)
-            {
-                latestGlobalStatisticsUpdate.BindTo(userStatisticsWatcher.LatestUpdate);
-                latestGlobalStatisticsUpdate.BindValueChanged(update =>
-                {
-                    if (update.NewValue?.Score.MatchesOnlineID(scoreInfo) == true)
-                        DisplayedUpdate.Value = update.NewValue;
-                }, true);
-            }
         }
 
         protected override void LoadComplete()
         {
             base.LoadComplete();
 
-            DisplayedUpdate.BindValueChanged(onUpdateReceived, true);
+            StatisticsUpdate.BindValueChanged(onUpdateReceived, true);
             FinishTransforms(true);
         }
 
-        private void onUpdateReceived(ValueChangedEvent<ScoreBasedUserStatisticsUpdate?> update)
+        private void onUpdateReceived(ValueChangedEvent<UserStatisticsUpdate?> update)
         {
             if (update.NewValue == null)
             {

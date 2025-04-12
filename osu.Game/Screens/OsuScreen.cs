@@ -37,7 +37,7 @@ namespace osu.Game.Screens
 
         public string Description => Title;
 
-        public virtual bool AllowUserExit => true;
+        public virtual bool AllowBackButton => true;
 
         public virtual bool ShowFooter => false;
 
@@ -47,8 +47,6 @@ namespace osu.Game.Screens
 
         public virtual bool HideMenuCursorOnNonMouseInput => false;
 
-        public virtual bool RequiresPortraitOrientation => false;
-
         /// <summary>
         /// The initial overlay activation mode to use when this screen is entered for the first time.
         /// </summary>
@@ -57,15 +55,6 @@ namespace osu.Game.Screens
         public readonly Bindable<OverlayActivation> OverlayActivationMode;
 
         IBindable<OverlayActivation> IOsuScreen.OverlayActivationMode => OverlayActivationMode;
-
-        /// <summary>
-        /// The initial visibility state of the back button when this screen is entered for the first time.
-        /// </summary>
-        protected virtual bool InitialBackButtonVisibility => AllowUserExit;
-
-        public readonly Bindable<bool> BackButtonVisibility;
-
-        IBindable<bool> IOsuScreen.BackButtonVisibility => BackButtonVisibility;
 
         public virtual bool CursorVisible => true;
 
@@ -83,7 +72,7 @@ namespace osu.Game.Screens
         /// </summary>
         protected readonly Bindable<UserActivity> Activity = new Bindable<UserActivity>();
 
-        Bindable<UserActivity> IOsuScreen.Activity => Activity;
+        IBindable<UserActivity> IOsuScreen.Activity => Activity;
 
         /// <summary>
         /// Whether to disallow changes to game-wise Beatmap/Ruleset bindables for this screen (and all children).
@@ -165,7 +154,6 @@ namespace osu.Game.Screens
             Origin = Anchor.Centre;
 
             OverlayActivationMode = new Bindable<OverlayActivation>(InitialOverlayActivationMode);
-            BackButtonVisibility = new Bindable<bool>(InitialBackButtonVisibility);
         }
 
         [BackgroundDependencyLoader(true)]

@@ -84,40 +84,6 @@ namespace osu.Game.Tests.Visual.UserInterface
         }
 
         [Test]
-        public void TestNormalDoesForwardToOverlay()
-        {
-            SimpleNotification notification = null!;
-
-            AddStep(@"simple #1", () => notificationOverlay.Post(notification = new SimpleNotification
-            {
-                Text = @"This shouldn't annoy you too much",
-                Transient = false,
-            }));
-
-            AddAssert("notification in toast tray", () => notification.IsInToastTray, () => Is.True);
-            AddUntilStep("wait for dismissed", () => notification.IsInToastTray, () => Is.False);
-
-            checkDisplayedCount(1);
-        }
-
-        [Test]
-        public void TestTransientDoesNotForwardToOverlay()
-        {
-            SimpleNotification notification = null!;
-
-            AddStep(@"simple #1", () => notificationOverlay.Post(notification = new SimpleNotification
-            {
-                Text = @"This shouldn't annoy you too much",
-                Transient = true,
-            }));
-
-            AddAssert("notification in toast tray", () => notification.IsInToastTray, () => Is.True);
-            AddUntilStep("wait for dismissed", () => notification.IsInToastTray, () => Is.False);
-
-            checkDisplayedCount(0);
-        }
-
-        [Test]
         public void TestForwardWithFlingRight()
         {
             bool activated = false;
@@ -668,18 +634,12 @@ namespace osu.Game.Tests.Visual.UserInterface
 
         private partial class BackgroundNotification : SimpleNotification
         {
-            public BackgroundNotification()
-            {
-                IsImportant = false;
-            }
+            public override bool IsImportant => false;
         }
 
         private partial class BackgroundProgressNotification : ProgressNotification
         {
-            public BackgroundProgressNotification()
-            {
-                IsImportant = false;
-            }
+            public override bool IsImportant => false;
         }
     }
 }

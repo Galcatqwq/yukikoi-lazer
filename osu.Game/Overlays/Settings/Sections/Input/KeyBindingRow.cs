@@ -222,7 +222,7 @@ namespace osu.Game.Overlays.Settings.Sections.Input
                 var button = buttons[i++];
                 button.UpdateKeyCombination(d);
 
-                tryPersistKeyBinding(button.KeyBinding.Value, advanceToNextBinding: false, restoringDefaults: true);
+                tryPersistKeyBinding(button.KeyBinding.Value, advanceToNextBinding: false);
             }
 
             isDefault.Value = true;
@@ -489,25 +489,12 @@ namespace osu.Game.Overlays.Settings.Sections.Input
             base.OnFocusLost(e);
         }
 
-        private bool isConflictingBinding(RealmKeyBinding first, RealmKeyBinding second, bool restoringDefaults)
-        {
-            if (first.ID == second.ID)
-                return false;
-
-            // ignore conflicts with same action bindings during revert. the assumption is that the other binding will be reverted subsequently in the same higher-level operation.
-            // this happens if the bindings for an action are rebound to the same keys, but the ordering of the bindings itself is different.
-            if (restoringDefaults && first.ActionInt == second.ActionInt)
-                return false;
-
-            return first.KeyCombination.Equals(second.KeyCombination);
-        }
-
-        private void tryPersistKeyBinding(RealmKeyBinding keyBinding, bool advanceToNextBinding, bool restoringDefaults = false)
+        private void tryPersistKeyBinding(RealmKeyBinding keyBinding, bool advanceToNextBinding)
         {
             List<RealmKeyBinding> bindings = GetAllSectionBindings();
             RealmKeyBinding? existingBinding = keyBinding.KeyCombination.Equals(new KeyCombination(InputKey.None))
                 ? null
-                : bindings.FirstOrDefault(other => isConflictingBinding(keyBinding, other, restoringDefaults));
+                : bindings.FirstOrDefault(other => other.ID != keyBinding.ID && other.KeyCombination.Equals(keyBinding.KeyCombination));
 
             if (existingBinding == null)
             {

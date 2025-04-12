@@ -20,38 +20,34 @@ namespace osu.Game.Online.Metadata
     {
         public override IBindable<bool> IsConnected { get; } = new Bindable<bool>();
 
-        public override UserPresence LocalUserPresence => localUserPresence;
-        private UserPresence localUserPresence;
+        public override IBindable<bool> IsWatchingUserPresence => isWatchingUserPresence;
+        private readonly BindableBool isWatchingUserPresence = new BindableBool();
 
-        public override IBindableDictionary<int, UserPresence> UserPresences => userPresences;
-        private readonly BindableDictionary<int, UserPresence> userPresences = new BindableDictionary<int, UserPresence>();
-
-        public override IBindableDictionary<int, UserPresence> FriendPresences => friendPresences;
-        private readonly BindableDictionary<int, UserPresence> friendPresences = new BindableDictionary<int, UserPresence>();
+        public override IBindableDictionary<int, UserPresence> UserStates => userStates;
+        private readonly BindableDictionary<int, UserPresence> userStates = new BindableDictionary<int, UserPresence>();
 
         public override IBindable<DailyChallengeInfo?> DailyChallengeInfo => dailyChallengeInfo;
         private readonly Bindable<DailyChallengeInfo?> dailyChallengeInfo = new Bindable<DailyChallengeInfo?>();
 
         private readonly string endpoint;
 
-        [Resolved]
-        private IAPIProvider api { get; set; } = null!;
-
         private IHubClientConnector? connector;
+
         private Bindable<int> lastQueueId = null!;
+
         private IBindable<APIUser> localUser = null!;
-        private IBindable<UserStatus> userStatus = null!;
         private IBindable<UserActivity?> userActivity = null!;
+        private IBindable<UserStatus?>? userStatus;
 
         private HubConnection? connection => connector?.CurrentConnection;
 
         public OnlineMetadataClient(EndpointConfiguration endpoints)
         {
-            endpoint = endpoints.MetadataUrl;
+            endpoint = endpoints.MetadataEndpointUrl;
         }
 
         [BackgroundDependencyLoader]
-        private void load(OsuConfigManager config, SessionStatics session)
+        private void load(IAPIProvider api, OsuConfigManager config)
         {
             // Importantly, we are intentionally not using MessagePack here to correctly support derived class serialization.
             // More information on the limitations / reasoning can be found in osu-server-spectator's initialisation code.
@@ -65,7 +61,6 @@ namespace osu.Game.Online.Metadata
                     // https://github.com/dotnet/aspnetcore/issues/15198
                     connection.On<BeatmapUpdates>(nameof(IMetadataClient.BeatmapSetsUpdated), ((IMetadataClient)this).BeatmapSetsUpdated);
                     connection.On<int, UserPresence?>(nameof(IMetadataClient.UserPresenceUpdated), ((IMetadataClient)this).UserPresenceUpdated);
-                    connection.On<int, UserPresence?>(nameof(IMetadataClient.FriendPresenceUpdated), ((IMetadataClient)this).FriendPresenceUpdated);
                     connection.On<DailyChallengeInfo?>(nameof(IMetadataClient.DailyChallengeUpdated), ((IMetadataClient)this).DailyChallengeUpdated);
                     connection.On<MultiplayerRoomScoreSetEvent>(nameof(IMetadataClient.MultiplayerRoomScoreSet), ((IMetadataClient)this).MultiplayerRoomScoreSet);
                     connection.On(nameof(IStatefulUserHubClient.DisconnectRequested), ((IMetadataClient)this).DisconnectRequested);
@@ -75,22 +70,25 @@ namespace osu.Game.Online.Metadata
                 IsConnected.BindValueChanged(isConnectedChanged, true);
             }
 
-            localUser = api.LocalUser.GetBoundCopy();
             lastQueueId = config.GetBindable<int>(OsuSetting.LastProcessedMetadataId);
-            userStatus = config.GetBindable<UserStatus>(OsuSetting.UserOnlineStatus);
-            userActivity = session.GetBindable<UserActivity?>(Static.UserOnlineActivity);
+
+            localUser = api.LocalUser.GetBoundCopy();
+            userActivity = api.Activity.GetBoundCopy()!;
         }
 
         protected override void LoadComplete()
         {
             base.LoadComplete();
-
-            userStatus.BindValueChanged(status =>
+            localUser.BindValueChanged(_ =>
             {
                 if (localUser.Value is not GuestUser)
-                    UpdateStatus(status.NewValue);
+                {
+                    userStatus = localUser.Value.Status.GetBoundCopy();
+                    userStatus.BindValueChanged(status => UpdateStatus(status.NewValue), true);
+                }
+                else
+                    userStatus = null;
             }, true);
-
             userActivity.BindValueChanged(activity =>
             {
                 if (localUser.Value is not GuestUser)
@@ -106,22 +104,17 @@ namespace osu.Game.Online.Metadata
             {
                 Schedule(() =>
                 {
-                    userPresences.Clear();
-                    friendPresences.Clear();
+                    isWatchingUserPresence.Value = false;
+                    userStates.Clear();
                     dailyChallengeInfo.Value = null;
-                    localUserPresence = default;
                 });
-
                 return;
             }
-
-            if (IsWatchingUserPresence)
-                BeginWatchingUserPresenceInternal();
 
             if (localUser.Value is not GuestUser)
             {
                 UpdateActivity(userActivity.Value);
-                UpdateStatus(userStatus.Value);
+                UpdateStatus(userStatus?.Value);
             }
 
             if (lastQueueId.Value >= 0)
@@ -201,65 +194,47 @@ namespace osu.Game.Online.Metadata
             return connection.InvokeAsync(nameof(IMetadataServer.UpdateStatus), status);
         }
 
-        protected override Task BeginWatchingUserPresenceInternal()
-        {
-            if (connector?.IsConnected.Value != true)
-                return Task.CompletedTask;
-
-            Logger.Log($@"{nameof(OnlineMetadataClient)} began watching user presence", LoggingTarget.Network);
-
-            Debug.Assert(connection != null);
-            return connection.InvokeAsync(nameof(IMetadataServer.BeginWatchingUserPresence));
-        }
-
-        protected override Task EndWatchingUserPresenceInternal()
-        {
-            if (connector?.IsConnected.Value != true)
-                return Task.CompletedTask;
-
-            Logger.Log($@"{nameof(OnlineMetadataClient)} stopped watching user presence", LoggingTarget.Network);
-
-            // must be scheduled before any remote calls to avoid mis-ordering.
-            Schedule(() => userPresences.Clear());
-
-            Debug.Assert(connection != null);
-            return connection.InvokeAsync(nameof(IMetadataServer.EndWatchingUserPresence));
-        }
-
         public override Task UserPresenceUpdated(int userId, UserPresence? presence)
         {
             Schedule(() =>
             {
                 if (presence?.Status != null)
-                {
-                    if (userId == api.LocalUser.Value.OnlineID)
-                        localUserPresence = presence.Value;
-                    else
-                        userPresences[userId] = presence.Value;
-                }
+                    userStates[userId] = presence.Value;
                 else
-                {
-                    if (userId == api.LocalUser.Value.OnlineID)
-                        localUserPresence = default;
-                    else
-                        userPresences.Remove(userId);
-                }
+                    userStates.Remove(userId);
             });
 
             return Task.CompletedTask;
         }
 
-        public override Task FriendPresenceUpdated(int userId, UserPresence? presence)
+        public override async Task BeginWatchingUserPresence()
         {
-            Schedule(() =>
-            {
-                if (presence?.Status != null)
-                    friendPresences[userId] = presence.Value;
-                else
-                    friendPresences.Remove(userId);
-            });
+            if (connector?.IsConnected.Value != true)
+                throw new OperationCanceledException();
 
-            return Task.CompletedTask;
+            Debug.Assert(connection != null);
+            await connection.InvokeAsync(nameof(IMetadataServer.BeginWatchingUserPresence)).ConfigureAwait(false);
+            Schedule(() => isWatchingUserPresence.Value = true);
+            Logger.Log($@"{nameof(OnlineMetadataClient)} began watching user presence", LoggingTarget.Network);
+        }
+
+        public override async Task EndWatchingUserPresence()
+        {
+            try
+            {
+                if (connector?.IsConnected.Value != true)
+                    throw new OperationCanceledException();
+
+                // must be scheduled before any remote calls to avoid mis-ordering.
+                Schedule(() => userStates.Clear());
+                Debug.Assert(connection != null);
+                await connection.InvokeAsync(nameof(IMetadataServer.EndWatchingUserPresence)).ConfigureAwait(false);
+                Logger.Log($@"{nameof(OnlineMetadataClient)} stopped watching user presence", LoggingTarget.Network);
+            }
+            finally
+            {
+                Schedule(() => isWatchingUserPresence.Value = false);
+            }
         }
 
         public override Task DailyChallengeUpdated(DailyChallengeInfo? info)

@@ -92,7 +92,7 @@ namespace osu.Game.Rulesets.Catch.Edit.Blueprints.Components
             }));
         }
 
-        public virtual void UpdateHitObjectFromPath(JuiceStream hitObject)
+        public void UpdateHitObjectFromPath(JuiceStream hitObject)
         {
             // The SV setting may need to be changed for the current path.
             var svBindable = hitObject.SliderVelocityMultiplierBindable;

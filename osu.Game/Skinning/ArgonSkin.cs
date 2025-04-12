@@ -7,6 +7,7 @@ using JetBrains.Annotations;
 using osu.Framework.Audio.Sample;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Textures;
 using osu.Game.Audio;
 using osu.Game.Beatmaps.Formats;
@@ -95,10 +96,14 @@ namespace osu.Game.Skinning
 
             switch (lookup)
             {
-                case GlobalSkinnableContainerLookup containerLookup:
-                    switch (containerLookup.Lookup)
+                case SkinComponentsContainerLookup containerLookup:
+
+                    if (base.GetDrawableComponent(lookup) is UserConfiguredLayoutContainer c)
+                        return c;
+
+                    switch (containerLookup.Target)
                     {
-                        case GlobalSkinnableContainers.SongSelect:
+                        case SkinComponentsContainerLookup.TargetArea.SongSelect:
                             var songSelectComponents = new DefaultSkinComponentsContainer(_ =>
                             {
                                 // do stuff when we need to.
@@ -106,40 +111,18 @@ namespace osu.Game.Skinning
 
                             return songSelectComponents;
 
-                        case GlobalSkinnableContainers.MainHUDComponents:
+                        case SkinComponentsContainerLookup.TargetArea.MainHUDComponents:
                             if (containerLookup.Ruleset != null)
                             {
-                                return new DefaultSkinComponentsContainer(container =>
-                                {
-                                    var comboCounter = container.OfType<ArgonComboCounter>().FirstOrDefault();
-                                    var spectatorList = container.OfType<SpectatorList>().FirstOrDefault();
-
-                                    Vector2 pos = new Vector2(36, -66);
-
-                                    if (comboCounter != null)
-                                    {
-                                        comboCounter.Position = pos;
-                                        pos -= new Vector2(0, comboCounter.DrawHeight * 1.4f + 20);
-                                    }
-
-                                    if (spectatorList != null)
-                                        spectatorList.Position = pos;
-                                })
+                                return new Container
                                 {
                                     RelativeSizeAxes = Axes.Both,
-                                    Children = new Drawable[]
+                                    Child = new ArgonComboCounter
                                     {
-                                        new ArgonComboCounter
-                                        {
-                                            Anchor = Anchor.BottomLeft,
-                                            Origin = Anchor.BottomLeft,
-                                            Scale = new Vector2(1.3f),
-                                        },
-                                        new SpectatorList
-                                        {
-                                            Anchor = Anchor.BottomLeft,
-                                            Origin = Anchor.BottomLeft,
-                                        }
+                                        Anchor = Anchor.BottomLeft,
+                                        Origin = Anchor.BottomLeft,
+                                        Position = new Vector2(36, -66),
+                                        Scale = new Vector2(1.3f),
                                     },
                                 };
                             }

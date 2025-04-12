@@ -24,48 +24,35 @@ namespace osu.Game.Storyboards
 
         public readonly StoryboardCommandGroup Commands = new StoryboardCommandGroup();
 
-        public virtual double StartTime
+        public double StartTime
         {
             get
             {
-                // Users that are crafting storyboards using raw osb scripting or external tools may create alpha events far before the actual display time
-                // of sprites.
+                // To get the initial start time, we need to check whether the first alpha command to exist (across all loops) has a StartValue of zero.
+                // A StartValue of zero governs, above all else, the first valid display time of a sprite.
                 //
-                // To make sure lifetime optimisations work as efficiently as they can, let's locally find the first time a sprite becomes visible.
-                var alphaCommands = new List<StoryboardCommand<float>>();
+                // You can imagine that the first command of each type decides that type's start value, so if the initial alpha is zero,
+                // anything before that point can be ignored (the sprite is not visible after all).
+                var alphaCommands = new List<(double startTime, bool isZeroStartValue)>();
 
-                foreach (var command in Commands.Alpha)
-                {
-                    alphaCommands.Add(command);
-                    if (visibleAtStartOrEnd(command))
-                        break;
-                }
+                var command = Commands.Alpha.FirstOrDefault();
+                if (command != null) alphaCommands.Add((command.StartTime, command.StartValue == 0));
 
                 foreach (var loop in loopingGroups)
                 {
-                    foreach (var command in loop.Alpha)
-                    {
-                        alphaCommands.Add(command);
-                        if (visibleAtStartOrEnd(command))
-                            break;
-                    }
+                    command = loop.Alpha.FirstOrDefault();
+                    if (command != null) alphaCommands.Add((command.StartTime, command.StartValue == 0));
                 }
 
                 if (alphaCommands.Count > 0)
                 {
-                    // Special care is given to cases where there's one or more no-op transforms (ie transforming from alpha 0 to alpha 0).
-                    // - If a 0->0 transform exists, we still need to check it to ensure the absolute first start value is non-visible.
-                    // - After ascertaining this, we then check the first non-noop transform to get the true start lifetime.
-                    var firstAlpha = alphaCommands.MinBy(c => c.StartTime);
-                    var firstRealAlpha = alphaCommands.Where(visibleAtStartOrEnd).MinBy(c => c.StartTime);
+                    var firstAlpha = alphaCommands.MinBy(t => t.startTime);
 
-                    if (firstAlpha!.StartValue == 0 && firstRealAlpha != null)
-                        return firstRealAlpha.StartTime;
+                    if (firstAlpha.isZeroStartValue)
+                        return firstAlpha.startTime;
                 }
 
                 return EarliestTransformTime;
-
-                bool visibleAtStartOrEnd(StoryboardCommand<float> command) => command.StartValue > 0 || command.EndValue > 0;
             }
         }
 

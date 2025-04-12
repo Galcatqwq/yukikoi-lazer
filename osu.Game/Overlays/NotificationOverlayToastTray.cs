@@ -41,7 +41,7 @@ namespace osu.Game.Overlays
         [Resolved]
         private OverlayColourProvider colourProvider { get; set; } = null!;
 
-        public required Action<Notification> ForwardNotificationToPermanentStore { get; init; }
+        public Action<Notification>? ForwardNotificationToPermanentStore { get; set; }
 
         public int UnreadCount => Notifications.Count(n => !n.WasClosed && !n.Read);
 
@@ -142,15 +142,8 @@ namespace osu.Game.Overlays
             notification.MoveToOffset(new Vector2(400, 0), NotificationOverlay.TRANSITION_LENGTH, Easing.OutQuint);
             notification.FadeOut(NotificationOverlay.TRANSITION_LENGTH, Easing.OutQuint).OnComplete(_ =>
             {
-                if (notification.Transient)
-                {
-                    notification.IsInToastTray = false;
-                    notification.Close(false);
-                    return;
-                }
-
                 RemoveInternal(notification, false);
-                ForwardNotificationToPermanentStore(notification);
+                ForwardNotificationToPermanentStore?.Invoke(notification);
 
                 notification.FadeIn(300, Easing.OutQuint);
             });
@@ -160,22 +153,8 @@ namespace osu.Game.Overlays
         {
             base.Update();
 
-            float height = 0;
-            float alpha = 0;
-
-            if (toastFlow.Count > 0)
-            {
-                float maxNotificationAlpha = 0;
-
-                foreach (var t in toastFlow)
-                {
-                    if (t.Alpha > maxNotificationAlpha)
-                        maxNotificationAlpha = t.Alpha;
-                }
-
-                height = toastFlow.DrawHeight + 120;
-                alpha = Math.Clamp(toastFlow.DrawHeight / 41, 0, 1) * maxNotificationAlpha;
-            }
+            float height = toastFlow.Count > 0 ? toastFlow.DrawHeight + 120 : 0;
+            float alpha = toastFlow.Count > 0 ? MathHelper.Clamp(toastFlow.DrawHeight / 41, 0, 1) * toastFlow.Children.Max(n => n.Alpha) : 0;
 
             toastContentBackground.Height = (float)Interpolation.DampContinuously(toastContentBackground.Height, height, 10, Clock.ElapsedFrameTime);
             toastContentBackground.Alpha = (float)Interpolation.DampContinuously(toastContentBackground.Alpha, alpha, 10, Clock.ElapsedFrameTime);

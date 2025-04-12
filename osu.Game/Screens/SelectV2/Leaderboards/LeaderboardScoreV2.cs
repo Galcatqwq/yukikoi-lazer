@@ -16,7 +16,6 @@ using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
 using osu.Framework.Localisation;
-using osu.Framework.Platform;
 using osu.Game.Configuration;
 using osu.Game.Extensions;
 using osu.Game.Graphics;
@@ -24,7 +23,6 @@ using osu.Game.Graphics.Backgrounds;
 using osu.Game.Graphics.Containers;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Graphics.UserInterface;
-using osu.Game.Online.API;
 using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Online.Leaderboards;
 using osu.Game.Overlays;
@@ -83,12 +81,6 @@ namespace osu.Game.Screens.SelectV2.Leaderboards
 
         [Resolved]
         private ScoreManager scoreManager { get; set; } = null!;
-
-        [Resolved]
-        private Clipboard? clipboard { get; set; }
-
-        [Resolved]
-        private IAPIProvider api { get; set; } = null!;
 
         private Container content = null!;
         private Box background = null!;
@@ -338,12 +330,6 @@ namespace osu.Game.Screens.SelectV2.Leaderboards
                                                 Anchor = Anchor.CentreLeft,
                                                 Origin = Anchor.CentreLeft,
                                                 Size = new Vector2(24, 16),
-                                            },
-                                            new UpdateableTeamFlag(user.Team)
-                                            {
-                                                Anchor = Anchor.CentreLeft,
-                                                Origin = Anchor.CentreLeft,
-                                                Size = new Vector2(40, 20),
                                             },
                                             new DateLabel(score.Date)
                                             {
@@ -715,21 +701,18 @@ namespace osu.Game.Screens.SelectV2.Leaderboards
             public LocalisableString TooltipText { get; }
         }
 
-        private sealed partial class ColouredModSwitchTiny : ModSwitchTiny, IHasCustomTooltip<Mod>
+        private sealed partial class ColouredModSwitchTiny : ModSwitchTiny, IHasTooltip
         {
-            public Mod? TooltipContent { get; }
+            private readonly IMod mod;
 
-            [Resolved]
-            private OverlayColourProvider colourProvider { get; set; } = null!;
-
-            public ColouredModSwitchTiny(Mod mod)
+            public ColouredModSwitchTiny(IMod mod)
                 : base(mod)
             {
-                TooltipContent = mod;
+                this.mod = mod;
                 Active.Value = true;
             }
 
-            public ITooltip<Mod> GetCustomTooltip() => new ModTooltip(colourProvider);
+            public LocalisableString TooltipText => (mod as Mod)?.IconTooltip ?? mod.Name;
         }
 
         private sealed partial class MoreModSwitchTiny : CompositeDrawable
@@ -783,14 +766,8 @@ namespace osu.Game.Screens.SelectV2.Leaderboards
             {
                 List<MenuItem> items = new List<MenuItem>();
 
-                // system mods should never be copied across regardless of anything.
-                var copyableMods = score.Mods.Where(m => IsValidMod.Invoke(m) && m.Type != ModType.System).ToArray();
-
-                if (copyableMods.Length > 0)
-                    items.Add(new OsuMenuItem("Use these mods", MenuItemType.Highlighted, () => SelectedMods.Value = copyableMods));
-
-                if (score.OnlineID > 0)
-                    items.Add(new OsuMenuItem(CommonStrings.CopyLink, MenuItemType.Standard, () => clipboard?.SetText($@"{api.Endpoints.WebsiteUrl}/scores/{score.OnlineID}")));
+                if (score.Mods.Length > 0)
+                    items.Add(new OsuMenuItem("Use these mods", MenuItemType.Highlighted, () => SelectedMods.Value = score.Mods.Where(m => IsValidMod.Invoke(m)).ToArray()));
 
                 if (score.Files.Count <= 0) return items.ToArray();
 

@@ -46,9 +46,9 @@ namespace osu.Game.Overlays.Chat
             }
         }
 
-        public IEnumerable<Drawable> DrawableContentFlow => drawableContentFlow.Children;
+        public IReadOnlyCollection<Drawable> DrawableContentFlow => drawableContentFlow;
 
-        private const float font_size = 13;
+        protected virtual float FontSize => 12;
 
         protected virtual float Spacing => 15;
 
@@ -183,13 +183,13 @@ namespace osu.Game.Overlays.Chat
                                 Anchor = Anchor.TopLeft,
                                 Origin = Anchor.TopLeft,
                                 Spacing = new Vector2(-1, 0),
-                                Font = OsuFont.GetFont(size: font_size, weight: FontWeight.SemiBold, fixedWidth: true),
+                                Font = OsuFont.GetFont(size: FontSize, weight: FontWeight.SemiBold, fixedWidth: true),
                                 AlwaysPresent = true,
                             },
                             drawableUsername = new DrawableChatUsername(message.Sender)
                             {
                                 Width = UsernameWidth,
-                                FontSize = font_size,
+                                FontSize = FontSize,
                                 AutoSizeAxes = Axes.Y,
                                 Origin = Anchor.TopRight,
                                 Anchor = Anchor.TopRight,
@@ -258,7 +258,7 @@ namespace osu.Game.Overlays.Chat
         private void styleMessageContent(SpriteText text)
         {
             text.Shadow = false;
-            text.Font = text.Font.With(size: font_size, italics: Message.IsAction, weight: isMention ? FontWeight.SemiBold : FontWeight.Medium);
+            text.Font = text.Font.With(size: FontSize, italics: Message.IsAction, weight: isMention ? FontWeight.SemiBold : FontWeight.Medium);
 
             Color4 messageColour = colourProvider?.Content1 ?? Colour4.White;
 

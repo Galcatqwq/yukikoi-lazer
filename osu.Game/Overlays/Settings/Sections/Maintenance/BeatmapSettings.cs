@@ -16,7 +16,6 @@ namespace osu.Game.Overlays.Settings.Sections.Maintenance
 
         private SettingsButton deleteBeatmapsButton = null!;
         private SettingsButton deleteBeatmapVideosButton = null!;
-        private SettingsButton resetOffsetsButton = null!;
         private SettingsButton restoreButton = null!;
         private SettingsButton undeleteButton = null!;
 
@@ -48,20 +47,6 @@ namespace osu.Game.Overlays.Settings.Sections.Maintenance
                     }, DeleteConfirmationContentStrings.BeatmapVideos));
                 }
             });
-
-            Add(resetOffsetsButton = new DangerousSettingsButton
-            {
-                Text = MaintenanceSettingsStrings.ResetAllOffsets,
-                Action = () =>
-                {
-                    dialogOverlay?.Push(new MassDeleteConfirmationDialog(() =>
-                    {
-                        resetOffsetsButton.Enabled.Value = false;
-                        Task.Run(beatmaps.ResetAllOffsets).ContinueWith(_ => Schedule(() => resetOffsetsButton.Enabled.Value = true));
-                    }, DeleteConfirmationContentStrings.Offsets));
-                }
-            });
-
             AddRange(new Drawable[]
             {
                 restoreButton = new SettingsButton

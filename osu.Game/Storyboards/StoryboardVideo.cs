@@ -14,10 +14,8 @@ namespace osu.Game.Storyboards
         {
             // This is just required to get a valid StartTime based on the incoming offset.
             // Actual fades are handled inside DrawableStoryboardVideo for now.
-            StartTime = offset;
+            Commands.AddAlpha(Easing.None, offset, offset, 0, 0);
         }
-
-        public override double StartTime { get; }
 
         public override Drawable CreateDrawable() => new DrawableStoryboardVideo(this);
     }

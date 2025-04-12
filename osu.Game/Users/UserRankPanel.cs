@@ -4,16 +4,13 @@
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Extensions.LocalisationExtensions;
-using osu.Framework.Extensions.ObjectExtensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Input.Events;
-using osu.Game.Graphics.UserInterface;
-using osu.Game.Online;
+using osu.Game.Online.API;
 using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Overlays.Profile.Header.Components;
 using osu.Game.Resources.Localisation.Web;
-using osu.Game.Rulesets;
 using osuTK;
 
 namespace osu.Game.Users
@@ -27,9 +24,13 @@ namespace osu.Game.Users
         private const int padding = 10;
         private const int main_content_height = 80;
 
+        [Resolved]
+        private IAPIProvider api { get; set; } = null!;
+
         private ProfileValueDisplay globalRankDisplay = null!;
         private ProfileValueDisplay countryRankDisplay = null!;
-        private LoadingLayer loadingLayer = null!;
+
+        private readonly IBindable<UserStatistics?> statistics = new Bindable<UserStatistics?>();
 
         public UserRankPanel(APIUser user)
             : base(user)
@@ -42,37 +43,13 @@ namespace osu.Game.Users
         private void load()
         {
             BorderColour = ColourProvider?.Light1 ?? Colours.GreyVioletLighter;
-        }
 
-        [Resolved]
-        private LocalUserStatisticsProvider? statisticsProvider { get; set; }
-
-        [Resolved]
-        private IBindable<RulesetInfo> ruleset { get; set; } = null!;
-
-        protected override void LoadComplete()
-        {
-            base.LoadComplete();
-
-            if (statisticsProvider != null)
-                statisticsProvider.StatisticsUpdated += onStatisticsUpdated;
-
-            ruleset.BindValueChanged(_ => updateDisplay(), true);
-        }
-
-        private void onStatisticsUpdated(UserStatisticsUpdate update)
-        {
-            if (update.Ruleset.Equals(ruleset.Value))
-                updateDisplay();
-        }
-
-        private void updateDisplay()
-        {
-            var statistics = statisticsProvider?.GetStatisticsFor(ruleset.Value);
-
-            loadingLayer.State.Value = statistics == null ? Visibility.Visible : Visibility.Hidden;
-            globalRankDisplay.Content = statistics?.GlobalRank?.ToLocalisableString("\\##,##0") ?? "-";
-            countryRankDisplay.Content = statistics?.CountryRank?.ToLocalisableString("\\##,##0") ?? "-";
+            statistics.BindTo(api.Statistics);
+            statistics.BindValueChanged(stats =>
+            {
+                globalRankDisplay.Content = stats.NewValue?.GlobalRank?.ToLocalisableString("\\##,##0") ?? "-";
+                countryRankDisplay.Content = stats.NewValue?.CountryRank?.ToLocalisableString("\\##,##0") ?? "-";
+            }, true);
         }
 
         protected override Drawable CreateLayout()
@@ -147,10 +124,9 @@ namespace osu.Game.Users
                                                         AutoSizeAxes = Axes.Both,
                                                         Direction = FillDirection.Horizontal,
                                                         Spacing = new Vector2(6),
-                                                        Children = new[]
+                                                        Children = new Drawable[]
                                                         {
                                                             CreateFlag(),
-                                                            CreateTeamLogo(),
                                                             // supporter icon is being added later
                                                         }
                                                     }
@@ -176,7 +152,7 @@ namespace osu.Game.Users
                         Margin = new MarginPadding { Top = main_content_height },
                         RelativeSizeAxes = Axes.X,
                         AutoSizeAxes = Axes.Y,
-                        Padding = new MarginPadding(padding),
+                        Padding = new MarginPadding { Left = 80, Vertical = padding },
                         ColumnDimensions = new[]
                         {
                             new Dimension(),
@@ -200,8 +176,7 @@ namespace osu.Game.Users
                                 }
                             }
                         }
-                    },
-                    loadingLayer = new LoadingLayer(true),
+                    }
                 }
             };
 
@@ -230,13 +205,5 @@ namespace osu.Game.Users
         }
 
         protected override Drawable? CreateBackground() => null;
-
-        protected override void Dispose(bool isDisposing)
-        {
-            if (statisticsProvider.IsNotNull())
-                statisticsProvider.StatisticsUpdated -= onStatisticsUpdated;
-
-            base.Dispose(isDisposing);
-        }
     }
 }

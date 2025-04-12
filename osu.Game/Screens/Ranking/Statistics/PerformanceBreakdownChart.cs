@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using osu.Framework.Allocation;
 using osu.Framework.Extensions;
 using osu.Framework.Extensions.Color4Extensions;
@@ -27,6 +26,7 @@ namespace osu.Game.Screens.Ranking.Statistics
     public partial class PerformanceBreakdownChart : Container
     {
         private readonly ScoreInfo score;
+        private readonly IBeatmap playableBeatmap;
 
         private Drawable spinner = null!;
         private Drawable content = null!;
@@ -42,6 +42,7 @@ namespace osu.Game.Screens.Ranking.Statistics
         public PerformanceBreakdownChart(ScoreInfo score, IBeatmap playableBeatmap)
         {
             this.score = score;
+            this.playableBeatmap = playableBeatmap;
         }
 
         [BackgroundDependencyLoader]
@@ -141,33 +142,12 @@ namespace osu.Game.Screens.Ranking.Statistics
 
             spinner.Show();
 
-            computePerformance(cancellationTokenSource.Token)
-                .ContinueWith(t => Schedule(() =>
-                {
-                    if (t.GetResultSafely() is PerformanceBreakdown breakdown)
-                        setPerformance(breakdown);
-                }), TaskContinuationOptions.OnlyOnRanToCompletion);
+            new PerformanceBreakdownCalculator(playableBeatmap, difficultyCache)
+                .CalculateAsync(score, cancellationTokenSource.Token)
+                .ContinueWith(t => Schedule(() => setPerformanceValue(t.GetResultSafely()!)));
         }
 
-        private async Task<PerformanceBreakdown?> computePerformance(CancellationToken token)
-        {
-            var performanceCalculator = score.Ruleset.CreateInstance().CreatePerformanceCalculator();
-            if (performanceCalculator == null)
-                return null;
-
-            var starsTask = difficultyCache.GetDifficultyAsync(score.BeatmapInfo!, score.Ruleset, score.Mods, token).ConfigureAwait(false);
-            if (await starsTask is not StarDifficulty stars)
-                return null;
-
-            if (stars.DifficultyAttributes == null || stars.PerformanceAttributes == null)
-                return null;
-
-            return new PerformanceBreakdown(
-                await performanceCalculator.CalculateAsync(score, stars.DifficultyAttributes, token).ConfigureAwait(false),
-                stars.PerformanceAttributes);
-        }
-
-        private void setPerformance(PerformanceBreakdown breakdown)
+        private void setPerformanceValue(PerformanceBreakdown breakdown)
         {
             spinner.Hide();
             content.FadeIn(200);
@@ -256,8 +236,6 @@ namespace osu.Game.Screens.Ranking.Statistics
         protected override void Dispose(bool isDisposing)
         {
             cancellationTokenSource.Cancel();
-            cancellationTokenSource.Dispose();
-
             base.Dispose(isDisposing);
         }
     }

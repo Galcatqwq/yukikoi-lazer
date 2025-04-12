@@ -10,11 +10,11 @@ namespace osu.Game.Rulesets.Mods
 {
     public abstract class ModEasy : Mod, IApplicableToDifficulty
     {
-        public override string Name => "Easy";
+        public override string Name => "Easy(吗)";
         public override string Acronym => "EZ";
         public override IconUsage? Icon => OsuIcon.ModEasy;
         public override ModType Type => ModType.DifficultyReduction;
-        public override double ScoreMultiplier => 0.5;
+        public override double ScoreMultiplier => 0.9;
         public override Type[] IncompatibleMods => new[] { typeof(ModHardRock), typeof(ModDifficultyAdjust) };
         public override bool Ranked => UsesDefaultConfiguration;
 

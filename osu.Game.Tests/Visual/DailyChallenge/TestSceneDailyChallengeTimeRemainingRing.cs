@@ -18,6 +18,11 @@ namespace osu.Game.Tests.Visual.DailyChallenge
     {
         private readonly Bindable<Room> room = new Bindable<Room>(new Room());
 
+        protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent) => new CachedModelDependencyContainer<Room>(base.CreateChildDependencies(parent))
+        {
+            Model = { BindTarget = room }
+        };
+
         [Cached]
         private OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Plum);
 
@@ -33,7 +38,7 @@ namespace osu.Game.Tests.Visual.DailyChallenge
                     RelativeSizeAxes = Axes.Both,
                     Colour = colourProvider.Background4,
                 },
-                ring = new DailyChallengeTimeRemainingRing(room.Value)
+                ring = new DailyChallengeTimeRemainingRing
                 {
                     RelativeSizeAxes = Axes.Both,
                     Anchor = Anchor.Centre,
@@ -54,29 +59,29 @@ namespace osu.Game.Tests.Visual.DailyChallenge
 
             AddStep("just started", () =>
             {
-                room.Value.StartDate = DateTimeOffset.Now.AddMinutes(-1);
-                room.Value.EndDate = room.Value.StartDate.Value.AddDays(1);
+                room.Value.StartDate.Value = DateTimeOffset.Now.AddMinutes(-1);
+                room.Value.EndDate.Value = room.Value.StartDate.Value.Value.AddDays(1);
             });
             AddStep("midway through", () =>
             {
-                room.Value.StartDate = DateTimeOffset.Now.AddHours(-12);
-                room.Value.EndDate = room.Value.StartDate.Value.AddDays(1);
+                room.Value.StartDate.Value = DateTimeOffset.Now.AddHours(-12);
+                room.Value.EndDate.Value = room.Value.StartDate.Value.Value.AddDays(1);
             });
             AddStep("nearing end", () =>
             {
-                room.Value.StartDate = DateTimeOffset.Now.AddDays(-1).AddMinutes(8);
-                room.Value.EndDate = room.Value.StartDate.Value.AddDays(1);
+                room.Value.StartDate.Value = DateTimeOffset.Now.AddDays(-1).AddMinutes(8);
+                room.Value.EndDate.Value = room.Value.StartDate.Value.Value.AddDays(1);
             });
             AddStep("already ended", () =>
             {
-                room.Value.StartDate = DateTimeOffset.Now.AddDays(-2);
-                room.Value.EndDate = room.Value.StartDate.Value.AddDays(1);
+                room.Value.StartDate.Value = DateTimeOffset.Now.AddDays(-2);
+                room.Value.EndDate.Value = room.Value.StartDate.Value.Value.AddDays(1);
             });
             AddSliderStep("manual progress", 0f, 1f, 0f, progress =>
             {
                 var startedTimeAgo = TimeSpan.FromHours(24) * progress;
-                room.Value.StartDate = DateTimeOffset.Now - startedTimeAgo;
-                room.Value.EndDate = room.Value.StartDate.Value.AddDays(1);
+                room.Value.StartDate.Value = DateTimeOffset.Now - startedTimeAgo;
+                room.Value.EndDate.Value = room.Value.StartDate.Value.Value.AddDays(1);
             });
         }
     }

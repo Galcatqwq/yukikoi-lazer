@@ -63,7 +63,7 @@ namespace osu.Game.Tests.Visual.Gameplay
         {
             loadPlayerWithBeatmap(new TestBeatmap(new OsuRuleset().RulesetInfo)
             {
-                AudioLeadIn = 60000
+                BeatmapInfo = { AudioLeadIn = 60000 }
             });
 
             AddUntilStep("wait for skip overlay", () => Player.ChildrenOfType<SkipOverlay>().First().IsButtonVisible);

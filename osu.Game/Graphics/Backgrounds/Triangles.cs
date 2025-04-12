@@ -127,6 +127,8 @@ namespace osu.Game.Graphics.Backgrounds
         {
             base.Update();
 
+            Invalidate(Invalidation.DrawNode);
+
             if (CreateNewTriangles)
                 addTriangles(false);
 
@@ -136,10 +138,6 @@ namespace osu.Game.Graphics.Backgrounds
                 : 1;
 
             float elapsedSeconds = (float)Time.Elapsed / 1000;
-
-            if (elapsedSeconds == 0)
-                return;
-
             // Since position is relative, the velocity needs to scale inversely with DrawHeight.
             // Since we will later multiply by the scale of individual triangles we normalize by
             // dividing by triangleScale.
@@ -159,8 +157,6 @@ namespace osu.Game.Graphics.Backgrounds
                 if (bottomPos < 0)
                     parts.RemoveAt(i);
             }
-
-            Invalidate(Invalidation.DrawNode);
         }
 
         /// <summary>
@@ -187,13 +183,8 @@ namespace osu.Game.Graphics.Backgrounds
 
             int currentCount = parts.Count;
 
-            if (AimCount - currentCount == 0)
-                return;
-
             for (int i = 0; i < AimCount - currentCount; i++)
                 parts.Add(createTriangle(randomY));
-
-            Invalidate(Invalidation.DrawNode);
         }
 
         private TriangleParticle createTriangle(bool randomY)

@@ -1,11 +1,12 @@
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
+#nullable disable
+
 using System.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Audio;
 using osu.Framework.Audio.Sample;
-using osu.Framework.Extensions.ObjectExtensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.Containers;
@@ -19,26 +20,27 @@ using osuTK.Graphics;
 
 namespace osu.Game.Screens.OnlinePlay.Multiplayer.Participants
 {
-    internal partial class TeamDisplay : CompositeDrawable
+    internal partial class TeamDisplay : MultiplayerRoomComposite
     {
         private readonly MultiplayerRoomUser user;
 
-        [Resolved]
-        private OsuColour colours { get; set; } = null!;
+        private Drawable box;
+
+        private Sample sampleTeamSwap;
 
         [Resolved]
-        private MultiplayerClient client { get; set; } = null!;
+        private OsuColour colours { get; set; }
 
-        private OsuClickableContainer clickableContent = null!;
-        private Drawable box = null!;
-        private Sample? sampleTeamSwap;
+        private OsuClickableContainer clickableContent;
 
         public TeamDisplay(MultiplayerRoomUser user)
         {
             this.user = user;
 
             RelativeSizeAxes = Axes.Y;
+
             AutoSizeAxes = Axes.X;
+
             Margin = new MarginPadding { Horizontal = 3 };
         }
 
@@ -69,7 +71,7 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Participants
                 }
             };
 
-            if (client.LocalUser?.Equals(user) == true)
+            if (Client.LocalUser?.Equals(user) == true)
             {
                 clickableContent.Action = changeTeam;
                 clickableContent.TooltipText = "Change team";
@@ -78,31 +80,23 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Participants
             sampleTeamSwap = audio.Samples.Get(@"Multiplayer/team-swap");
         }
 
-        protected override void LoadComplete()
-        {
-            base.LoadComplete();
-
-            client.RoomUpdated += onRoomUpdated;
-            updateState();
-        }
-
         private void changeTeam()
         {
-            client.SendMatchRequest(new ChangeTeamRequest
+            Client.SendMatchRequest(new ChangeTeamRequest
             {
-                TeamID = ((client.LocalUser?.MatchState as TeamVersusUserState)?.TeamID + 1) % 2 ?? 0,
+                TeamID = ((Client.LocalUser?.MatchState as TeamVersusUserState)?.TeamID + 1) % 2 ?? 0,
             }).FireAndForget();
         }
 
         public int? DisplayedTeam { get; private set; }
 
-        private void onRoomUpdated() => Scheduler.AddOnce(updateState);
-
-        private void updateState()
+        protected override void OnRoomUpdated()
         {
+            base.OnRoomUpdated();
+
             // we don't have a way of knowing when an individual user's state has updated, so just handle on RoomUpdated for now.
 
-            var userRoomState = client.Room?.Users.FirstOrDefault(u => u.Equals(user))?.MatchState;
+            var userRoomState = Room?.Users.FirstOrDefault(u => u.Equals(user))?.MatchState;
 
             const double duration = 400;
 
@@ -143,14 +137,6 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Participants
                 case 1:
                     return colours.Blue;
             }
-        }
-
-        protected override void Dispose(bool isDisposing)
-        {
-            base.Dispose(isDisposing);
-
-            if (client.IsNotNull())
-                client.RoomUpdated -= onRoomUpdated;
         }
     }
 }

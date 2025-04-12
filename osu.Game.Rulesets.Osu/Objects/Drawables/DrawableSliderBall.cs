@@ -66,9 +66,8 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
             Slider slider = drawableSlider.HitObject;
             Position = slider.CurvePositionAt(completionProgress);
 
-            // 0.1 / slider.Path.Distance is the additional progress needed to ensure the diff length is 0.1
-            double checkDistance = 0.1 / slider.Path.Distance;
-            var diff = slider.CurvePositionAt(Math.Min(1 - checkDistance, completionProgress)) - slider.CurvePositionAt(Math.Min(1, completionProgress + checkDistance));
+            //0.1 / slider.Path.Distance is the additional progress needed to ensure the diff length is 0.1
+            var diff = slider.CurvePositionAt(completionProgress) - slider.CurvePositionAt(Math.Min(1, completionProgress + 0.1 / slider.Path.Distance));
 
             // Ensure the value is substantially high enough to allow for Atan2 to get a valid angle.
             // Needed for when near completion, or in case of a very short slider.

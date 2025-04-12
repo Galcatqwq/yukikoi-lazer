@@ -9,7 +9,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Microsoft.Toolkit.HighPerformance;
-using osu.Framework.Extensions;
 using osu.Framework.IO.Stores;
 using SharpCompress.Archives.Zip;
 using SharpCompress.Common;
@@ -55,22 +54,12 @@ namespace osu.Game.IO.Archives
             if (entry == null)
                 return null;
 
-            using (Stream s = entry.OpenEntryStream())
-            {
-                if (entry.Size > 0)
-                {
-                    var owner = MemoryAllocator.Default.Allocate<byte>((int)entry.Size);
-                    s.ReadExactly(owner.Memory.Span);
-                    return new MemoryOwnerMemoryStream(owner);
-                }
+            var owner = MemoryAllocator.Default.Allocate<byte>((int)entry.Size);
 
-                // due to a sharpcompress bug (https://github.com/adamhathcock/sharpcompress/issues/88),
-                // in rare instances the `ZipArchiveEntry` will not contain a correct `Size` but instead report 0.
-                // this would lead to the block above reading nothing, and the game basically seeing an archive full of empty files.
-                // since the bug is years old now, and this is a rather rare situation anyways (reported once in years),
-                // work around this locally by falling back to reading as many bytes as possible and using a standard non-pooled memory stream.
-                return new MemoryStream(s.ReadAllRemainingBytesToArray());
-            }
+            using (Stream s = entry.OpenEntryStream())
+                s.ReadExactly(owner.Memory.Span);
+
+            return new MemoryOwnerMemoryStream(owner);
         }
 
         public override void Dispose()

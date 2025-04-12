@@ -73,16 +73,6 @@ namespace osu.Game.Graphics.Containers
         /// </summary>
         protected bool IsBeatSyncedWithTrack { get; private set; }
 
-        /// <summary>
-        /// The most valid timing point, updated every frame.
-        /// </summary>
-        protected TimingControlPoint TimingPoint { get; private set; } = TimingControlPoint.DEFAULT;
-
-        /// <summary>
-        /// The most valid effect point, updated every frame.
-        /// </summary>
-        protected EffectControlPoint EffectPoint { get; private set; } = EffectControlPoint.DEFAULT;
-
         [Resolved]
         protected IBeatSyncProvider BeatSyncSource { get; private set; } = null!;
 
@@ -92,6 +82,9 @@ namespace osu.Game.Graphics.Containers
 
         protected override void Update()
         {
+            TimingControlPoint timingPoint;
+            EffectControlPoint effectPoint;
+
             IsBeatSyncedWithTrack = BeatSyncSource.Clock.IsRunning;
 
             double currentTrackTime;
@@ -109,8 +102,8 @@ namespace osu.Game.Graphics.Containers
 
                 currentTrackTime = BeatSyncSource.Clock.CurrentTime + early;
 
-                TimingPoint = BeatSyncSource.ControlPoints?.TimingPointAt(currentTrackTime) ?? TimingControlPoint.DEFAULT;
-                EffectPoint = BeatSyncSource.ControlPoints?.EffectPointAt(currentTrackTime) ?? EffectControlPoint.DEFAULT;
+                timingPoint = BeatSyncSource.ControlPoints?.TimingPointAt(currentTrackTime) ?? TimingControlPoint.DEFAULT;
+                effectPoint = BeatSyncSource.ControlPoints?.EffectPointAt(currentTrackTime) ?? EffectControlPoint.DEFAULT;
             }
             else
             {
@@ -118,28 +111,28 @@ namespace osu.Game.Graphics.Containers
                 // we still want to show an idle animation, so use this container's time instead.
                 currentTrackTime = Clock.CurrentTime + EarlyActivationMilliseconds;
 
-                TimingPoint = TimingControlPoint.DEFAULT;
-                EffectPoint = EffectControlPoint.DEFAULT;
+                timingPoint = TimingControlPoint.DEFAULT;
+                effectPoint = EffectControlPoint.DEFAULT;
             }
 
-            double beatLength = TimingPoint.BeatLength / Divisor;
+            double beatLength = timingPoint.BeatLength / Divisor;
 
             while (beatLength < MinimumBeatLength)
                 beatLength *= 2;
 
-            int beatIndex = (int)((currentTrackTime - TimingPoint.Time) / beatLength) - (TimingPoint.OmitFirstBarLine ? 1 : 0);
+            int beatIndex = (int)((currentTrackTime - timingPoint.Time) / beatLength) - (timingPoint.OmitFirstBarLine ? 1 : 0);
 
             // The beats before the start of the first control point are off by 1, this should do the trick
-            if (currentTrackTime < TimingPoint.Time)
+            if (currentTrackTime < timingPoint.Time)
                 beatIndex--;
 
-            TimeUntilNextBeat = (TimingPoint.Time - currentTrackTime) % beatLength;
+            TimeUntilNextBeat = (timingPoint.Time - currentTrackTime) % beatLength;
             if (TimeUntilNextBeat <= 0)
                 TimeUntilNextBeat += beatLength;
 
             TimeSinceLastBeat = beatLength - TimeUntilNextBeat;
 
-            if (ReferenceEquals(TimingPoint, lastTimingPoint) && beatIndex == lastBeat)
+            if (ReferenceEquals(timingPoint, lastTimingPoint) && beatIndex == lastBeat)
                 return;
 
             // as this event is sometimes used for sound triggers where `BeginDelayedSequence` has no effect, avoid firing it if too far away from the beat.
@@ -147,13 +140,13 @@ namespace osu.Game.Graphics.Containers
             if (AllowMistimedEventFiring || Math.Abs(TimeSinceLastBeat) < MISTIMED_ALLOWANCE)
             {
                 using (BeginDelayedSequence(-TimeSinceLastBeat))
-                    OnNewBeat(beatIndex, TimingPoint, EffectPoint, BeatSyncSource.CurrentAmplitudes);
+                    OnNewBeat(beatIndex, timingPoint, effectPoint, BeatSyncSource.CurrentAmplitudes);
             }
 
             lastBeat = beatIndex;
-            lastTimingPoint = TimingPoint;
+            lastTimingPoint = timingPoint;
 
-            IsKiaiTime = EffectPoint.KiaiMode;
+            IsKiaiTime = effectPoint.KiaiMode;
         }
     }
 }

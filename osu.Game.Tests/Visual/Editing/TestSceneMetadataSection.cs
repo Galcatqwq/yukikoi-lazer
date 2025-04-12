@@ -6,13 +6,11 @@
 using System.Linq;
 using NUnit.Framework;
 using osu.Framework.Allocation;
-using osu.Framework.Graphics;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input;
 using osu.Framework.Testing;
 using osu.Game.Beatmaps;
 using osu.Game.Graphics.UserInterfaceV2;
-using osu.Game.Overlays;
 using osu.Game.Rulesets.Osu;
 using osu.Game.Screens.Edit;
 using osu.Game.Screens.Edit.Setup;
@@ -22,9 +20,6 @@ namespace osu.Game.Tests.Visual.Editing
 {
     public partial class TestSceneMetadataSection : OsuManualInputManagerTestScene
     {
-        [Cached]
-        private OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Aquamarine);
-
         [Cached]
         private EditorBeatmap editorBeatmap = new EditorBeatmap(new Beatmap
         {
@@ -206,7 +201,7 @@ namespace osu.Game.Tests.Visual.Editing
         }
 
         private void createSection()
-            => AddStep("create metadata section", () => Child = metadataSection = new TestMetadataSection { RelativeSizeAxes = Axes.X });
+            => AddStep("create metadata section", () => Child = metadataSection = new TestMetadataSection());
 
         private void assertArtistMetadata(string expected)
             => AddAssert($"artist metadata is {expected}", () => editorBeatmap.Metadata.Artist, () => Is.EqualTo(expected));
@@ -231,11 +226,11 @@ namespace osu.Game.Tests.Visual.Editing
 
         private partial class TestMetadataSection : MetadataSection
         {
-            public new FormTextBox ArtistTextBox => base.ArtistTextBox;
-            public new FormTextBox RomanisedArtistTextBox => base.RomanisedArtistTextBox;
+            public new LabelledTextBox ArtistTextBox => base.ArtistTextBox;
+            public new LabelledTextBox RomanisedArtistTextBox => base.RomanisedArtistTextBox;
 
-            public new FormTextBox TitleTextBox => base.TitleTextBox;
-            public new FormTextBox RomanisedTitleTextBox => base.RomanisedTitleTextBox;
+            public new LabelledTextBox TitleTextBox => base.TitleTextBox;
+            public new LabelledTextBox RomanisedTitleTextBox => base.RomanisedTitleTextBox;
         }
     }
 }

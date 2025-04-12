@@ -59,10 +59,11 @@ namespace osu.Game.Rulesets.Taiko.UI
                 {
                     Anchor = Anchor.BottomCentre,
                     Origin = Anchor.BottomCentre,
-                    RelativeSizeAxes = Axes.Both,
-                    Height = 0.45f,
+                    RelativeSizeAxes = Axes.X,
+                    Height = 350,
                     Y = 20,
                     Masking = true,
+                    FillMode = FillMode.Fit,
                     Children = new Drawable[]
                     {
                         mainContent = new Container

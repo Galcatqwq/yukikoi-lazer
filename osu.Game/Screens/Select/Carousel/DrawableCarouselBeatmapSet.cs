@@ -8,7 +8,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using osu.Framework.Allocation;
-using osu.Framework.Bindables;
 using osu.Framework.Extensions.IEnumerableExtensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -20,10 +19,7 @@ using osu.Game.Beatmaps;
 using osu.Game.Collections;
 using osu.Game.Database;
 using osu.Game.Graphics.UserInterface;
-using osu.Game.Localisation;
-using osu.Game.Online.API;
 using osu.Game.Overlays;
-using osu.Game.Rulesets;
 
 namespace osu.Game.Screens.Select.Carousel
 {
@@ -43,16 +39,7 @@ namespace osu.Game.Screens.Select.Carousel
         [Resolved]
         private RealmAccess realm { get; set; } = null!;
 
-        [Resolved]
-        private IAPIProvider api { get; set; } = null!;
-
-        [Resolved]
-        private OsuGame? game { get; set; }
-
-        [Resolved]
-        private IBindable<RulesetInfo> ruleset { get; set; } = null!;
-
-        public IReadOnlyList<DrawableCarouselItem> DrawableBeatmaps => beatmapContainer?.IsLoaded != true ? Array.Empty<DrawableCarouselItem>() : beatmapContainer;
+        public IEnumerable<DrawableCarouselItem> DrawableBeatmaps => beatmapContainer?.IsLoaded != true ? Enumerable.Empty<DrawableCarouselItem>() : beatmapContainer.AliveChildren;
 
         private Container<DrawableCarouselItem>? beatmapContainer;
 
@@ -299,9 +286,6 @@ namespace osu.Game.Screens.Select.Carousel
 
                 if (beatmapSet.Beatmaps.Any(b => b.Hidden))
                     items.Add(new OsuMenuItem("Restore all hidden", MenuItemType.Standard, () => restoreHiddenRequested(beatmapSet)));
-
-                if (beatmapSet.GetOnlineURL(api, ruleset.Value) is string url)
-                    items.Add(new OsuMenuItem(CommonStrings.CopyLink, MenuItemType.Standard, () => game?.CopyToClipboard(url)));
 
                 if (dialogOverlay != null)
                     items.Add(new OsuMenuItem("Delete...", MenuItemType.Destructive, () => dialogOverlay.Push(new BeatmapDeleteDialog(beatmapSet))));

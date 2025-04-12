@@ -11,12 +11,13 @@ using osu.Framework.Localisation;
 using osu.Framework.Logging;
 using osu.Framework.Platform;
 using osu.Game.Database;
+using osu.Game.Localisation;
 
 namespace osu.Game.Overlays.Settings.Sections.DebugSettings
 {
     public partial class MemorySettings : SettingsSubsection
     {
-        protected override LocalisableString Header => @"Memory";
+        protected override LocalisableString Header => DebugSettingsStrings.MemoryHeader;
 
         [BackgroundDependencyLoader]
         private void load(GameHost host, RealmAccess realm)
@@ -28,27 +29,27 @@ namespace osu.Game.Overlays.Settings.Sections.DebugSettings
             {
                 new SettingsButton
                 {
-                    Text = @"Clear all caches",
+                    Text = DebugSettingsStrings.ClearAllCaches,
                     Action = host.Collect
                 },
                 new SettingsButton
                 {
-                    Text = @"Compact realm",
+                    Text = "Compact realm",
                     Action = () =>
                     {
                         // Blocking operations implicitly causes a Compact().
-                        using (realm.BlockAllOperations(@"compact"))
+                        using (realm.BlockAllOperations("compact"))
                         {
                         }
                     }
                 },
                 blockAction = new SettingsButton
                 {
-                    Text = @"Block realm",
+                    Text = "Block realm",
                 },
                 unblockAction = new SettingsButton
                 {
-                    Text = @"Unblock realm",
+                    Text = "Unblock realm",
                 },
             };
 
@@ -56,7 +57,7 @@ namespace osu.Game.Overlays.Settings.Sections.DebugSettings
             {
                 try
                 {
-                    IDisposable? token = realm.BlockAllOperations(@"maintenance");
+                    IDisposable? token = realm.BlockAllOperations("maintenance");
 
                     blockAction.Enabled.Value = false;
 
@@ -88,7 +89,7 @@ namespace osu.Game.Overlays.Settings.Sections.DebugSettings
                 }
                 catch (Exception e)
                 {
-                    Logger.Error(e, @"Blocking realm failed");
+                    Logger.Error(e, "Blocking realm failed");
                 }
             };
         }

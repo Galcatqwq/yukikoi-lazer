@@ -1,30 +1,25 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using System.ComponentModel;
+using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
-using osu.Framework.Graphics.Containers;
 using osu.Game.Graphics.Containers;
-using osu.Game.Online.Rooms;
 
 namespace osu.Game.Screens.OnlinePlay.Components
 {
-    public partial class ParticipantsDisplay : CompositeDrawable
+    public partial class ParticipantsDisplay : OnlinePlayComposite
     {
-        public readonly Bindable<string> Details = new Bindable<string>();
+        public Bindable<string> Details = new Bindable<string>();
 
-        private readonly Room room;
-
-        public ParticipantsDisplay(Room room, Direction direction)
+        public ParticipantsDisplay(Direction direction)
         {
-            this.room = room;
             OsuScrollContainer scroll;
             ParticipantsList list;
 
             AddInternal(scroll = new OsuScrollContainer(direction)
             {
-                Child = list = new ParticipantsList(room)
+                Child = list = new ParticipantsList()
             });
 
             switch (direction)
@@ -51,32 +46,14 @@ namespace osu.Game.Screens.OnlinePlay.Components
             }
         }
 
-        protected override void LoadComplete()
+        [BackgroundDependencyLoader]
+        private void load()
         {
-            base.LoadComplete();
-
-            room.PropertyChanged += onRoomPropertyChanged;
-            updateRoomParticipantCount();
+            ParticipantCount.BindValueChanged(_ => setParticipantCount());
+            MaxParticipants.BindValueChanged(_ => setParticipantCount(), true);
         }
 
-        private void onRoomPropertyChanged(object? sender, PropertyChangedEventArgs e)
-        {
-            switch (e.PropertyName)
-            {
-                case nameof(Room.MaxParticipants):
-                case nameof(Room.ParticipantCount):
-                    updateRoomParticipantCount();
-                    break;
-            }
-        }
-
-        private void updateRoomParticipantCount()
-            => Details.Value = room.MaxParticipants != null ? $"{room.ParticipantCount}/{room.MaxParticipants}" : room.ParticipantCount.ToString();
-
-        protected override void Dispose(bool isDisposing)
-        {
-            base.Dispose(isDisposing);
-            room.PropertyChanged -= onRoomPropertyChanged;
-        }
+        private void setParticipantCount() =>
+            Details.Value = MaxParticipants.Value != null ? $"{ParticipantCount.Value}/{MaxParticipants.Value}" : ParticipantCount.Value.ToString();
     }
 }

@@ -19,7 +19,7 @@ namespace osu.Game.Rulesets.Catch.Tests.Editor
     {
         protected override DrawableHitObject CreateHitObject(HitObject hitObject) => new DrawableFruit((Fruit)hitObject);
 
-        protected override HitObjectPlacementBlueprint CreateBlueprint() => new FruitPlacementBlueprint();
+        protected override PlacementBlueprint CreateBlueprint() => new FruitPlacementBlueprint();
 
         [Test]
         public void TestFruitPlacementPosition()

@@ -11,7 +11,6 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Effects;
 using osu.Framework.Graphics.Shapes;
-using osu.Framework.Input;
 using osu.Framework.Input.Bindings;
 using osu.Framework.Input.Events;
 using osu.Game.Configuration;
@@ -215,45 +214,23 @@ namespace osu.Game.Overlays.Mods
                 this.panel = panel;
             }
 
-            private InputManager inputManager = null!;
-
-            protected override void LoadComplete()
+            protected override void OnHoverLost(HoverLostEvent e)
             {
-                base.LoadComplete();
-                inputManager = GetContainingInputManager()!;
-            }
-
-            private double timeUntilCollapse;
-
-            private const double collapse_grace_time = 180;
-            private const float collapse_grace_position = 40;
-
-            protected override void Update()
-            {
-                base.Update();
-
-                if (ExpandedState.Value == ModCustomisationPanelState.Expanded)
+                if (ExpandedState.Value is ModCustomisationPanelState.ExpandedByHover
+                    && !ReceivePositionalInputAt(e.ScreenSpaceMousePosition))
                 {
-                    bool canCollapse = !DrawRectangle.Inflate(new Vector2(collapse_grace_position)).Contains(ToLocalSpace(inputManager.CurrentState.Mouse.Position))
-                                       && inputManager.DraggedDrawable == null;
-
-                    if (canCollapse)
-                    {
-                        if (timeUntilCollapse <= 0)
-                            ExpandedState.Value = ModCustomisationPanelState.Collapsed;
-                        timeUntilCollapse -= Time.Elapsed;
-                    }
-                    else
-                        timeUntilCollapse = collapse_grace_time;
+                    ExpandedState.Value = ModCustomisationPanelState.Collapsed;
                 }
+
+                base.OnHoverLost(e);
             }
         }
 
         public enum ModCustomisationPanelState
         {
             Collapsed = 0,
-            Expanded = 1,
-            ExpandedByMod = 2,
+            ExpandedByHover = 1,
+            Expanded = 2,
         }
     }
 }

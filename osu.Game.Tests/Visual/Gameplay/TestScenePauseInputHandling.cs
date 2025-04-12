@@ -47,16 +47,6 @@ namespace osu.Game.Tests.Visual.Gameplay
                 {
                     Position = OsuPlayfield.BASE_SIZE / 2,
                     StartTime = 5000,
-                },
-                new HitCircle
-                {
-                    Position = OsuPlayfield.BASE_SIZE / 2,
-                    StartTime = 10000,
-                },
-                new HitCircle
-                {
-                    Position = OsuPlayfield.BASE_SIZE / 2,
-                    StartTime = 15000,
                 }
             }
         };
@@ -266,7 +256,7 @@ namespace osu.Game.Tests.Visual.Gameplay
         }
 
         [Test]
-        public void TestOsuHitCircleNotReceivingInputOnResume()
+        public void TestOsuRegisterInputFromPressingOrangeCursorButPressIsBlocked()
         {
             KeyCounter counter = null!;
 
@@ -291,80 +281,17 @@ namespace osu.Game.Tests.Visual.Gameplay
             AddAssert("button is released in kbc", () => !Player.DrawableRuleset.Playfield.FindClosestParent<OsuInputManager>()!.PressedActions.Any());
         }
 
-        [Test]
-        public void TestOsuHitCircleNotReceivingInputOnResume_PauseWhileHoldingSameKey()
-        {
-            KeyCounter counter = null!;
-
-            loadPlayer(() => new OsuRuleset());
-            AddStep("get key counter", () => counter = this.ChildrenOfType<KeyCounter>().Single(k => k.Trigger is KeyCounterActionTrigger<OsuAction> actionTrigger && actionTrigger.Action == OsuAction.LeftButton));
-
-            AddStep("press Z", () => InputManager.PressKey(Key.Z));
-            AddAssert("circle hit", () => Player.ScoreProcessor.HighestCombo.Value, () => Is.EqualTo(1));
-
-            AddStep("pause", () => Player.Pause());
-            AddStep("release Z", () => InputManager.ReleaseKey(Key.Z));
-
-            AddStep("resume", () => Player.Resume());
-            AddStep("go to resume cursor", () => InputManager.MoveMouseTo(this.ChildrenOfType<OsuResumeOverlay.OsuClickToResumeCursor>().Single()));
-            AddStep("press Z to resume", () => InputManager.PressKey(Key.Z));
-            AddStep("release Z", () => InputManager.ReleaseKey(Key.Z));
-
-            checkKey(() => counter, 1, false);
-
-            seekTo(5000);
-
-            AddStep("press Z", () => InputManager.PressKey(Key.Z));
-
-            checkKey(() => counter, 2, true);
-            AddAssert("circle hit", () => Player.ScoreProcessor.HighestCombo.Value, () => Is.EqualTo(2));
-
-            AddStep("release Z", () => InputManager.ReleaseKey(Key.Z));
-            checkKey(() => counter, 2, false);
-        }
-
-        [Test]
-        public void TestOsuHitCircleNotReceivingInputOnResume_PauseWhileHoldingOtherKey()
-        {
-            loadPlayer(() => new OsuRuleset());
-
-            AddStep("press X", () => InputManager.PressKey(Key.X));
-            AddAssert("circle hit", () => Player.ScoreProcessor.HighestCombo.Value, () => Is.EqualTo(1));
-
-            seekTo(5000);
-
-            AddStep("pause", () => Player.Pause());
-            AddStep("release X", () => InputManager.ReleaseKey(Key.X));
-
-            AddStep("resume", () => Player.Resume());
-            AddStep("go to resume cursor", () => InputManager.MoveMouseTo(this.ChildrenOfType<OsuResumeOverlay.OsuClickToResumeCursor>().Single()));
-            AddStep("press Z to resume", () => InputManager.PressKey(Key.Z));
-            AddStep("release Z", () => InputManager.ReleaseKey(Key.Z));
-
-            AddAssert("circle not hit", () => Player.ScoreProcessor.HighestCombo.Value, () => Is.EqualTo(1));
-
-            AddStep("press X", () => InputManager.PressKey(Key.X));
-            AddStep("release X", () => InputManager.ReleaseKey(Key.X));
-
-            AddAssert("circle hit", () => Player.ScoreProcessor.HighestCombo.Value, () => Is.EqualTo(2));
-        }
-
         private void loadPlayer(Func<Ruleset> createRuleset)
         {
             AddStep("set ruleset", () => currentRuleset = createRuleset());
             AddStep("load player", LoadPlayer);
             AddUntilStep("player loaded", () => Player.IsLoaded && Player.Alpha == 1);
-            AddUntilStep("wait for hud", () => Player.HUDOverlay.ChildrenOfType<SkinnableContainer>().All(s => s.ComponentsLoaded));
+            AddUntilStep("wait for hud", () => Player.HUDOverlay.ChildrenOfType<SkinComponentsContainer>().All(s => s.ComponentsLoaded));
 
-            seekTo(0);
+            AddStep("seek to gameplay", () => Player.GameplayClockContainer.Seek(0));
+            AddUntilStep("wait for seek to finish", () => Player.DrawableRuleset.FrameStableClock.CurrentTime, () => Is.EqualTo(0).Within(500));
             AddAssert("not in break", () => !Player.IsBreakTime.Value);
             AddStep("move cursor to center", () => InputManager.MoveMouseTo(Player.DrawableRuleset.Playfield));
-        }
-
-        private void seekTo(double time)
-        {
-            AddStep($"seek to {time}ms", () => Player.GameplayClockContainer.Seek(time));
-            AddUntilStep("wait for seek to finish", () => Player.DrawableRuleset.FrameStableClock.CurrentTime, () => Is.EqualTo(time).Within(500));
         }
 
         private void checkKey(Func<KeyCounter> counter, int count, bool active)

@@ -84,7 +84,7 @@ namespace osu.Game.Tests.Visual.SongSelect
             AddStep("select EZ mod", () =>
             {
                 var ruleset = advancedStats.BeatmapInfo.Ruleset.CreateInstance().AsNonNull();
-                advancedStats.Mods.Value = new[] { ruleset.CreateMod<ModEasy>() };
+                SelectedMods.Value = new[] { ruleset.CreateMod<ModEasy>() };
             });
 
             AddAssert("circle size bar is blue", () => barIsBlue(advancedStats.FirstValue));
@@ -101,7 +101,7 @@ namespace osu.Game.Tests.Visual.SongSelect
             AddStep("select HR mod", () =>
             {
                 var ruleset = advancedStats.BeatmapInfo.Ruleset.CreateInstance().AsNonNull();
-                advancedStats.Mods.Value = new[] { ruleset.CreateMod<ModHardRock>() };
+                SelectedMods.Value = new[] { ruleset.CreateMod<ModHardRock>() };
             });
 
             AddAssert("circle size bar is red", () => barIsRed(advancedStats.FirstValue));
@@ -120,7 +120,7 @@ namespace osu.Game.Tests.Visual.SongSelect
                 var ruleset = advancedStats.BeatmapInfo.Ruleset.CreateInstance().AsNonNull();
                 var difficultyAdjustMod = ruleset.CreateMod<ModDifficultyAdjust>().AsNonNull();
                 difficultyAdjustMod.ReadFromDifficulty(advancedStats.BeatmapInfo.Difficulty);
-                advancedStats.Mods.Value = new[] { difficultyAdjustMod };
+                SelectedMods.Value = new[] { difficultyAdjustMod };
             });
 
             AddAssert("circle size bar is white", () => barIsWhite(advancedStats.FirstValue));
@@ -143,7 +143,7 @@ namespace osu.Game.Tests.Visual.SongSelect
                 difficultyAdjustMod.ReadFromDifficulty(originalDifficulty);
                 difficultyAdjustMod.DrainRate.Value = originalDifficulty.DrainRate - 0.5f;
                 difficultyAdjustMod.ApproachRate.Value = originalDifficulty.ApproachRate + 2.2f;
-                advancedStats.Mods.Value = new[] { difficultyAdjustMod };
+                SelectedMods.Value = new[] { difficultyAdjustMod };
             });
 
             AddAssert("circle size bar is white", () => barIsWhite(advancedStats.FirstValue));

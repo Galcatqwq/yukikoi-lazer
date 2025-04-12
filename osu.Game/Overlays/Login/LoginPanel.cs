@@ -9,13 +9,13 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Primitives;
 using osu.Framework.Input.Events;
-using osu.Game.Configuration;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Containers;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Graphics.UserInterface;
 using osu.Game.Localisation;
 using osu.Game.Online.API;
+using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Overlays.Settings;
 using osu.Game.Users;
 using osuTK;
@@ -38,14 +38,13 @@ namespace osu.Game.Overlays.Login
         /// </summary>
         public Action? RequestHide;
 
+        private IBindable<APIUser> user = null!;
+        private readonly Bindable<UserStatus?> status = new Bindable<UserStatus?>();
+
         private readonly IBindable<APIState> apiState = new Bindable<APIState>();
-        private readonly Bindable<UserStatus> configUserStatus = new Bindable<UserStatus>();
 
         [Resolved]
         private IAPIProvider api { get; set; } = null!;
-
-        [Resolved]
-        private OsuConfigManager config { get; set; } = null!;
 
         public override RectangleF BoundingBox => bounding ? base.BoundingBox : RectangleF.Empty;
 
@@ -69,11 +68,17 @@ namespace osu.Game.Overlays.Login
         {
             base.LoadComplete();
 
-            config.BindWith(OsuSetting.UserOnlineStatus, configUserStatus);
-            configUserStatus.BindValueChanged(e => updateDropdownCurrent(e.NewValue), true);
-
             apiState.BindTo(api.State);
             apiState.BindValueChanged(onlineStateChanged, true);
+
+            user = api.LocalUser.GetBoundCopy();
+            user.BindValueChanged(u =>
+            {
+                status.UnbindBindings();
+                status.BindTo(u.NewValue.Status);
+            }, true);
+
+            status.BindValueChanged(e => updateDropdownCurrent(e.NewValue), true);
         }
 
         private void onlineStateChanged(ValueChangedEvent<APIState> state) => Schedule(() =>
@@ -152,23 +157,23 @@ namespace osu.Game.Overlays.Login
                         },
                     };
 
-                    updateDropdownCurrent(configUserStatus.Value);
+                    updateDropdownCurrent(status.Value);
                     dropdown.Current.BindValueChanged(action =>
                     {
                         switch (action.NewValue)
                         {
                             case UserAction.Online:
-                                configUserStatus.Value = UserStatus.Online;
+                                api.LocalUser.Value.Status.Value = UserStatus.Online;
                                 dropdown.StatusColour = colours.Green;
                                 break;
 
                             case UserAction.DoNotDisturb:
-                                configUserStatus.Value = UserStatus.DoNotDisturb;
+                                api.LocalUser.Value.Status.Value = UserStatus.DoNotDisturb;
                                 dropdown.StatusColour = colours.Red;
                                 break;
 
                             case UserAction.AppearOffline:
-                                configUserStatus.Value = UserStatus.Offline;
+                                api.LocalUser.Value.Status.Value = UserStatus.Offline;
                                 dropdown.StatusColour = colours.Gray7;
                                 break;
 

@@ -28,6 +28,7 @@ using osu.Game.Rulesets;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Screens.Select.Filter;
 using osuTK;
+using osuTK.Graphics;
 using osuTK.Input;
 
 namespace osu.Game.Screens.Select
@@ -57,7 +58,7 @@ namespace osu.Game.Screens.Select
         [CanBeNull]
         private FilterCriteria currentCriteria;
 
-        public virtual FilterCriteria CreateCriteria()
+        public FilterCriteria CreateCriteria()
         {
             string query = searchTextBox.Text;
 
@@ -96,8 +97,8 @@ namespace osu.Game.Screens.Select
             {
                 new Box
                 {
-                    Colour = OsuColour.Gray(0.05f),
-                    Alpha = 0.96f,
+                    Colour = Color4.Black,
+                    Alpha = 0.8f,
                     Width = 2,
                     RelativeSizeAxes = Axes.Both,
                 },

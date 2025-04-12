@@ -30,8 +30,7 @@ namespace osu.Game.Overlays
 
         private const float border_width = 5;
 
-        public readonly Medal Medal;
-
+        private readonly Medal medal;
         private readonly Box background;
         private readonly Container backgroundStrip, particleContainer;
         private readonly BackgroundStrip leftStrip, rightStrip;
@@ -45,7 +44,7 @@ namespace osu.Game.Overlays
 
         public MedalAnimation(Medal medal)
         {
-            Medal = medal;
+            this.medal = medal;
             RelativeSizeAxes = Axes.Both;
 
             Child = content = new Container
@@ -169,7 +168,7 @@ namespace osu.Game.Overlays
         {
             base.LoadComplete();
 
-            LoadComponentAsync(drawableMedal = new DrawableMedal(Medal)
+            LoadComponentAsync(drawableMedal = new DrawableMedal(medal)
             {
                 Anchor = Anchor.TopCentre,
                 Origin = Anchor.TopCentre,
@@ -245,19 +244,18 @@ namespace osu.Game.Overlays
             this.FadeOut(200);
         }
 
-        public bool Dismiss()
+        public void Dismiss()
         {
             if (drawableMedal != null && drawableMedal.State != DisplayState.Full)
             {
                 // if we haven't yet, play out the animation fully
                 drawableMedal.State = DisplayState.Full;
                 FinishTransforms(true);
-                return false;
+                return;
             }
 
             Hide();
             Expire();
-            return true;
         }
 
         private partial class BackgroundStrip : Container

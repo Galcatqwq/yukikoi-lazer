@@ -8,9 +8,7 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
-using osu.Framework.Localisation;
 using osu.Game.Graphics.Containers;
-using osu.Game.Localisation.SkinComponents;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.UI;
 using osuTK;
@@ -22,24 +20,9 @@ namespace osu.Game.Screens.Play.HUD
     /// </summary>
     public partial class ModDisplay : CompositeDrawable, IHasCurrentValue<IReadOnlyList<Mod>>
     {
-        public const float MOD_ICON_SCALE = 0.6f;
+        private const int fade_duration = 1000;
 
-        private ExpansionMode expansionMode = ExpansionMode.ExpandOnHover;
-
-        public ExpansionMode ExpansionMode
-        {
-            get => expansionMode;
-            set
-            {
-                if (expansionMode == value)
-                    return;
-
-                expansionMode = value;
-
-                if (IsLoaded)
-                    updateExpansionMode();
-            }
-        }
+        public ExpansionMode ExpansionMode = ExpansionMode.ExpandOnHover;
 
         private readonly BindableWithCurrent<IReadOnlyList<Mod>> current = new BindableWithCurrent<IReadOnlyList<Mod>>(Array.Empty<Mod>());
 
@@ -54,25 +37,7 @@ namespace osu.Game.Screens.Play.HUD
             }
         }
 
-        private bool showExtendedInformation;
-
-        public bool ShowExtendedInformation
-        {
-            get => showExtendedInformation;
-            set
-            {
-                showExtendedInformation = value;
-                foreach (var icon in iconsContainer)
-                    icon.ShowExtendedInformation = value;
-            }
-        }
-
-        public FillDirection FillDirection
-        {
-            get => iconsContainer.Direction;
-            set => iconsContainer.Direction = value;
-        }
-
+        private readonly bool showExtendedInformation;
         private readonly FillFlowContainer<ModIcon> iconsContainer;
 
         public ModDisplay(bool showExtendedInformation = true)
@@ -93,7 +58,11 @@ namespace osu.Game.Screens.Play.HUD
             base.LoadComplete();
 
             Current.BindValueChanged(updateDisplay, true);
-            updateExpansionMode(0);
+
+            iconsContainer.FadeInFromZero(fade_duration, Easing.OutQuint);
+
+            if (ExpansionMode == ExpansionMode.AlwaysExpanded || ExpansionMode == ExpansionMode.AlwaysContracted)
+                FinishTransforms(true);
         }
 
         private void updateDisplay(ValueChangedEvent<IReadOnlyList<Mod>> mods)
@@ -101,40 +70,29 @@ namespace osu.Game.Screens.Play.HUD
             iconsContainer.Clear();
 
             foreach (Mod mod in mods.NewValue.AsOrdered())
-                iconsContainer.Add(new ModIcon(mod, showExtendedInformation: showExtendedInformation) { Scale = new Vector2(MOD_ICON_SCALE) });
+                iconsContainer.Add(new ModIcon(mod, showExtendedInformation: showExtendedInformation) { Scale = new Vector2(0.6f) });
+
+            appearTransform();
         }
 
-        private void updateExpansionMode(double duration = 500)
+        private void appearTransform()
         {
-            switch (expansionMode)
-            {
-                case ExpansionMode.AlwaysExpanded:
-                    expand(duration);
-                    break;
+            expand();
 
-                case ExpansionMode.AlwaysContracted:
-                    contract(duration);
-                    break;
-
-                case ExpansionMode.ExpandOnHover:
-                    if (IsHovered)
-                        expand(duration);
-                    else
-                        contract(duration);
-                    break;
-            }
+            using (iconsContainer.BeginDelayedSequence(1200))
+                contract();
         }
 
-        private void expand(double duration = 500)
+        private void expand()
         {
             if (ExpansionMode != ExpansionMode.AlwaysContracted)
-                iconsContainer.TransformSpacingTo(new Vector2(5, -10), duration, Easing.OutQuint);
+                iconsContainer.TransformSpacingTo(new Vector2(5, 0), 500, Easing.OutQuint);
         }
 
-        private void contract(double duration = 500)
+        private void contract()
         {
             if (ExpansionMode != ExpansionMode.AlwaysExpanded)
-                iconsContainer.TransformSpacingTo(new Vector2(-25), duration, Easing.OutQuint);
+                iconsContainer.TransformSpacingTo(new Vector2(-25, 0), 500, Easing.OutQuint);
         }
 
         protected override bool OnHover(HoverEvent e)
@@ -155,19 +113,16 @@ namespace osu.Game.Screens.Play.HUD
         /// <summary>
         /// The <see cref="ModDisplay"/> will expand only when hovered.
         /// </summary>
-        [LocalisableDescription(typeof(SkinnableModDisplayStrings), nameof(SkinnableModDisplayStrings.ExpandOnHover))]
         ExpandOnHover,
 
         /// <summary>
         /// The <see cref="ModDisplay"/> will always be expanded.
         /// </summary>
-        [LocalisableDescription(typeof(SkinnableModDisplayStrings), nameof(SkinnableModDisplayStrings.AlwaysExpanded))]
         AlwaysExpanded,
 
         /// <summary>
         /// The <see cref="ModDisplay"/> will always be contracted.
         /// </summary>
-        [LocalisableDescription(typeof(SkinnableModDisplayStrings), nameof(SkinnableModDisplayStrings.AlwaysContracted))]
-        AlwaysContracted,
+        AlwaysContracted
     }
 }

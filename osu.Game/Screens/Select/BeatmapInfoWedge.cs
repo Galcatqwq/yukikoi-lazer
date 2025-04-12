@@ -401,6 +401,7 @@ namespace osu.Game.Screens.Select
                 if (beatmap == null || bpmLabelContainer == null)
                     return;
 
+                // this doesn't consider mods which apply variable rates, yet.
                 double rate = ModUtils.CalculateRateWithMods(mods.Value);
 
                 int bpmMax = FormatUtils.RoundBPM(beatmap.ControlPointInfo.BPMMaximum, rate);

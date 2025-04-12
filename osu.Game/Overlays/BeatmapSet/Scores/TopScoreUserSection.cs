@@ -27,9 +27,7 @@ namespace osu.Game.Overlays.BeatmapSet.Scores
         private readonly UpdateableAvatar avatar;
         private readonly LinkFlowContainer usernameText;
         private readonly DrawableDate achievedOn;
-
         private readonly UpdateableFlag flag;
-        private readonly UpdateableTeamFlag teamFlag;
 
         public TopScoreUserSection()
         {
@@ -114,30 +112,12 @@ namespace osu.Game.Overlays.BeatmapSet.Scores
                                     },
                                 }
                             },
-                            new FillFlowContainer
+                            flag = new UpdateableFlag
                             {
-                                AutoSizeAxes = Axes.Both,
                                 Anchor = Anchor.CentreLeft,
                                 Origin = Anchor.CentreLeft,
-                                Direction = FillDirection.Horizontal,
-                                Spacing = new Vector2(4),
-                                Children = new Drawable[]
-                                {
-                                    flag = new UpdateableFlag
-                                    {
-                                        Anchor = Anchor.CentreLeft,
-                                        Origin = Anchor.CentreLeft,
-                                        Size = new Vector2(19, 14),
-                                        Margin = new MarginPadding { Top = 3 }, // makes spacing look more even
-                                    },
-                                    teamFlag = new UpdateableTeamFlag
-                                    {
-                                        Anchor = Anchor.CentreLeft,
-                                        Origin = Anchor.CentreLeft,
-                                        Size = new Vector2(28, 14),
-                                        Margin = new MarginPadding { Top = 3 }, // makes spacing look more even
-                                    },
-                                }
+                                Size = new Vector2(19, 14),
+                                Margin = new MarginPadding { Top = 3 }, // makes spacing look more even
                             },
                         }
                     }
@@ -159,7 +139,6 @@ namespace osu.Game.Overlays.BeatmapSet.Scores
             {
                 avatar.User = value.User;
                 flag.CountryCode = value.User.CountryCode;
-                teamFlag.Team = value.User.Team;
                 achievedOn.Date = value.Date;
 
                 usernameText.Clear();

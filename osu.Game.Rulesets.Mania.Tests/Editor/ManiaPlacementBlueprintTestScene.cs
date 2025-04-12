@@ -9,6 +9,7 @@ using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Timing;
+using osu.Game.Rulesets.Edit;
 using osu.Game.Rulesets.Mania.Beatmaps;
 using osu.Game.Rulesets.Mania.Objects.Drawables;
 using osu.Game.Rulesets.Mania.UI;
@@ -22,8 +23,6 @@ namespace osu.Game.Rulesets.Mania.Tests.Editor
 {
     public abstract partial class ManiaPlacementBlueprintTestScene : PlacementBlueprintTestScene
     {
-        protected sealed override Ruleset CreateRuleset() => new ManiaRuleset();
-
         private readonly Column column;
 
         [Cached(typeof(IReadOnlyList<Mod>))]
@@ -48,11 +47,12 @@ namespace osu.Game.Rulesets.Mania.Tests.Editor
             });
         }
 
-        protected override void UpdatePlacementTimeAndPosition()
+        protected override SnapResult SnapForBlueprint(PlacementBlueprint blueprint)
         {
             double time = column.TimeAtScreenSpacePosition(InputManager.CurrentState.Mouse.Position);
             var pos = column.ScreenSpacePositionAtTime(time);
-            CurrentBlueprint.UpdateTimeAndPosition(pos, time);
+
+            return new SnapResult(pos, time, column);
         }
 
         protected override Container CreateHitObjectContainer() => new ScrollingTestContainer(ScrollingDirection.Down) { RelativeSizeAxes = Axes.Both };

@@ -658,10 +658,11 @@ namespace osu.Game.Tests.Visual.Gameplay
 
         private partial class TestModSelectOverlay : UserModSelectOverlay
         {
+            protected override bool ShowPresets => false;
+
             public TestModSelectOverlay()
                 : base(OverlayColourScheme.Aquamarine)
             {
-                ShowPresets = false;
             }
         }
     }

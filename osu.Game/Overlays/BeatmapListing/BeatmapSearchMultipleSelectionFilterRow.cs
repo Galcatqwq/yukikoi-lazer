@@ -73,10 +73,7 @@ namespace osu.Game.Overlays.BeatmapListing
             private void currentChanged(object? sender, NotifyCollectionChangedEventArgs e)
             {
                 foreach (var c in Children)
-                {
-                    if (!c.Active.Disabled)
-                        c.Active.Value = Current.Contains(c.Value);
-                }
+                    c.Active.Value = Current.Contains(c.Value);
             }
 
             /// <summary>
@@ -103,7 +100,7 @@ namespace osu.Game.Overlays.BeatmapListing
 
         protected partial class MultipleSelectionFilterTabItem : FilterTabItem<T>
         {
-            private Container activeContent = null!;
+            private Drawable activeContent = null!;
             private Circle background = null!;
 
             public MultipleSelectionFilterTabItem(T value)
@@ -163,9 +160,7 @@ namespace osu.Game.Overlays.BeatmapListing
             {
                 Color4 colour = Active.Value ? ColourActive : ColourNormal;
 
-                if (!Enabled.Value)
-                    colour = colour.Darken(1f);
-                else if (IsHovered)
+                if (IsHovered)
                     colour = Active.Value ? colour.Darken(0.2f) : colour.Lighten(0.2f);
 
                 if (Active.Value)

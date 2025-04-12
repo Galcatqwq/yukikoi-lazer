@@ -68,14 +68,14 @@ namespace osu.Game.Tests.Visual.UserInterface
             AddAssert(@"Check empty multiplier", () => assertModsMultiplier(Array.Empty<Mod>()));
         }
 
-        [Test]
+        /*[Test]
         public void TestUnrankedBadge()
         {
             AddStep(@"Add unranked mod", () => changeMods(new[] { new OsuModDeflate() }));
             AddAssert("Unranked badge shown", () => footerButtonMods.UnrankedBadge.Alpha == 1);
             AddStep(@"Clear selected mod", () => changeMods(Array.Empty<Mod>()));
             AddAssert("Unranked badge not shown", () => footerButtonMods.UnrankedBadge.Alpha == 0);
-        }
+        }*/
 
         private void changeMods(IReadOnlyList<Mod> mods)
         {

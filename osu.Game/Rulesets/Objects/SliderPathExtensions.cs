@@ -15,9 +15,9 @@ namespace osu.Game.Rulesets.Objects
         /// Snaps the provided <paramref name="hitObject"/>'s duration using the <paramref name="snapProvider"/>.
         /// </summary>
         public static void SnapTo<THitObject>(this THitObject hitObject, IDistanceSnapProvider? snapProvider)
-            where THitObject : HitObject, IHasPath, IHasSliderVelocity
+            where THitObject : HitObject, IHasPath
         {
-            hitObject.Path.ExpectedDistance.Value = snapProvider?.FindSnappedDistance((float)hitObject.Path.CalculatedDistance, hitObject.StartTime, hitObject) ?? hitObject.Path.CalculatedDistance;
+            hitObject.Path.ExpectedDistance.Value = snapProvider?.FindSnappedDistance(hitObject, (float)hitObject.Path.CalculatedDistance) ?? hitObject.Path.CalculatedDistance;
         }
 
         /// <summary>

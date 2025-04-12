@@ -10,8 +10,11 @@ namespace osu.Game.Rulesets.Mods
 {
     public abstract class ModHidden : ModWithVisibilityAdjustment, IApplicableToScoreProcessor
     {
-        public override string Name => "Hidden";
+        public override string Name => "消隐";
+
         public override string Acronym => "HD";
+
+        //public override LocalisableString Description => "没有缩圈,圆圈渐隐,分数略微提高";
         public override IconUsage? Icon => OsuIcon.ModHidden;
         public override ModType Type => ModType.DifficultyIncrease;
         public override bool Ranked => UsesDefaultConfiguration;

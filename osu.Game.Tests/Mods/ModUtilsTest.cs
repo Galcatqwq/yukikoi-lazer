@@ -6,7 +6,6 @@ using System.Linq;
 using Moq;
 using NUnit.Framework;
 using osu.Framework.Localisation;
-using osu.Game.Online.Rooms;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Osu;
 using osu.Game.Rulesets.Osu.Mods;
@@ -138,18 +137,6 @@ namespace osu.Game.Tests.Mods
 
         private static readonly object[] invalid_mod_test_scenarios =
         {
-            // incompatible pair.
-            new object[]
-            {
-                new Mod[] { new OsuModHidden(), new OsuModApproachDifferent() },
-                new[] { typeof(OsuModHidden), typeof(OsuModApproachDifferent) }
-            },
-            // incompatible pair with derived class.
-            new object[]
-            {
-                new Mod[] { new OsuModDeflate(), new OsuModApproachDifferent() },
-                new[] { typeof(OsuModDeflate), typeof(OsuModApproachDifferent) }
-            },
             // system mod not applicable in lazer.
             new object[]
             {
@@ -184,18 +171,6 @@ namespace osu.Game.Tests.Mods
 
         private static readonly object[] invalid_multiplayer_mod_test_scenarios =
         {
-            // incompatible pair.
-            new object[]
-            {
-                new Mod[] { new OsuModHidden(), new OsuModApproachDifferent() },
-                new[] { typeof(OsuModHidden), typeof(OsuModApproachDifferent) }
-            },
-            // incompatible pair with derived class.
-            new object[]
-            {
-                new Mod[] { new OsuModDeflate(), new OsuModApproachDifferent() },
-                new[] { typeof(OsuModDeflate), typeof(OsuModApproachDifferent) }
-            },
             // system mod.
             new object[]
             {
@@ -253,18 +228,6 @@ namespace osu.Game.Tests.Mods
             {
                 new Mod[] { new OsuModHidden(), new InvalidMultiplayerFreeMod() },
                 new[] { typeof(InvalidMultiplayerFreeMod) }
-            },
-            // incompatible pair is valid for free mods.
-            new object[]
-            {
-                new Mod[] { new OsuModHidden(), new OsuModApproachDifferent() },
-                Array.Empty<Type>(),
-            },
-            // incompatible pair with derived class is valid for free mods.
-            new object[]
-            {
-                new Mod[] { new OsuModDeflate(), new OsuModSpinIn() },
-                Array.Empty<Type>(),
             },
             // valid pair.
             new object[]
@@ -341,40 +304,6 @@ namespace osu.Game.Tests.Mods
             Assert.AreEqual(ModUtils.FormatScoreMultiplier(1.045).ToString(), "1.05x");
             Assert.AreEqual(ModUtils.FormatScoreMultiplier(1.05).ToString(), "1.05x");
             Assert.AreEqual(ModUtils.FormatScoreMultiplier(1.055).ToString(), "1.06x");
-        }
-
-        [Test]
-        public void TestRoomModValidity()
-        {
-            Assert.IsTrue(ModUtils.IsValidModForMatchType(new OsuModHardRock(), MatchType.Playlists));
-            Assert.IsTrue(ModUtils.IsValidModForMatchType(new OsuModDoubleTime(), MatchType.Playlists));
-            Assert.IsTrue(ModUtils.IsValidModForMatchType(new ModAdaptiveSpeed(), MatchType.Playlists));
-            Assert.IsFalse(ModUtils.IsValidModForMatchType(new OsuModAutoplay(), MatchType.Playlists));
-            Assert.IsFalse(ModUtils.IsValidModForMatchType(new OsuModTouchDevice(), MatchType.Playlists));
-
-            Assert.IsTrue(ModUtils.IsValidModForMatchType(new OsuModHardRock(), MatchType.HeadToHead));
-            Assert.IsTrue(ModUtils.IsValidModForMatchType(new OsuModDoubleTime(), MatchType.HeadToHead));
-            // For now, adaptive speed isn't allowed in multiplayer because it's a per-user rate adjustment.
-            Assert.IsFalse(ModUtils.IsValidModForMatchType(new ModAdaptiveSpeed(), MatchType.HeadToHead));
-            Assert.IsFalse(ModUtils.IsValidModForMatchType(new OsuModAutoplay(), MatchType.HeadToHead));
-            Assert.IsFalse(ModUtils.IsValidModForMatchType(new OsuModTouchDevice(), MatchType.HeadToHead));
-        }
-
-        [Test]
-        public void TestRoomFreeModValidity()
-        {
-            Assert.IsTrue(ModUtils.IsValidFreeModForMatchType(new OsuModHardRock(), MatchType.Playlists));
-            Assert.IsTrue(ModUtils.IsValidFreeModForMatchType(new OsuModDoubleTime(), MatchType.Playlists));
-            Assert.IsTrue(ModUtils.IsValidFreeModForMatchType(new ModAdaptiveSpeed(), MatchType.Playlists));
-            Assert.IsFalse(ModUtils.IsValidFreeModForMatchType(new OsuModAutoplay(), MatchType.Playlists));
-            Assert.IsFalse(ModUtils.IsValidFreeModForMatchType(new OsuModTouchDevice(), MatchType.Playlists));
-
-            Assert.IsTrue(ModUtils.IsValidFreeModForMatchType(new OsuModHardRock(), MatchType.HeadToHead));
-            // For now, all rate adjustment mods aren't allowed as free mods in multiplayer.
-            Assert.IsFalse(ModUtils.IsValidFreeModForMatchType(new OsuModDoubleTime(), MatchType.HeadToHead));
-            Assert.IsFalse(ModUtils.IsValidFreeModForMatchType(new ModAdaptiveSpeed(), MatchType.HeadToHead));
-            Assert.IsFalse(ModUtils.IsValidFreeModForMatchType(new OsuModAutoplay(), MatchType.HeadToHead));
-            Assert.IsFalse(ModUtils.IsValidFreeModForMatchType(new OsuModTouchDevice(), MatchType.HeadToHead));
         }
 
         public abstract class CustomMod1 : Mod, IModCompatibilitySpecification

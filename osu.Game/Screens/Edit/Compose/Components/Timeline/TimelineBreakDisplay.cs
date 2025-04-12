@@ -6,7 +6,6 @@ using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Caching;
 using osu.Game.Beatmaps.Timing;
-using osu.Game.Configuration;
 using osu.Game.Screens.Edit.Components.Timelines.Summary.Parts;
 
 namespace osu.Game.Screens.Edit.Compose.Components.Timeline
@@ -27,15 +26,6 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
         private readonly Cached breakCache = new Cached();
 
         private readonly BindableList<BreakPeriod> breaks = new BindableList<BreakPeriod>();
-
-        private readonly BindableBool showBreaks = new BindableBool(true);
-
-        [BackgroundDependencyLoader]
-        private void load(OsuConfigManager configManager)
-        {
-            configManager.BindWith(OsuSetting.EditorTimelineShowBreaks, showBreaks);
-            showBreaks.BindValueChanged(_ => breakCache.Invalidate());
-        }
 
         protected override void LoadBeatmap(EditorBeatmap beatmap)
         {
@@ -76,9 +66,6 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
         private void recreateBreaks()
         {
             Clear();
-
-            if (!showBreaks.Value)
-                return;
 
             for (int i = 0; i < breaks.Count; i++)
             {

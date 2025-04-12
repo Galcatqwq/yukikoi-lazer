@@ -18,7 +18,7 @@ namespace osu.Game.Rulesets.Osu.Skinning.Argon
         {
             switch (lookup)
             {
-                case SkinComponentLookup<HitResult> resultComponent:
+                case GameplaySkinComponentLookup<HitResult> resultComponent:
                     HitResult result = resultComponent.Component;
 
                     // This should eventually be moved to a skin setting, when supported.

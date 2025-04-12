@@ -1,29 +1,30 @@
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using System;
+#nullable disable
+
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.UserInterface;
 using osu.Game.Graphics.UserInterface;
 using osu.Game.Online.API;
-using osu.Game.Online.API.Requests;
 using osu.Game.Online.Rooms;
+using osu.Game.Screens.OnlinePlay.Components;
 using osu.Game.Screens.OnlinePlay.Lounge;
 using osu.Game.Screens.OnlinePlay.Lounge.Components;
+using osu.Game.Screens.OnlinePlay.Match;
 
 namespace osu.Game.Screens.OnlinePlay.Playlists
 {
     public partial class PlaylistsLoungeSubScreen : LoungeSubScreen
     {
         [Resolved]
-        private IAPIProvider api { get; set; } = null!;
+        private IAPIProvider api { get; set; }
 
-        private Dropdown<PlaylistsCategory> categoryDropdown = null!;
+        private Dropdown<PlaylistsCategory> categoryDropdown;
 
         protected override IEnumerable<Drawable> CreateFilterControls()
         {
@@ -60,41 +61,20 @@ namespace osu.Game.Screens.OnlinePlay.Playlists
             return criteria;
         }
 
-        protected override void JoinInternal(Room room, string? password, Action<Room> onSuccess, Action<string, Exception?> onFailure)
-        {
-            var joinRoomRequest = new JoinRoomRequest(room, password);
-
-            joinRoomRequest.Success += r => onSuccess(r);
-            joinRoomRequest.Failure += exception =>
-            {
-                if (exception is not OperationCanceledException)
-                    onFailure($"Failed to open playlist. {exception.Message}", exception);
-            };
-
-            api.Queue(joinRoomRequest);
-        }
-
-        public override void Close(Room room)
-        {
-            Debug.Assert(room.RoomID != null);
-
-            var request = new ClosePlaylistRequest(room.RoomID.Value);
-            request.Success += RefreshRooms;
-            api.Queue(request);
-        }
-
         protected override OsuButton CreateNewRoomButton() => new CreatePlaylistsRoomButton();
 
         protected override Room CreateNewRoom()
         {
             return new Room
             {
-                Name = $"{api.LocalUser}'s awesome playlist",
-                Type = MatchType.Playlists
+                Name = { Value = $"{api.LocalUser}'s awesome playlist" },
+                Type = { Value = MatchType.Playlists }
             };
         }
 
-        protected override OnlinePlaySubScreen CreateRoomSubScreen(Room room) => new PlaylistsRoomSubScreen(room);
+        protected override RoomSubScreen CreateRoomSubScreen(Room room) => new PlaylistsRoomSubScreen(room);
+
+        protected override ListingPollingComponent CreatePollingComponent() => new ListingPollingComponent();
 
         private enum PlaylistsCategory
         {

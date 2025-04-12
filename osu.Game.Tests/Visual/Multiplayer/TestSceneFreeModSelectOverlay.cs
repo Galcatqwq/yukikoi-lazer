@@ -1,6 +1,8 @@
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
+#nullable disable
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,9 +26,9 @@ namespace osu.Game.Tests.Visual.Multiplayer
 {
     public partial class TestSceneFreeModSelectOverlay : MultiplayerTestScene
     {
-        private FreeModSelectOverlay freeModSelectOverlay = null!;
-        private FooterButtonFreeMods footerButtonFreeMods = null!;
-        private ScreenFooter footer = null!;
+        private FreeModSelectOverlay freeModSelectOverlay;
+        private FooterButtonFreeMods footerButtonFreeMods;
+        private ScreenFooter footer;
         private readonly Bindable<Dictionary<ModType, IReadOnlyList<Mod>>> availableMods = new Bindable<Dictionary<ModType, IReadOnlyList<Mod>>>();
 
         [BackgroundDependencyLoader]
@@ -47,7 +49,8 @@ namespace osu.Game.Tests.Visual.Multiplayer
 
             AddToggleStep("toggle visibility", visible =>
             {
-                freeModSelectOverlay.State.Value = visible ? Visibility.Visible : Visibility.Hidden;
+                if (freeModSelectOverlay != null)
+                    freeModSelectOverlay.State.Value = visible ? Visibility.Visible : Visibility.Hidden;
             });
         }
 
@@ -166,7 +169,7 @@ namespace osu.Game.Tests.Visual.Multiplayer
                         Anchor = Anchor.BottomRight,
                         Origin = Anchor.BottomRight,
                         Y = -ScreenFooter.HEIGHT,
-                        FreeMods = { BindTarget = freeModSelectOverlay.SelectedMods },
+                        Current = { BindTarget = freeModSelectOverlay.SelectedMods },
                     },
                     footer = new ScreenFooter(),
                 },

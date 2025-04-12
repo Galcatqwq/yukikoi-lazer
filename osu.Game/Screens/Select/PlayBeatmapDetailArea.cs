@@ -83,7 +83,6 @@ namespace osu.Game.Screens.Select
             new BeatmapDetailAreaLeaderboardTabItem<BeatmapLeaderboardScope>(BeatmapLeaderboardScope.Global),
             new BeatmapDetailAreaLeaderboardTabItem<BeatmapLeaderboardScope>(BeatmapLeaderboardScope.Country),
             new BeatmapDetailAreaLeaderboardTabItem<BeatmapLeaderboardScope>(BeatmapLeaderboardScope.Friend),
-            new BeatmapDetailAreaLeaderboardTabItem<BeatmapLeaderboardScope>(BeatmapLeaderboardScope.Team),
         }).ToArray();
 
         private BeatmapDetailAreaTabItem getTabItemFromTabType(TabType type)
@@ -104,9 +103,6 @@ namespace osu.Game.Screens.Select
 
                 case TabType.Friends:
                     return new BeatmapDetailAreaLeaderboardTabItem<BeatmapLeaderboardScope>(BeatmapLeaderboardScope.Friend);
-
-                case TabType.Team:
-                    return new BeatmapDetailAreaLeaderboardTabItem<BeatmapLeaderboardScope>(BeatmapLeaderboardScope.Team);
 
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type));
@@ -135,9 +131,6 @@ namespace osu.Game.Screens.Select
                         case BeatmapLeaderboardScope.Friend:
                             return TabType.Friends;
 
-                        case BeatmapLeaderboardScope.Team:
-                            return TabType.Team;
-
                         default:
                             throw new ArgumentOutOfRangeException(nameof(item));
                     }
@@ -153,8 +146,7 @@ namespace osu.Game.Screens.Select
             Local,
             Country,
             Global,
-            Friends,
-            Team
+            Friends
         }
     }
 }

@@ -4,6 +4,7 @@
 #nullable disable
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
@@ -16,6 +17,7 @@ using osu.Framework.Utils;
 using osu.Game.Beatmaps;
 using osu.Game.Database;
 using osu.Game.Graphics.UserInterface;
+using osu.Game.Online.API;
 using osu.Game.Rulesets;
 using osu.Game.Rulesets.Difficulty;
 using osu.Game.Rulesets.Osu;
@@ -60,6 +62,12 @@ namespace osu.Game.Tests.Visual.Ranking
                 if (beatmapInfo != null)
                     Beatmap.Value = beatmaps.GetWorkingBeatmap(beatmapInfo);
             });
+
+            AddToggleStep("toggle legacy classic skin", v =>
+            {
+                if (skins != null)
+                    skins.CurrentSkinInfo.Value = v ? skins.DefaultClassicSkin.SkinInfo : skins.CurrentSkinInfo.Default;
+            });
         }
 
         [SetUp]
@@ -74,16 +82,6 @@ namespace osu.Game.Tests.Visual.Ranking
                 Content.Scale = new Vector2(v);
                 Content.Size = new Vector2(1f / v);
             }));
-        }
-
-        [Test]
-        public void TestLegacySkin()
-        {
-            AddToggleStep("toggle legacy classic skin", v =>
-            {
-                if (skins != null)
-                    skins.CurrentSkinInfo.Value = v ? skins.DefaultClassicSkin.SkinInfo : skins.CurrentSkinInfo.Default;
-            });
         }
 
         private int onlineScoreID = 1;
@@ -404,7 +402,7 @@ namespace osu.Game.Tests.Visual.Ranking
                 : base(score)
             {
                 AllowRetry = true;
-                IsLocalPlay = true;
+                ShowUserStatistics = true;
             }
 
             protected override void LoadComplete()
@@ -414,19 +412,21 @@ namespace osu.Game.Tests.Visual.Ranking
                 RetryOverlay = InternalChildren.OfType<HotkeyRetryOverlay>().SingleOrDefault();
             }
 
-            protected override Task<ScoreInfo[]> FetchScores()
+            protected override APIRequest FetchScores(Action<IEnumerable<ScoreInfo>> scoresCallback)
             {
-                var scores = new ScoreInfo[20];
+                var scores = new List<ScoreInfo>();
 
-                for (int i = 0; i < scores.Length; i++)
+                for (int i = 0; i < 20; i++)
                 {
                     var score = TestResources.CreateTestScoreInfo();
                     score.TotalScore += 10 - i;
                     score.HasOnlineReplay = true;
-                    scores[i] = score;
+                    scores.Add(score);
                 }
 
-                return Task.FromResult(scores);
+                scoresCallback.Invoke(scores);
+
+                return null;
             }
         }
 
@@ -442,25 +442,27 @@ namespace osu.Game.Tests.Visual.Ranking
                 this.fetchWaitTask = fetchWaitTask ?? Task.CompletedTask;
             }
 
-            protected override Task<ScoreInfo[]> FetchScores()
+            protected override APIRequest FetchScores(Action<IEnumerable<ScoreInfo>> scoresCallback)
             {
-                return Task.Run(async () =>
+                Task.Run(async () =>
                 {
                     await fetchWaitTask;
 
-                    var scores = new ScoreInfo[20];
+                    var scores = new List<ScoreInfo>();
 
-                    for (int i = 0; i < scores.Length; i++)
+                    for (int i = 0; i < 20; i++)
                     {
                         var score = TestResources.CreateTestScoreInfo();
                         score.TotalScore += 10 - i;
-                        scores[i] = score;
+                        scores.Add(score);
                     }
 
-                    Schedule(() => FetchCompleted = true);
+                    scoresCallback?.Invoke(scores);
 
-                    return scores;
+                    Schedule(() => FetchCompleted = true);
                 });
+
+                return null;
             }
         }
 

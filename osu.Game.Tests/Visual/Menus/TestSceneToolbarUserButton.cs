@@ -97,11 +97,10 @@ namespace osu.Game.Tests.Visual.Menus
         public void TestTransientUserStatisticsDisplay()
         {
             AddStep("Log in", () => dummyAPI.Login("wang", "jang"));
-
             AddStep("Gain", () =>
             {
                 var transientUpdateDisplay = this.ChildrenOfType<TransientUserStatisticsUpdateDisplay>().Single();
-                transientUpdateDisplay.LatestUpdate.Value = new ScoreBasedUserStatisticsUpdate(
+                transientUpdateDisplay.LatestUpdate.Value = new UserStatisticsUpdate(
                     new ScoreInfo(),
                     new UserStatistics
                     {
@@ -114,11 +113,10 @@ namespace osu.Game.Tests.Visual.Menus
                         PP = 1357
                     });
             });
-
             AddStep("Loss", () =>
             {
                 var transientUpdateDisplay = this.ChildrenOfType<TransientUserStatisticsUpdateDisplay>().Single();
-                transientUpdateDisplay.LatestUpdate.Value = new ScoreBasedUserStatisticsUpdate(
+                transientUpdateDisplay.LatestUpdate.Value = new UserStatisticsUpdate(
                     new ScoreInfo(),
                     new UserStatistics
                     {
@@ -131,46 +129,26 @@ namespace osu.Game.Tests.Visual.Menus
                         PP = 1234
                     });
             });
-
-            // Tests flooring logic works as expected.
-            AddStep("Tiny increase in PP", () =>
+            AddStep("No change", () =>
             {
                 var transientUpdateDisplay = this.ChildrenOfType<TransientUserStatisticsUpdateDisplay>().Single();
-                transientUpdateDisplay.LatestUpdate.Value = new ScoreBasedUserStatisticsUpdate(
+                transientUpdateDisplay.LatestUpdate.Value = new UserStatisticsUpdate(
                     new ScoreInfo(),
                     new UserStatistics
                     {
                         GlobalRank = 111_111,
-                        PP = 1357.6m
+                        PP = 1357
                     },
                     new UserStatistics
                     {
                         GlobalRank = 111_111,
-                        PP = 1358.1m
+                        PP = 1357
                     });
             });
-
-            AddStep("No change 1", () =>
-            {
-                var transientUpdateDisplay = this.ChildrenOfType<TransientUserStatisticsUpdateDisplay>().Single();
-                transientUpdateDisplay.LatestUpdate.Value = new ScoreBasedUserStatisticsUpdate(
-                    new ScoreInfo(),
-                    new UserStatistics
-                    {
-                        GlobalRank = 111_111,
-                        PP = 1357m
-                    },
-                    new UserStatistics
-                    {
-                        GlobalRank = 111_111,
-                        PP = 1357.1m
-                    });
-            });
-
             AddStep("Was null", () =>
             {
                 var transientUpdateDisplay = this.ChildrenOfType<TransientUserStatisticsUpdateDisplay>().Single();
-                transientUpdateDisplay.LatestUpdate.Value = new ScoreBasedUserStatisticsUpdate(
+                transientUpdateDisplay.LatestUpdate.Value = new UserStatisticsUpdate(
                     new ScoreInfo(),
                     new UserStatistics
                     {
@@ -183,11 +161,10 @@ namespace osu.Game.Tests.Visual.Menus
                         PP = 1357
                     });
             });
-
             AddStep("Became null", () =>
             {
                 var transientUpdateDisplay = this.ChildrenOfType<TransientUserStatisticsUpdateDisplay>().Single();
-                transientUpdateDisplay.LatestUpdate.Value = new ScoreBasedUserStatisticsUpdate(
+                transientUpdateDisplay.LatestUpdate.Value = new UserStatisticsUpdate(
                     new ScoreInfo(),
                     new UserStatistics
                     {

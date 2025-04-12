@@ -35,7 +35,7 @@ using osuTK.Input;
 
 namespace osu.Game.Overlays.Mods
 {
-    public partial class ModSelectOverlay : ShearedOverlayContainer, ISamplePlaybackDisabler, IKeyBindingHandler<PlatformAction>
+    public abstract partial class ModSelectOverlay : ShearedOverlayContainer, ISamplePlaybackDisabler, IKeyBindingHandler<PlatformAction>
     {
         public const int BUTTON_WIDTH = 200;
 
@@ -96,7 +96,7 @@ namespace osu.Game.Overlays.Mods
         /// <summary>
         /// Whether the column with available mod presets should be shown.
         /// </summary>
-        public bool ShowPresets { get; init; }
+        protected virtual bool ShowPresets => false;
 
         protected virtual ModColumn CreateModColumn(ModType modType) => new ModColumn(modType, false);
 
@@ -125,7 +125,7 @@ namespace osu.Game.Overlays.Mods
         [Resolved]
         private ScreenFooter? footer { get; set; }
 
-        public ModSelectOverlay(OverlayColourScheme colourScheme = OverlayColourScheme.Green)
+        protected ModSelectOverlay(OverlayColourScheme colourScheme = OverlayColourScheme.Green)
             : base(colourScheme)
         {
         }
@@ -243,9 +243,6 @@ namespace osu.Game.Overlays.Mods
             {
                 foreach (var column in columnFlow.Columns)
                     column.SearchTerm = query.NewValue;
-
-                if (SearchTextBox.HasFocus)
-                    preselectMod();
             }, true);
 
             // Start scrolling from the end, to give the user a sense that
@@ -255,26 +252,6 @@ namespace osu.Game.Overlays.Mods
                 columnScroll.ScrollToEnd(false);
                 columnScroll.ScrollTo(0);
             });
-        }
-
-        private void preselectMod()
-        {
-            var visibleMods = columnFlow.Columns.OfType<ModColumn>().Where(c => c.IsPresent).SelectMany(c => c.AvailableMods.Where(m => m.Visible));
-
-            // Search for an exact acronym or name match, or otherwise default to the first visible mod.
-            ModState? matchingMod =
-                visibleMods.FirstOrDefault(m => m.Mod.Acronym.Equals(SearchTerm, StringComparison.OrdinalIgnoreCase) || m.Mod.Name.Equals(SearchTerm, StringComparison.OrdinalIgnoreCase))
-                ?? visibleMods.FirstOrDefault();
-            var preselectedMod = matchingMod;
-
-            foreach (var mod in AllAvailableMods)
-                mod.Preselected.Value = mod == preselectedMod && SearchTextBox.Current.Value.Length > 0;
-        }
-
-        private void clearPreselection()
-        {
-            foreach (var mod in AllAvailableMods)
-                mod.Preselected.Value = false;
         }
 
         public new ModSelectFooterContent? DisplayedFooterContent => base.DisplayedFooterContent as ModSelectFooterContent;
@@ -353,10 +330,7 @@ namespace osu.Game.Overlays.Mods
                                     .ToArray();
 
                 foreach (var modState in modStates)
-                {
-                    modState.Active.Value = SelectedMods.Value.Any(selected => selected.GetType() == modState.Mod.GetType());
                     modState.Active.BindValueChanged(_ => updateFromInternalSelection());
-                }
 
                 newLocalAvailableMods[modType] = modStates;
             }
@@ -394,7 +368,7 @@ namespace osu.Game.Overlays.Mods
                 customisationPanel.Enabled.Value = true;
 
                 if (anyModPendingConfiguration)
-                    customisationPanel.ExpandedState.Value = ModCustomisationPanel.ModCustomisationPanelState.ExpandedByMod;
+                    customisationPanel.ExpandedState.Value = ModCustomisationPanel.ModCustomisationPanelState.Expanded;
             }
             else
             {
@@ -409,7 +383,7 @@ namespace osu.Game.Overlays.Mods
             {
                 columnScroll.FadeColour(OsuColour.Gray(0.5f), 400, Easing.OutQuint);
                 SearchTextBox.FadeColour(OsuColour.Gray(0.5f), 400, Easing.OutQuint);
-                setTextBoxFocus(false);
+                SearchTextBox.KillFocus();
             }
             else
             {
@@ -616,11 +590,11 @@ namespace osu.Game.Overlays.Mods
                         return true;
                     }
 
-                    var matchingMod = AllAvailableMods.SingleOrDefault(m => m.Preselected.Value);
+                    ModState? firstMod = columnFlow.Columns.OfType<ModColumn>().FirstOrDefault(m => m.IsPresent)?.AvailableMods.FirstOrDefault(x => x.Visible);
 
-                    if (matchingMod is not null)
+                    if (firstMod is not null)
                     {
-                        matchingMod.Active.Value = !matchingMod.Active.Value;
+                        firstMod.Active.Value = !firstMod.Active.Value;
                         SearchTextBox.SelectAll();
                     }
 
@@ -674,15 +648,9 @@ namespace osu.Game.Overlays.Mods
         private void setTextBoxFocus(bool focus)
         {
             if (focus)
-            {
                 SearchTextBox.TakeFocus();
-                preselectMod();
-            }
             else
-            {
                 SearchTextBox.KillFocus();
-                clearPreselection();
-            }
         }
 
         #endregion
@@ -713,13 +681,13 @@ namespace osu.Game.Overlays.Mods
 
                 // the bounds below represent the horizontal range of scroll items to be considered fully visible/active, in the scroll's internal coordinate space.
                 // note that clamping is applied to the left scroll bound to ensure scrolling past extents does not change the set of active columns.
-                double leftVisibleBound = Math.Clamp(Current, 0, ScrollableExtent);
-                double rightVisibleBound = leftVisibleBound + DrawWidth;
+                float leftVisibleBound = Math.Clamp(Current, 0, ScrollableExtent);
+                float rightVisibleBound = leftVisibleBound + DrawWidth;
 
                 // if a movement is occurring at this time, the bounds below represent the full range of columns that the scroll movement will encompass.
                 // this will be used to ensure that columns do not change state from active to inactive back and forth until they are fully scrolled past.
-                double leftMovementBound = Math.Min(Current, Target);
-                double rightMovementBound = Math.Max(Current, Target) + DrawWidth;
+                float leftMovementBound = Math.Min(Current, Target);
+                float rightMovementBound = Math.Max(Current, Target) + DrawWidth;
 
                 foreach (var column in Child)
                 {

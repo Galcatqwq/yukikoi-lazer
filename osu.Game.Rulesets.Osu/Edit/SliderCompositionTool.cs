@@ -10,7 +10,7 @@ using osu.Game.Rulesets.Osu.Objects;
 
 namespace osu.Game.Rulesets.Osu.Edit
 {
-    public class SliderCompositionTool : CompositionTool
+    public class SliderCompositionTool : HitObjectCompositionTool
     {
         public SliderCompositionTool()
             : base(nameof(Slider))
@@ -26,6 +26,6 @@ namespace osu.Game.Rulesets.Osu.Edit
 
         public override Drawable CreateIcon() => new BeatmapStatisticIcon(BeatmapStatisticsIconType.Sliders);
 
-        public override HitObjectPlacementBlueprint CreatePlacementBlueprint() => new SliderPlacementBlueprint();
+        public override PlacementBlueprint CreatePlacementBlueprint() => new SliderPlacementBlueprint();
     }
 }

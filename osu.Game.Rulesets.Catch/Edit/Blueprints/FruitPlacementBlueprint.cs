@@ -5,7 +5,6 @@ using osu.Framework.Input.Events;
 using osu.Game.Rulesets.Catch.Edit.Blueprints.Components;
 using osu.Game.Rulesets.Catch.Objects;
 using osu.Game.Rulesets.Edit;
-using osuTK;
 using osuTK.Input;
 
 namespace osu.Game.Rulesets.Catch.Edit.Blueprints
@@ -42,20 +41,11 @@ namespace osu.Game.Rulesets.Catch.Edit.Blueprints
             return true;
         }
 
-        public override SnapResult UpdateTimeAndPosition(Vector2 screenSpacePosition, double fallbackTime)
+        public override void UpdateTimeAndPosition(SnapResult result)
         {
-            var gridSnapResult = Composer?.FindSnappedPositionAndTime(screenSpacePosition) ?? new SnapResult(screenSpacePosition, fallbackTime);
-            gridSnapResult.ScreenSpacePosition.X = screenSpacePosition.X;
-            var distanceSnapResult = Composer?.TryDistanceSnap(gridSnapResult.ScreenSpacePosition);
-
-            var result = distanceSnapResult != null && Vector2.Distance(gridSnapResult.ScreenSpacePosition, distanceSnapResult.ScreenSpacePosition) < CatchHitObjectComposer.DISTANCE_SNAP_RADIUS
-                ? distanceSnapResult
-                : gridSnapResult;
-
-            base.UpdateTimeAndPosition(result.ScreenSpacePosition, result.Time ?? fallbackTime);
+            base.UpdateTimeAndPosition(result);
 
             HitObject.X = ToLocalSpace(result.ScreenSpacePosition).X;
-            return result;
         }
     }
 }

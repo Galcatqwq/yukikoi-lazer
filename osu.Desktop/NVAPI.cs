@@ -141,12 +141,12 @@ namespace osu.Desktop
 
                 // Make sure that this is a laptop.
                 IntPtr[] gpus = new IntPtr[64];
-                if (checkError(EnumPhysicalGPUs(gpus, out int gpuCount), nameof(EnumPhysicalGPUs)))
+                if (checkError(EnumPhysicalGPUs(gpus, out int gpuCount)))
                     return false;
 
                 for (int i = 0; i < gpuCount; i++)
                 {
-                    if (checkError(GetSystemType(gpus[i], out var type), nameof(GetSystemType)))
+                    if (checkError(GetSystemType(gpus[i], out var type)))
                         return false;
 
                     if (type == NvSystemType.LAPTOP)
@@ -182,7 +182,7 @@ namespace osu.Desktop
 
                 bool success = setSetting(NvSettingID.OGL_THREAD_CONTROL_ID, (uint)value);
 
-                Logger.Log(success ? $"[NVAPI] Threaded optimizations set to \"{value}\"!" : "[NVAPI] Threaded optimizations set failed!");
+                Logger.Log(success ? $"Threaded optimizations set to \"{value}\"!" : "Threaded optimizations set failed!");
             }
         }
 
@@ -205,7 +205,7 @@ namespace osu.Desktop
 
             uint numApps = profile.NumOfApps;
 
-            if (checkError(EnumApplications(sessionHandle, profileHandle, 0, ref numApps, applications), nameof(EnumApplications)))
+            if (checkError(EnumApplications(sessionHandle, profileHandle, 0, ref numApps, applications)))
                 return false;
 
             for (uint i = 0; i < numApps; i++)
@@ -236,10 +236,10 @@ namespace osu.Desktop
 
             isApplicationSpecific = true;
 
-            if (checkError(FindApplicationByName(sessionHandle, osu_filename, out profileHandle, ref application), nameof(FindApplicationByName)))
+            if (checkError(FindApplicationByName(sessionHandle, osu_filename, out profileHandle, ref application)))
             {
                 isApplicationSpecific = false;
-                if (checkError(GetCurrentGlobalProfile(sessionHandle, out profileHandle), nameof(GetCurrentGlobalProfile)))
+                if (checkError(GetCurrentGlobalProfile(sessionHandle, out profileHandle)))
                     return false;
             }
 
@@ -258,10 +258,12 @@ namespace osu.Desktop
                 Version = NvProfile.Stride,
                 IsPredefined = 0,
                 ProfileName = PROFILE_NAME,
-                GpuSupport = NvDrsGpuSupport.Geforce
+                GPUSupport = new uint[32]
             };
 
-            if (checkError(CreateProfile(sessionHandle, ref newProfile, out profileHandle), nameof(CreateProfile)))
+            newProfile.GPUSupport[0] = 1;
+
+            if (checkError(CreateProfile(sessionHandle, ref newProfile, out profileHandle)))
                 return false;
 
             return true;
@@ -282,7 +284,7 @@ namespace osu.Desktop
                 SettingID = settingId
             };
 
-            if (checkError(GetSetting(sessionHandle, profileHandle, settingId, ref setting), nameof(GetSetting)))
+            if (checkError(GetSetting(sessionHandle, profileHandle, settingId, ref setting)))
                 return false;
 
             return true;
@@ -311,7 +313,7 @@ namespace osu.Desktop
             };
 
             // Set the thread state
-            if (checkError(SetSetting(sessionHandle, profileHandle, ref newSetting), nameof(SetSetting)))
+            if (checkError(SetSetting(sessionHandle, profileHandle, ref newSetting)))
                 return false;
 
             // Get the profile (needed to check app count)
@@ -319,7 +321,7 @@ namespace osu.Desktop
             {
                 Version = NvProfile.Stride
             };
-            if (checkError(GetProfileInfo(sessionHandle, profileHandle, ref profile), nameof(GetProfileInfo)))
+            if (checkError(GetProfileInfo(sessionHandle, profileHandle, ref profile)))
                 return false;
 
             if (!containsApplication(profileHandle, profile, out application))
@@ -330,12 +332,12 @@ namespace osu.Desktop
                 application.AppName = osu_filename;
                 application.UserFriendlyName = APPLICATION_NAME;
 
-                if (checkError(CreateApplication(sessionHandle, profileHandle, ref application), nameof(CreateApplication)))
+                if (checkError(CreateApplication(sessionHandle, profileHandle, ref application)))
                     return false;
             }
 
             // Save!
-            return !checkError(SaveSettings(sessionHandle), nameof(SaveSettings));
+            return !checkError(SaveSettings(sessionHandle));
         }
 
         /// <summary>
@@ -344,25 +346,20 @@ namespace osu.Desktop
         /// <returns>If the operation succeeded.</returns>
         private static bool createSession()
         {
-            if (checkError(CreateSession(out sessionHandle), nameof(CreateSession)))
+            if (checkError(CreateSession(out sessionHandle)))
                 return false;
 
             // Load settings into session
-            if (checkError(LoadSettings(sessionHandle), nameof(LoadSettings)))
+            if (checkError(LoadSettings(sessionHandle)))
                 return false;
 
             return true;
         }
 
-        private static bool checkError(NvStatus status, string caller)
+        private static bool checkError(NvStatus status)
         {
             Status = status;
-
-            bool hasError = status != NvStatus.OK;
-            if (hasError)
-                Logger.Log($"[NVAPI] {caller} call failed with status code {status}");
-
-            return hasError;
+            return status != NvStatus.OK;
         }
 
         static NVAPI()
@@ -461,7 +458,9 @@ namespace osu.Desktop
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = NVAPI.UNICODE_STRING_MAX)]
         public string ProfileName;
 
-        public NvDrsGpuSupport GpuSupport;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)]
+        public uint[] GPUSupport;
+
         public uint IsPredefined;
         public uint NumOfApps;
         public uint NumOfSettings;
@@ -607,7 +606,6 @@ namespace osu.Desktop
         SYNC_NOT_ACTIVE = -194, // The requested action cannot be performed without Sync being enabled.
         SYNC_MASTER_NOT_FOUND = -195, // The requested action cannot be performed without Sync Master being enabled.
         INVALID_SYNC_TOPOLOGY = -196, // Invalid displays passed in the NV_GSYNC_DISPLAY pointer.
-
         ECID_SIGN_ALGO_UNSUPPORTED = -197, // The specified signing algorithm is not supported. Either an incorrect value was entered or the current installed driver/hardware does not support the input value.
         ECID_KEY_VERIFICATION_FAILED = -198, // The encrypted public key verification has failed.
         FIRMWARE_OUT_OF_DATE = -199, // The device's firmware is out of date.
@@ -745,13 +743,5 @@ namespace osu.Desktop
         OGL_THREAD_CONTROL_DISABLE = 0x00000002,
         OGL_THREAD_CONTROL_NUM_VALUES = 2,
         OGL_THREAD_CONTROL_DEFAULT = 0
-    }
-
-    [Flags]
-    internal enum NvDrsGpuSupport : uint
-    {
-        Geforce = 1 << 0,
-        Quadro = 1 << 1,
-        Nvs = 1 << 2
     }
 }

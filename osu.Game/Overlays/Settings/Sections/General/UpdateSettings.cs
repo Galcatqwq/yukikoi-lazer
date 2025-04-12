@@ -4,6 +4,7 @@
 using System.Threading.Tasks;
 using osu.Framework;
 using osu.Framework.Allocation;
+using osu.Framework.Extensions;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Localisation;
 using osu.Framework.Logging;
@@ -12,7 +13,6 @@ using osu.Framework.Screens;
 using osu.Framework.Statistics;
 using osu.Game.Configuration;
 using osu.Game.Localisation;
-using osu.Game.Online.Multiplayer;
 using osu.Game.Overlays.Notifications;
 using osu.Game.Overlays.Settings.Sections.Maintenance;
 using osu.Game.Updater;
@@ -36,11 +36,8 @@ namespace osu.Game.Overlays.Settings.Sections.General
         [Resolved]
         private Storage storage { get; set; } = null!;
 
-        [Resolved]
-        private OsuGame? game { get; set; }
-
         [BackgroundDependencyLoader]
-        private void load(OsuConfigManager config)
+        private void load(OsuConfigManager config, OsuGame? game)
         {
             Add(new SettingsEnumDropdown<ReleaseStream>
             {
@@ -53,7 +50,23 @@ namespace osu.Game.Overlays.Settings.Sections.General
                 Add(checkForUpdatesButton = new SettingsButton
                 {
                     Text = GeneralSettingsStrings.CheckUpdate,
-                    Action = () => checkForUpdates().FireAndForget()
+                    Action = () =>
+                    {
+                        checkForUpdatesButton.Enabled.Value = false;
+                        Task.Run(updateManager.CheckForUpdateAsync).ContinueWith(task => Schedule(() =>
+                        {
+                            if (!task.GetResultSafely())
+                            {
+                                notifications?.Post(new SimpleNotification
+                                {
+                                    Text = GeneralSettingsStrings.RunningLatestRelease(game!.Version),
+                                    Icon = FontAwesome.Solid.CheckCircle,
+                                });
+                            }
+
+                            checkForUpdatesButton.Enabled.Value = true;
+                        }));
+                    }
                 });
             }
 
@@ -78,44 +91,6 @@ namespace osu.Game.Overlays.Settings.Sections.General
                     Text = GeneralSettingsStrings.ChangeFolderLocation,
                     Action = () => game?.PerformFromScreen(menu => menu.Push(new MigrationSelectScreen()))
                 });
-            }
-        }
-
-        private async Task checkForUpdates()
-        {
-            if (updateManager == null || game == null)
-                return;
-
-            checkForUpdatesButton.Enabled.Value = false;
-
-            var checkingNotification = new ProgressNotification
-            {
-                Text = GeneralSettingsStrings.CheckingForUpdates,
-            };
-            notifications?.Post(checkingNotification);
-
-            try
-            {
-                bool foundUpdate = await updateManager.CheckForUpdateAsync().ConfigureAwait(true);
-
-                if (!foundUpdate)
-                {
-                    notifications?.Post(new SimpleNotification
-                    {
-                        Text = GeneralSettingsStrings.RunningLatestRelease(game.Version),
-                        Icon = FontAwesome.Solid.CheckCircle,
-                    });
-                }
-            }
-            catch
-            {
-            }
-            finally
-            {
-                // This sequence allows the notification to be immediately dismissed.
-                checkingNotification.State = ProgressNotificationState.Cancelled;
-                checkingNotification.Close(false);
-                checkForUpdatesButton.Enabled.Value = true;
             }
         }
 

@@ -13,6 +13,7 @@ using Android.Graphics;
 using Android.OS;
 using Android.Views;
 using osu.Framework.Android;
+using osu.Framework.Extensions.ObjectExtensions;
 using osu.Game.Database;
 using Debug = System.Diagnostics.Debug;
 using Uri = Android.Net.Uri;
@@ -49,25 +50,9 @@ namespace osu.Android
         /// <remarks>Adjusted on startup to match expected UX for the current device type (phone/tablet).</remarks>
         public ScreenOrientation DefaultOrientation = ScreenOrientation.Unspecified;
 
-        public new bool IsTablet { get; private set; }
+        private OsuGameAndroid game = null!;
 
-        private readonly OsuGameAndroid game;
-
-        private bool gameCreated;
-
-        protected override Framework.Game CreateGame()
-        {
-            if (gameCreated)
-                throw new InvalidOperationException("Framework tried to create a game twice.");
-
-            gameCreated = true;
-            return game;
-        }
-
-        public OsuGameActivity()
-        {
-            game = new OsuGameAndroid(this);
-        }
+        protected override Framework.Game CreateGame() => game = new OsuGameAndroid(this);
 
         protected override void OnCreate(Bundle? savedInstanceState)
         {
@@ -91,9 +76,9 @@ namespace osu.Android
             WindowManager.DefaultDisplay.GetSize(displaySize);
 #pragma warning restore CA1422
             float smallestWidthDp = Math.Min(displaySize.X, displaySize.Y) / Resources.DisplayMetrics.Density;
-            IsTablet = smallestWidthDp >= 600f;
+            bool isTablet = smallestWidthDp >= 600f;
 
-            RequestedOrientation = DefaultOrientation = IsTablet ? ScreenOrientation.FullUser : ScreenOrientation.SensorLandscape;
+            RequestedOrientation = DefaultOrientation = isTablet ? ScreenOrientation.FullUser : ScreenOrientation.SensorLandscape;
 
             // Currently (SDK 6.0.200), BundleAssemblies is not runnable for net6-android.
             // The assembly files are not available as files either after native AOT.
@@ -110,38 +95,25 @@ namespace osu.Android
 
         private void handleIntent(Intent? intent)
         {
-            if (intent == null)
-                return;
-
-            switch (intent.Action)
+            switch (intent?.Action)
             {
                 case Intent.ActionDefault:
                     if (intent.Scheme == ContentResolver.SchemeContent)
-                    {
-                        if (intent.Data != null)
-                            handleImportFromUris(intent.Data);
-                    }
+                        handleImportFromUris(intent.Data.AsNonNull());
                     else if (osu_url_schemes.Contains(intent.Scheme))
-                    {
-                        if (intent.DataString != null)
-                            game.HandleLink(intent.DataString);
-                    }
-
+                        game.HandleLink(intent.DataString);
                     break;
 
                 case Intent.ActionSend:
                 case Intent.ActionSendMultiple:
                 {
-                    if (intent.ClipData == null)
-                        break;
-
                     var uris = new List<Uri>();
 
-                    for (int i = 0; i < intent.ClipData.ItemCount; i++)
+                    for (int i = 0; i < intent.ClipData?.ItemCount; i++)
                     {
-                        var item = intent.ClipData.GetItemAt(i);
-                        if (item?.Uri != null)
-                            uris.Add(item.Uri);
+                        var content = intent.ClipData?.GetItemAt(i);
+                        if (content != null)
+                            uris.Add(content.Uri.AsNonNull());
                     }
 
                     handleImportFromUris(uris.ToArray());

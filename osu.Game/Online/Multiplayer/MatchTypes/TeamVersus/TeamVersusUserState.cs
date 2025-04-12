@@ -5,7 +5,6 @@ using MessagePack;
 
 namespace osu.Game.Online.Multiplayer.MatchTypes.TeamVersus
 {
-    [MessagePackObject]
     public class TeamVersusUserState : MatchUserState
     {
         [Key(0)]

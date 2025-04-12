@@ -4,7 +4,6 @@
 using System.Linq;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
-using osu.Game.Screens.Play.HUD;
 using osu.Game.Skinning;
 using osuTK;
 using osuTK.Graphics;
@@ -31,45 +30,42 @@ namespace osu.Game.Rulesets.Catch.Skinning.Legacy
         {
             switch (lookup)
             {
-                case GlobalSkinnableContainerLookup containerLookup:
+                case SkinComponentsContainerLookup containerLookup:
                     // Only handle per ruleset defaults here.
                     if (containerLookup.Ruleset == null)
                         return base.GetDrawableComponent(lookup);
+
+                    // Skin has configuration.
+                    if (base.GetDrawableComponent(lookup) is UserConfiguredLayoutContainer d)
+                        return d;
 
                     // we don't have enough assets to display these components (this is especially the case on a "beatmap" skin).
                     if (!IsProvidingLegacyResources)
                         return null;
 
                     // Our own ruleset components default.
-                    switch (containerLookup.Lookup)
+                    switch (containerLookup.Target)
                     {
-                        case GlobalSkinnableContainers.MainHUDComponents:
+                        case SkinComponentsContainerLookup.TargetArea.MainHUDComponents:
                             // todo: remove CatchSkinComponents.CatchComboCounter and refactor LegacyCatchComboCounter to be added here instead.
                             return new DefaultSkinComponentsContainer(container =>
                             {
                                 var keyCounter = container.OfType<LegacyKeyCounterDisplay>().FirstOrDefault();
-                                var spectatorList = container.OfType<SpectatorList>().FirstOrDefault();
 
                                 if (keyCounter != null)
                                 {
                                     // set the anchor to top right so that it won't squash to the return button to the top
                                     keyCounter.Anchor = Anchor.CentreRight;
-                                    keyCounter.Origin = Anchor.TopRight;
-                                    keyCounter.Position = new Vector2(0, -40) * 1.6f;
-                                }
-
-                                if (spectatorList != null)
-                                {
-                                    spectatorList.Anchor = Anchor.BottomLeft;
-                                    spectatorList.Origin = Anchor.BottomLeft;
-                                    spectatorList.Position = new Vector2(10, -10);
+                                    keyCounter.Origin = Anchor.CentreRight;
+                                    keyCounter.X = 0;
+                                    // 340px is the default height inherit from stable
+                                    keyCounter.Y = container.ToLocalSpace(new Vector2(0, container.ScreenSpaceDrawQuad.Centre.Y - 340f)).Y;
                                 }
                             })
                             {
                                 Children = new Drawable[]
                                 {
                                     new LegacyKeyCounterDisplay(),
-                                    new SpectatorList(),
                                 }
                             };
                     }

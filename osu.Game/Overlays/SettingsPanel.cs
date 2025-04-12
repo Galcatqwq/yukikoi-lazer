@@ -54,7 +54,7 @@ namespace osu.Game.Overlays
 
         public SettingsSectionsContainer SectionsContainer { get; private set; }
 
-        protected SeekLimitedSearchTextBox SearchTextBox { get; private set; }
+        private SeekLimitedSearchTextBox searchTextBox;
 
         protected override string PopInSampleName => "UI/settings-pop-in";
         protected override double PopInOutSampleBalance => -OsuGameBase.SFX_STEREO_STRENGTH;
@@ -135,7 +135,7 @@ namespace osu.Game.Overlays
                         },
                         Anchor = Anchor.TopCentre,
                         Origin = Anchor.TopCentre,
-                        Child = SearchTextBox = new SettingsSearchTextBox
+                        Child = searchTextBox = new SettingsSearchTextBox
                         {
                             RelativeSizeAxes = Axes.X,
                             Origin = Anchor.TopCentre,
@@ -183,8 +183,8 @@ namespace osu.Game.Overlays
             Sidebar?.MoveToX(0, TRANSITION_LENGTH, Easing.OutQuint);
             this.FadeTo(1, TRANSITION_LENGTH / 2, Easing.OutQuint);
 
-            SearchTextBox.TakeFocus();
-            SearchTextBox.HoldFocus = true;
+            searchTextBox.TakeFocus();
+            searchTextBox.HoldFocus = true;
         }
 
         protected virtual float ExpandedPosition => 0;
@@ -199,8 +199,8 @@ namespace osu.Game.Overlays
             Sidebar?.MoveToX(-sidebar_width, TRANSITION_LENGTH, Easing.OutQuint);
             this.FadeTo(0, TRANSITION_LENGTH / 2, Easing.OutQuint);
 
-            SearchTextBox.HoldFocus = false;
-            if (SearchTextBox.HasFocus)
+            searchTextBox.HoldFocus = false;
+            if (searchTextBox.HasFocus)
                 GetContainingFocusManager()!.ChangeFocus(null);
         }
 
@@ -208,7 +208,7 @@ namespace osu.Game.Overlays
 
         protected override void OnFocus(FocusEvent e)
         {
-            SearchTextBox.TakeFocus();
+            searchTextBox.TakeFocus();
             base.OnFocus(e);
         }
 
@@ -234,7 +234,7 @@ namespace osu.Game.Overlays
 
                 loading.Hide();
 
-                SearchTextBox.Current.BindValueChanged(term => SectionsContainer.SearchTerm = term.NewValue, true);
+                searchTextBox.Current.BindValueChanged(term => SectionsContainer.SearchTerm = term.NewValue, true);
 
                 loadSidebarButtons();
             });

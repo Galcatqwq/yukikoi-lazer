@@ -10,7 +10,7 @@ using osu.Game.Rulesets.Taiko.Objects;
 
 namespace osu.Game.Rulesets.Taiko.Edit
 {
-    public class HitCompositionTool : CompositionTool
+    public class HitCompositionTool : HitObjectCompositionTool
     {
         public HitCompositionTool()
             : base(nameof(Hit))
@@ -19,6 +19,6 @@ namespace osu.Game.Rulesets.Taiko.Edit
 
         public override Drawable CreateIcon() => new BeatmapStatisticIcon(BeatmapStatisticsIconType.Circles);
 
-        public override HitObjectPlacementBlueprint CreatePlacementBlueprint() => new HitPlacementBlueprint();
+        public override PlacementBlueprint CreatePlacementBlueprint() => new HitPlacementBlueprint();
     }
 }

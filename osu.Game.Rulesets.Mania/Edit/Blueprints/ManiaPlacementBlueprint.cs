@@ -1,8 +1,8 @@
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using System;
-using osu.Framework.Allocation;
+#nullable disable
+
 using osu.Framework.Graphics;
 using osu.Framework.Input.Events;
 using osu.Game.Rulesets.Edit;
@@ -15,23 +15,18 @@ using osuTK.Input;
 
 namespace osu.Game.Rulesets.Mania.Edit.Blueprints
 {
-    public abstract partial class ManiaPlacementBlueprint<T> : HitObjectPlacementBlueprint
+    public abstract partial class ManiaPlacementBlueprint<T> : PlacementBlueprint
         where T : ManiaHitObject
     {
         protected new T HitObject => (T)base.HitObject;
 
-        [Resolved]
-        private ManiaHitObjectComposer? composer { get; set; }
+        private Column column;
 
-        private Column? column;
-
-        public Column? Column
+        public Column Column
         {
             get => column;
             set
             {
-                ArgumentNullException.ThrowIfNull(value);
-
                 if (value == column)
                     return;
 
@@ -58,11 +53,9 @@ namespace osu.Game.Rulesets.Mania.Edit.Blueprints
             return true;
         }
 
-        public override SnapResult UpdateTimeAndPosition(Vector2 screenSpacePosition, double fallbackTime)
+        public override void UpdateTimeAndPosition(SnapResult result)
         {
-            var result = composer?.FindSnappedPositionAndTime(screenSpacePosition) ?? new SnapResult(screenSpacePosition, fallbackTime);
-
-            base.UpdateTimeAndPosition(result.ScreenSpacePosition, result.Time ?? fallbackTime);
+            base.UpdateTimeAndPosition(result);
 
             if (result.Playfield is Column col)
             {
@@ -83,8 +76,6 @@ namespace osu.Game.Rulesets.Mania.Edit.Blueprints
                 if (PlacementActive == PlacementState.Waiting)
                     Column = col;
             }
-
-            return result;
         }
 
         private float getNoteHeight(Column resultPlayfield) =>

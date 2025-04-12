@@ -198,14 +198,8 @@ namespace osu.Game.Skinning
                 case LegacyManiaSkinConfigurationLookups.ComboBreakColour:
                     return SkinUtils.As<TValue>(getCustomColour(existing, "ColourBreak"));
 
-                case LegacyManiaSkinConfigurationLookups.BarLineColour:
-                    return SkinUtils.As<TValue>(getCustomColour(existing, "ColourBarline"));
-
                 case LegacyManiaSkinConfigurationLookups.MinimumColumnWidth:
                     return SkinUtils.As<TValue>(new Bindable<float>(existing.MinimumColumnWidth));
-
-                case LegacyManiaSkinConfigurationLookups.BarLineHeight:
-                    return SkinUtils.As<TValue>(new Bindable<float>(existing.BarLineHeight));
 
                 case LegacyManiaSkinConfigurationLookups.NoteBodyStyle:
 
@@ -364,38 +358,28 @@ namespace osu.Game.Skinning
         {
             switch (lookup)
             {
-                case GlobalSkinnableContainerLookup containerLookup:
-                    switch (containerLookup.Lookup)
+                case SkinComponentsContainerLookup containerLookup:
+                    if (base.GetDrawableComponent(lookup) is UserConfiguredLayoutContainer c)
+                        return c;
+
+                    switch (containerLookup.Target)
                     {
-                        case GlobalSkinnableContainers.MainHUDComponents:
+                        case SkinComponentsContainerLookup.TargetArea.MainHUDComponents:
                             if (containerLookup.Ruleset != null)
                             {
                                 return new DefaultSkinComponentsContainer(container =>
                                 {
                                     var combo = container.OfType<LegacyDefaultComboCounter>().FirstOrDefault();
-                                    var spectatorList = container.OfType<SpectatorList>().FirstOrDefault();
-
-                                    Vector2 pos = new Vector2();
 
                                     if (combo != null)
                                     {
                                         combo.Anchor = Anchor.BottomLeft;
                                         combo.Origin = Anchor.BottomLeft;
                                         combo.Scale = new Vector2(1.28f);
-
-                                        pos += new Vector2(10, -(combo.DrawHeight * 1.56f + 20) * combo.Scale.X);
-                                    }
-
-                                    if (spectatorList != null)
-                                    {
-                                        spectatorList.Anchor = Anchor.BottomLeft;
-                                        spectatorList.Origin = Anchor.BottomLeft;
-                                        spectatorList.Position = pos;
                                     }
                                 })
                                 {
-                                    new LegacyDefaultComboCounter(),
-                                    new SpectatorList(),
+                                    new LegacyDefaultComboCounter()
                                 };
                             }
 
@@ -442,7 +426,7 @@ namespace osu.Game.Skinning
 
                     return null;
 
-                case SkinComponentLookup<HitResult> resultComponent:
+                case GameplaySkinComponentLookup<HitResult> resultComponent:
 
                     // kind of wasteful that we throw this away, but should do for now.
                     if (getJudgementAnimation(resultComponent.Component) != null)

@@ -131,12 +131,9 @@ namespace osu.Game.Skinning
         {
             Realm.Run(r =>
             {
-                // Required local for iOS. Will cause runtime crash if inlined.
-                Guid currentSkinId = CurrentSkinInfo.Value.ID;
-
                 // choose from only user skins, removing the current selection to ensure a new one is chosen.
                 var randomChoices = r.All<SkinInfo>()
-                                     .Where(s => !s.DeletePending && s.ID != currentSkinId)
+                                     .Where(s => !s.DeletePending && s.ID != CurrentSkinInfo.Value.ID)
                                      .ToArray();
 
                 if (randomChoices.Length == 0)

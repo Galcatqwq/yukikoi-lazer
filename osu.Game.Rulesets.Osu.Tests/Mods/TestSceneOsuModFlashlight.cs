@@ -68,7 +68,7 @@ namespace osu.Game.Rulesets.Osu.Tests.Mods
                         Player.GameplayClockContainer.CurrentTime < 1000 && Player.ChildrenOfType<ModFlashlight<OsuHitObject>.Flashlight>().Single().FlashlightDim > 0;
                     return Player.GameplayState.HasPassed && !sliderDimmedBeforeStartTime;
                 },
-                CreateBeatmap = () => new OsuBeatmap
+                Beatmap = new OsuBeatmap
                 {
                     HitObjects = new List<OsuHitObject>
                     {
@@ -83,7 +83,10 @@ namespace osu.Game.Rulesets.Osu.Tests.Mods
                             })
                         }
                     },
-                    StackLeniency = 0,
+                    BeatmapInfo =
+                    {
+                        StackLeniency = 0,
+                    }
                 },
                 ReplayFrames = new List<ReplayFrame>
                 {
@@ -111,7 +114,7 @@ namespace osu.Game.Rulesets.Osu.Tests.Mods
                         Player.GameplayClockContainer.CurrentTime >= 1000 && Player.ChildrenOfType<ModFlashlight<OsuHitObject>.Flashlight>().Single().FlashlightDim > 0;
                     return Player.GameplayState.HasPassed && sliderDimmed;
                 },
-                CreateBeatmap = () => new OsuBeatmap
+                Beatmap = new OsuBeatmap
                 {
                     HitObjects = new List<OsuHitObject>
                     {
@@ -150,7 +153,7 @@ namespace osu.Game.Rulesets.Osu.Tests.Mods
                         Player.GameplayClockContainer.CurrentTime >= 1000 && Player.ChildrenOfType<ModFlashlight<OsuHitObject>.Flashlight>().Single().FlashlightDim > 0;
                     return Player.GameplayState.HasPassed && sliderDimmed;
                 },
-                CreateBeatmap = () => new OsuBeatmap
+                Beatmap = new OsuBeatmap
                 {
                     HitObjects = new List<OsuHitObject>
                     {

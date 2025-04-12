@@ -3,16 +3,13 @@
 
 using System;
 using Android.App;
-using Android.Content.PM;
 using Microsoft.Maui.Devices;
 using osu.Framework.Allocation;
 using osu.Framework.Extensions.ObjectExtensions;
 using osu.Framework.Platform;
 using osu.Game;
-using osu.Game.Screens;
 using osu.Game.Updater;
 using osu.Game.Utils;
-using osuTK;
 
 namespace osu.Android
 {
@@ -20,8 +17,6 @@ namespace osu.Android
     {
         [Cached]
         private readonly OsuGameActivity gameActivity;
-
-        public override Vector2 ScalingContainerTargetDrawSize => new Vector2(1024, 1024 * DrawHeight / DrawWidth);
 
         public OsuGameAndroid(OsuGameActivity activity)
             : base(null)
@@ -76,35 +71,7 @@ namespace osu.Android
         protected override void LoadComplete()
         {
             base.LoadComplete();
-            UserPlayingState.BindValueChanged(_ => updateOrientation());
-        }
-
-        protected override void ScreenChanged(IOsuScreen? current, IOsuScreen? newScreen)
-        {
-            base.ScreenChanged(current, newScreen);
-
-            if (newScreen != null)
-                updateOrientation();
-        }
-
-        private void updateOrientation()
-        {
-            var orientation = MobileUtils.GetOrientation(this, (IOsuScreen)ScreenStack.CurrentScreen, gameActivity.IsTablet);
-
-            switch (orientation)
-            {
-                case MobileUtils.Orientation.Locked:
-                    gameActivity.RequestedOrientation = ScreenOrientation.Locked;
-                    break;
-
-                case MobileUtils.Orientation.Portrait:
-                    gameActivity.RequestedOrientation = ScreenOrientation.Portrait;
-                    break;
-
-                case MobileUtils.Orientation.Default:
-                    gameActivity.RequestedOrientation = gameActivity.DefaultOrientation;
-                    break;
-            }
+            LoadComponentAsync(new GameplayScreenRotationLocker(), Add);
         }
 
         public override void SetHost(GameHost host)
@@ -113,7 +80,7 @@ namespace osu.Android
             host.Window.CursorState |= CursorState.Hidden;
         }
 
-        protected override UpdateManager CreateUpdateManager() => new MobileUpdateNotifier();
+        protected override UpdateManager CreateUpdateManager() => new SimpleUpdateManager();
 
         protected override BatteryInfo CreateBatteryInfo() => new AndroidBatteryInfo();
 

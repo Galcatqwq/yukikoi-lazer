@@ -8,7 +8,6 @@ using System.Linq;
 using osu.Framework.Extensions;
 using osu.Framework.Extensions.EnumExtensions;
 using osu.Framework.Graphics;
-using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Input.Bindings;
 using osu.Framework.IO.Stores;
@@ -31,7 +30,6 @@ using osu.Game.Screens.Edit.Setup;
 using osu.Game.Screens.Ranking.Statistics;
 using osu.Game.Skinning;
 using osu.Game.Users;
-using osuTK;
 
 namespace osu.Game.Rulesets
 {
@@ -101,7 +99,7 @@ namespace osu.Game.Rulesets
         /// <param name="acronym">The acronym to query for .</param>
         public Mod? CreateModFromAcronym(string acronym)
         {
-            return AllMods.FirstOrDefault(m => string.Equals(m.Acronym, acronym, StringComparison.OrdinalIgnoreCase))?.CreateInstance();
+            return AllMods.FirstOrDefault(m => m.Acronym == acronym)?.CreateInstance();
         }
 
         /// <summary>
@@ -398,33 +396,10 @@ namespace osu.Game.Rulesets
         /// <summary>
         /// Can be overridden to add ruleset-specific sections to the editor beatmap setup screen.
         /// </summary>
-        public virtual IEnumerable<Drawable> CreateEditorSetupSections() =>
+        public virtual IEnumerable<SetupSection> CreateEditorSetupSections() =>
         [
-            new MetadataSection(),
             new DifficultySection(),
-            new FillFlowContainer
-            {
-                AutoSizeAxes = Axes.Y,
-                Direction = FillDirection.Vertical,
-                Spacing = new Vector2(25),
-                Children = new Drawable[]
-                {
-                    new ResourcesSection
-                    {
-                        RelativeSizeAxes = Axes.X,
-                    },
-                    new ColoursSection
-                    {
-                        RelativeSizeAxes = Axes.X,
-                    }
-                }
-            },
-            new DesignSection(),
+            new ColoursSection(),
         ];
-
-        /// <summary>
-        /// Can be overridden to avoid showing scroll speed changes in the editor.
-        /// </summary>
-        public virtual bool EditorShowScrollSpeed => true;
     }
 }

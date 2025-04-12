@@ -61,7 +61,7 @@ namespace osu.Game.Rulesets.Osu.Tests.Mods
             Mod = new OsuModPerfect(),
             PassCondition = () => ((ModFailConditionTestPlayer)Player).CheckFailed(true),
             Autoplay = false,
-            CreateBeatmap = () => new Beatmap
+            Beatmap = new Beatmap
             {
                 HitObjects = new List<HitObject>
                 {

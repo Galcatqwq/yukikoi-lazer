@@ -22,9 +22,9 @@ namespace osu.Game.Tests.Database
     [HeadlessTest]
     public partial class BackgroundDataStoreProcessorTests : OsuTestScene, ILocalUserPlayInfo
     {
-        public IBindable<LocalUserPlayingState> PlayingState => isPlaying;
+        public IBindable<bool> IsPlaying => isPlaying;
 
-        private readonly Bindable<LocalUserPlayingState> isPlaying = new Bindable<LocalUserPlayingState>();
+        private readonly Bindable<bool> isPlaying = new Bindable<bool>();
 
         private BeatmapSetInfo importedSet = null!;
 
@@ -37,7 +37,7 @@ namespace osu.Game.Tests.Database
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("Set not playing", () => isPlaying.Value = LocalUserPlayingState.NotPlaying);
+            AddStep("Set not playing", () => isPlaying.Value = false);
         }
 
         [Test]
@@ -62,11 +62,12 @@ namespace osu.Game.Tests.Database
                 });
             });
 
-            TestBackgroundDataStoreProcessor processor = null!;
-            AddStep("Run background processor", () => Add(processor = new TestBackgroundDataStoreProcessor()));
-            AddUntilStep("Wait for completion", () => processor.Completed);
+            AddStep("Run background processor", () =>
+            {
+                Add(new TestBackgroundDataStoreProcessor());
+            });
 
-            AddAssert("Difficulties repopulated", () =>
+            AddUntilStep("wait for difficulties repopulated", () =>
             {
                 return Realm.Run(r =>
                 {
@@ -88,7 +89,7 @@ namespace osu.Game.Tests.Database
                 });
             });
 
-            AddStep("Set playing", () => isPlaying.Value = LocalUserPlayingState.Playing);
+            AddStep("Set playing", () => isPlaying.Value = true);
 
             AddStep("Reset difficulty", () =>
             {
@@ -100,10 +101,13 @@ namespace osu.Game.Tests.Database
                 });
             });
 
-            TestBackgroundDataStoreProcessor processor = null!;
-            AddStep("Run background processor", () => Add(processor = new TestBackgroundDataStoreProcessor()));
+            AddStep("Run background processor", () =>
+            {
+                Add(new TestBackgroundDataStoreProcessor());
+            });
 
             AddWaitStep("wait some", 500);
+
             AddAssert("Difficulty still not populated", () =>
             {
                 return Realm.Run(r =>
@@ -113,10 +117,9 @@ namespace osu.Game.Tests.Database
                 });
             });
 
-            AddStep("Set not playing", () => isPlaying.Value = LocalUserPlayingState.NotPlaying);
-            AddUntilStep("Wait for completion", () => processor.Completed);
+            AddStep("Set not playing", () => isPlaying.Value = false);
 
-            AddAssert("Difficulties repopulated", () =>
+            AddUntilStep("wait for difficulties repopulated", () =>
             {
                 return Realm.Run(r =>
                 {
@@ -148,11 +151,9 @@ namespace osu.Game.Tests.Database
                 });
             });
 
-            TestBackgroundDataStoreProcessor processor = null!;
-            AddStep("Run background processor", () => Add(processor = new TestBackgroundDataStoreProcessor()));
-            AddUntilStep("Wait for completion", () => processor.Completed);
+            AddStep("Run background processor", () => Add(new TestBackgroundDataStoreProcessor()));
 
-            AddAssert("Score version upgraded", () => Realm.Run(r => r.Find<ScoreInfo>(scoreInfo.ID)!.TotalScoreVersion), () => Is.EqualTo(LegacyScoreEncoder.LATEST_VERSION));
+            AddUntilStep("Score version upgraded", () => Realm.Run(r => r.Find<ScoreInfo>(scoreInfo.ID)!.TotalScoreVersion), () => Is.EqualTo(LegacyScoreEncoder.LATEST_VERSION));
             AddAssert("Score not marked as failed", () => Realm.Run(r => r.Find<ScoreInfo>(scoreInfo.ID)!.BackgroundReprocessingFailed), () => Is.False);
         }
 
@@ -182,7 +183,7 @@ namespace osu.Game.Tests.Database
             AddStep("Run background processor", () => Add(processor = new TestBackgroundDataStoreProcessor()));
             AddUntilStep("Wait for completion", () => processor.Completed);
 
-            AddAssert("Score marked as failed", () => Realm.Run(r => r.Find<ScoreInfo>(scoreInfo.ID)!.BackgroundReprocessingFailed), () => Is.True);
+            AddUntilStep("Score marked as failed", () => Realm.Run(r => r.Find<ScoreInfo>(scoreInfo.ID)!.BackgroundReprocessingFailed), () => Is.True);
             AddAssert("Score version not upgraded", () => Realm.Run(r => r.Find<ScoreInfo>(scoreInfo.ID)!.TotalScoreVersion), () => Is.EqualTo(scoreVersion));
         }
 

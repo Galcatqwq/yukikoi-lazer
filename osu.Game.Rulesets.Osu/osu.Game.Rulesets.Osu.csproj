@@ -15,4 +15,8 @@
   <ItemGroup Label="Project References">
     <ProjectReference Include="..\osu.Game\osu.Game.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Mods\OsuModGrow.cs" />
+  </ItemGroup>
 </Project>

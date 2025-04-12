@@ -90,7 +90,7 @@ namespace osu.Game.Rulesets.Replays
 
         private int currentFrameIndex;
 
-        private const double sixty_frame_time = 1000.0 / 60;
+        private const double sixty_frame_time = 100000.0 / 60;
 
         protected FramedReplayInputHandler(Replay replay)
         {

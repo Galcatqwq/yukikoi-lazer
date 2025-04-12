@@ -38,6 +38,8 @@ namespace osu.Game.Screens.Ranking
                     Icon = FontAwesome.Solid.Redo,
                 },
             };
+
+            TooltipText = "retry";
         }
 
         [BackgroundDependencyLoader]
@@ -46,14 +48,7 @@ namespace osu.Game.Screens.Ranking
             background.Colour = colours.Green;
 
             if (player != null)
-            {
-                TooltipText = player is ReplayPlayer ? "replay" : "retry";
                 Action = () => player.Restart();
-            }
-            else
-            {
-                TooltipText = "retry";
-            }
         }
     }
 }

@@ -53,20 +53,19 @@ namespace osu.Game.Beatmaps.Drawables.Cards.Buttons
             favouriteRequest?.Cancel();
             favouriteRequest = new PostBeatmapFavouriteRequest(beatmapSet.OnlineID, actionType);
 
-            SetLoading(true);
-
+            Enabled.Value = false;
             favouriteRequest.Success += () =>
             {
                 bool favourited = actionType == BeatmapFavouriteAction.Favourite;
 
                 current.Value = new BeatmapSetFavouriteState(favourited, current.Value.FavouriteCount + (favourited ? 1 : -1));
 
-                SetLoading(false);
+                Enabled.Value = true;
             };
             favouriteRequest.Failure += e =>
             {
                 Logger.Error(e, $"Failed to {actionType.ToString().ToLowerInvariant()} beatmap: {e.Message}");
-                SetLoading(false);
+                Enabled.Value = true;
             };
 
             api.Queue(favouriteRequest);

@@ -10,9 +10,9 @@ namespace osu.Game.Screens.Select.Carousel
     /// <summary>
     /// A group which ensures at least one item is selected (if the group itself is selected).
     /// </summary>
-    public abstract class CarouselGroupEagerSelect : CarouselGroup
+    public class CarouselGroupEagerSelect : CarouselGroup
     {
-        protected CarouselGroupEagerSelect()
+        public CarouselGroupEagerSelect()
         {
             State.ValueChanged += state =>
             {

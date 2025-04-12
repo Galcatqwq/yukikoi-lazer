@@ -75,7 +75,7 @@ namespace osu.Game.Tests.Visual.UserInterface
                     new Box
                     {
                         RelativeSizeAxes = Axes.Both,
-                        Colour = colourProvider.Background3
+                        Colour = colourProvider.Background4
                     },
                     CreateContent()
                 }

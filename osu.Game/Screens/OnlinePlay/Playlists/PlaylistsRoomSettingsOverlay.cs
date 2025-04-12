@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Linq;
 using Humanizer;
 using Humanizer.Localisation;
@@ -26,7 +25,6 @@ using osu.Game.Screens.OnlinePlay.Match.Components;
 using osuTK;
 using osu.Game.Localisation;
 using osu.Game.Rulesets;
-using Container = osu.Framework.Graphics.Containers.Container;
 
 namespace osu.Game.Screens.OnlinePlay.Playlists
 {
@@ -47,14 +45,14 @@ namespace osu.Game.Screens.OnlinePlay.Playlists
 
         protected override void SelectBeatmap() => settings.SelectBeatmap();
 
-        protected override Drawable CreateSettings(Room room) => settings = new MatchSettings(room)
+        protected override OnlinePlayComposite CreateSettings(Room room) => settings = new MatchSettings(room)
         {
             RelativeSizeAxes = Axes.Both,
             RelativePositionAxes = Axes.Y,
             EditPlaylist = () => EditPlaylist?.Invoke()
         };
 
-        protected partial class MatchSettings : CompositeDrawable
+        protected partial class MatchSettings : OnlinePlayComposite
         {
             private const float disabled_alpha = 0.2f;
 
@@ -74,6 +72,9 @@ namespace osu.Game.Screens.OnlinePlay.Playlists
             private OsuSpriteText playlistLength = null!;
 
             private PurpleRoundedButton editPlaylistButton = null!;
+
+            [Resolved]
+            private IRoomManager? manager { get; set; }
 
             [Resolved]
             private IAPIProvider api { get; set; } = null!;
@@ -141,8 +142,7 @@ namespace osu.Game.Screens.OnlinePlay.Playlists
                                                             {
                                                                 RelativeSizeAxes = Axes.X,
                                                                 TabbableContentContainer = this,
-                                                                LengthLimit = 100,
-                                                                Text = room.Name
+                                                                LengthLimit = 100
                                                             },
                                                         },
                                                         new Section("Duration")
@@ -313,6 +313,12 @@ namespace osu.Game.Screens.OnlinePlay.Playlists
                     loadingLayer = new LoadingLayer(true)
                 };
 
+                RoomName.BindValueChanged(name => NameField.Text = name.NewValue, true);
+                Availability.BindValueChanged(availability => AvailabilityPicker.Current.Value = availability.NewValue, true);
+                MaxParticipants.BindValueChanged(count => MaxParticipantsField.Text = count.NewValue?.ToString(), true);
+                MaxAttempts.BindValueChanged(count => MaxAttemptsField.Text = count.NewValue?.ToString(), true);
+                Duration.BindValueChanged(duration => DurationField.Current.Value = duration.NewValue ?? TimeSpan.FromMinutes(30), true);
+
                 DurationField.Current.BindValueChanged(duration =>
                 {
                     if (hasValidDuration)
@@ -326,71 +332,10 @@ namespace osu.Game.Screens.OnlinePlay.Playlists
 
                 localUser = api.LocalUser.GetBoundCopy();
                 localUser.BindValueChanged(populateDurations, true);
+
+                playlist.Items.BindTo(Playlist);
+                Playlist.BindCollectionChanged(onPlaylistChanged, true);
             }
-
-            protected override void LoadComplete()
-            {
-                base.LoadComplete();
-
-                room.PropertyChanged += onRoomPropertyChanged;
-
-                updateRoomName();
-                updateRoomAvailability();
-                updateRoomMaxParticipants();
-                updateRoomDuration();
-                updateRoomMaxAttempts();
-                updateRoomPlaylist();
-
-                playlist.Items.BindCollectionChanged((_, __) => room.Playlist = playlist.Items.ToArray());
-            }
-
-            private void onRoomPropertyChanged(object? sender, PropertyChangedEventArgs e)
-            {
-                switch (e.PropertyName)
-                {
-                    case nameof(Room.Name):
-                        updateRoomName();
-                        break;
-
-                    case nameof(Room.Availability):
-                        updateRoomAvailability();
-                        break;
-
-                    case nameof(Room.MaxParticipants):
-                        updateRoomMaxParticipants();
-                        break;
-
-                    case nameof(Room.Duration):
-                        updateRoomDuration();
-                        break;
-
-                    case nameof(Room.MaxAttempts):
-                        updateRoomMaxAttempts();
-                        break;
-
-                    case nameof(Room.Playlist):
-                        updateRoomPlaylist();
-                        break;
-                }
-            }
-
-            private void updateRoomName()
-                => NameField.Text = room.Name;
-
-            private void updateRoomAvailability()
-                => AvailabilityPicker.Current.Value = room.Availability;
-
-            private void updateRoomMaxParticipants()
-                => MaxParticipantsField.Text = room.MaxParticipants?.ToString();
-
-            private void updateRoomDuration()
-                => DurationField.Current.Value = room.Duration ?? TimeSpan.FromMinutes(30);
-
-            private void updateRoomMaxAttempts()
-                => MaxAttemptsField.Text = room.MaxAttempts?.ToString();
-
-            private void updateRoomPlaylist()
-                => playlist.Items.ReplaceRange(0, playlist.Items.Count, room.Playlist);
 
             private void populateDurations(ValueChangedEvent<APIUser> user)
             {
@@ -425,9 +370,9 @@ namespace osu.Game.Screens.OnlinePlay.Playlists
             public void SelectBeatmap() => editPlaylistButton.TriggerClick();
 
             private void onPlaylistChanged(object? sender, NotifyCollectionChangedEventArgs e) =>
-                playlistLength.Text = $"Length: {room.Playlist.GetTotalDuration(rulesets)}";
+                playlistLength.Text = $"Length: {Playlist.GetTotalDuration(rulesets)}";
 
-            private bool hasValidSettings => room.RoomID == null && NameField.Text.Length > 0 && room.Playlist.Count > 0
+            private bool hasValidSettings => RoomID.Value == null && NameField.Text.Length > 0 && Playlist.Count > 0
                                              && hasValidDuration;
 
             private bool hasValidDuration => DurationField.Current.Value <= TimeSpan.FromDays(14) || localUser.Value.IsSupporter;
@@ -437,21 +382,30 @@ namespace osu.Game.Screens.OnlinePlay.Playlists
                 if (!ApplyButton.Enabled.Value)
                     return;
 
-                ErrorText.FadeOut(50);
+                hideError();
 
-                room.Name = NameField.Text;
-                room.Availability = AvailabilityPicker.Current.Value;
-                room.MaxParticipants = int.TryParse(MaxParticipantsField.Text, out int maxParticipants) ? maxParticipants : null;
-                room.MaxAttempts = int.TryParse(MaxAttemptsField.Text, out int maxAttempts) ? maxAttempts : null;
-                room.Duration = DurationField.Current.Value;
+                RoomName.Value = NameField.Text;
+                Availability.Value = AvailabilityPicker.Current.Value;
+
+                if (int.TryParse(MaxParticipantsField.Text, out int max))
+                    MaxParticipants.Value = max;
+                else
+                    MaxParticipants.Value = null;
+
+                if (int.TryParse(MaxAttemptsField.Text, out max))
+                    MaxAttempts.Value = max;
+                else
+                    MaxAttempts.Value = null;
+
+                Duration.Value = DurationField.Current.Value;
 
                 loadingLayer.Show();
-
-                var req = new CreateRoomRequest(room);
-                req.Success += _ => loadingLayer.Hide();
-                req.Failure += e => onError(req.Response?.Error ?? e.Message);
-                api.Queue(req);
+                manager?.CreateRoom(room, onSuccess, onError);
             }
+
+            private void hideError() => ErrorText.FadeOut(50);
+
+            private void onSuccess(Room room) => loadingLayer.Hide();
 
             private void onError(string text)
             {
@@ -468,7 +422,7 @@ namespace osu.Game.Screens.OnlinePlay.Playlists
                                               .Select(int.Parse)
                                               .ToArray();
 
-                    foreach (var item in room.Playlist)
+                    foreach (var item in Playlist)
                     {
                         if (invalidBeatmapIDs.Contains(item.Beatmap.OnlineID))
                             item.MarkInvalid();
@@ -481,12 +435,6 @@ namespace osu.Game.Screens.OnlinePlay.Playlists
 
                 ErrorText.FadeIn(50);
                 loadingLayer.Hide();
-            }
-
-            protected override void Dispose(bool isDisposing)
-            {
-                base.Dispose(isDisposing);
-                room.PropertyChanged -= onRoomPropertyChanged;
             }
         }
 

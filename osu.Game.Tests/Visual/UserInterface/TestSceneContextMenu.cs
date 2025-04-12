@@ -101,16 +101,7 @@ namespace osu.Game.Tests.Visual.UserInterface
                                     }
                                 }
                             }
-                        },
-                    }
-                },
-                new OsuMenuItem(@"Another nested option")
-                {
-                    Items = new MenuItem[]
-                    {
-                        new OsuMenuItem(@"Sub-One"),
-                        new OsuMenuItem(@"Sub-Two"),
-                        new OsuMenuItem(@"Sub-Three"),
+                        }
                     }
                 },
                 new OsuMenuItem(@"Choose me please"),

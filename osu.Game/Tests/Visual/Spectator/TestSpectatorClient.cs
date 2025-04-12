@@ -13,8 +13,6 @@ using osu.Game.Online.API;
 using osu.Game.Online.Spectator;
 using osu.Game.Replays.Legacy;
 using osu.Game.Rulesets;
-using osu.Game.Rulesets.Judgements;
-using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Replays;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Scoring;
@@ -78,12 +76,12 @@ namespace osu.Game.Tests.Visual.Spectator
         /// <param name="state">The spectator state to end play with.</param>
         public void SendEndPlay(int userId, SpectatedUserState state = SpectatedUserState.Quit)
         {
-            if (!userBeatmapDictionary.TryGetValue(userId, out int beatmapId))
+            if (!userBeatmapDictionary.ContainsKey(userId))
                 return;
 
             ((ISpectatorClient)this).UserFinishedPlaying(userId, new SpectatorState
             {
-                BeatmapID = beatmapId,
+                BeatmapID = userBeatmapDictionary[userId],
                 RulesetID = 0,
                 Mods = userModsDictionary[userId],
                 State = state
@@ -101,23 +99,12 @@ namespace osu.Game.Tests.Visual.Spectator
         /// <param name="userId">The user to send frames for.</param>
         /// <param name="count">The total number of frames to send.</param>
         /// <param name="startTime">The time to start gameplay frames from.</param>
-        /// <param name="initialResultCount">Add a number of misses to frame header data for testing purposes.</param>
-        public void SendFramesFromUser(int userId, int count, double startTime = 0, int initialResultCount = 0)
+        public void SendFramesFromUser(int userId, int count, double startTime = 0)
         {
             var frames = new List<LegacyReplayFrame>();
 
             int currentFrameIndex = userNextFrameDictionary[userId];
             int lastFrameIndex = currentFrameIndex + count - 1;
-
-            var scoreProcessor = new ScoreProcessor(rulesetStore.GetRuleset(0)!.CreateInstance());
-
-            for (int i = 0; i < initialResultCount; i++)
-            {
-                scoreProcessor.ApplyResult(new JudgementResult(new HitObject(), new Judgement())
-                {
-                    Type = HitResult.Miss,
-                });
-            }
 
             for (; currentFrameIndex <= lastFrameIndex; currentFrameIndex++)
             {
@@ -143,16 +130,7 @@ namespace osu.Game.Tests.Visual.Spectator
                     Combo = currentFrameIndex,
                     TotalScore = (long)(currentFrameIndex * 123478 * RNG.NextDouble(0.99, 1.01)),
                     Accuracy = RNG.NextDouble(0.98, 1),
-                    Statistics = scoreProcessor.Statistics.ToDictionary(),
-                }, scoreProcessor, frames.ToArray());
-
-                if (initialResultCount > 0)
-                {
-                    foreach (var f in frames)
-                        f.Header = bundle.Header;
-                }
-
-                scoreProcessor.ResetFromReplayFrame(frames.Last());
+                }, new ScoreProcessor(rulesetStore.GetRuleset(0)!.CreateInstance()), frames.ToArray());
                 ((ISpectatorClient)this).UserSentFrames(userId, bundle);
 
                 frames.Clear();

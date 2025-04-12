@@ -39,8 +39,6 @@ namespace osu.Game.Screens.Play
         /// </remarks>
         public double StartTime { get; protected set; }
 
-        public double GameplayStartTime { get; protected set; }
-
         public IAdjustableAudioComponent AdjustmentsFromMods { get; } = new AudioAdjustments();
 
         private readonly BindableBool isPaused = new BindableBool(true);

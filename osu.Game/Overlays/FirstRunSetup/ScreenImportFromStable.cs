@@ -31,7 +31,7 @@ using osuTK;
 namespace osu.Game.Overlays.FirstRunSetup
 {
     [LocalisableDescription(typeof(FirstRunOverlayImportFromStableScreenStrings), nameof(FirstRunOverlayImportFromStableScreenStrings.Header))]
-    public partial class ScreenImportFromStable : WizardScreen
+    public partial class ScreenImportFromStable : FirstRunSetupScreen
     {
         private static readonly Vector2 button_size = new Vector2(400, 50);
 
@@ -314,7 +314,6 @@ namespace osu.Game.Overlays.FirstRunSetup
             private partial class DirectoryChooserPopover : OsuPopover
             {
                 public DirectoryChooserPopover(Bindable<DirectoryInfo?> currentDirectory)
-                    : base(false)
                 {
                     Child = new Container
                     {
@@ -325,13 +324,6 @@ namespace osu.Game.Overlays.FirstRunSetup
                             CurrentPath = { BindTarget = currentDirectory }
                         },
                     };
-                }
-
-                [BackgroundDependencyLoader]
-                private void load(OverlayColourProvider colourProvider)
-                {
-                    Body.BorderColour = colourProvider.Highlight1;
-                    Body.BorderThickness = 2;
                 }
             }
         }

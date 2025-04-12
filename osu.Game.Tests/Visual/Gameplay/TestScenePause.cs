@@ -12,7 +12,6 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Logging;
 using osu.Framework.Screens;
 using osu.Framework.Testing;
-using osu.Game.Beatmaps;
 using osu.Game.Configuration;
 using osu.Game.Graphics.Containers;
 using osu.Game.Graphics.Cursor;
@@ -20,7 +19,6 @@ using osu.Game.Rulesets;
 using osu.Game.Rulesets.UI;
 using osu.Game.Screens.Play;
 using osu.Game.Skinning;
-using osu.Game.Storyboards;
 using osuTK;
 using osuTK.Input;
 
@@ -29,12 +27,6 @@ namespace osu.Game.Tests.Visual.Gameplay
     public partial class TestScenePause : OsuPlayerTestScene
     {
         protected new PausePlayer Player => (PausePlayer)base.Player;
-
-        protected override WorkingBeatmap CreateWorkingBeatmap(IBeatmap beatmap, Storyboard storyboard = null)
-        {
-            beatmap.AudioLeadIn = 4000;
-            return base.CreateWorkingBeatmap(beatmap, storyboard);
-        }
 
         private readonly Container content;
 
@@ -208,10 +200,8 @@ namespace osu.Game.Tests.Visual.Gameplay
         }
 
         [Test]
-        [Ignore("Fails on github runners if they happen to skip too far forward in time.")]
         public void TestUserPauseDuringCooldownTooSoon()
         {
-            AddStep("seek to gameplay", () => Player.GameplayClockContainer.Seek(0));
             AddStep("move cursor outside", () => InputManager.MoveMouseTo(Player.ScreenSpaceDrawQuad.TopLeft - new Vector2(10)));
 
             pauseAndConfirm();
@@ -224,22 +214,8 @@ namespace osu.Game.Tests.Visual.Gameplay
         }
 
         [Test]
-        public void TestUserPauseDuringIntroSkipsCooldown()
-        {
-            AddStep("seek before gameplay", () => Player.GameplayClockContainer.Seek(-5000));
-            AddStep("move cursor outside", () => InputManager.MoveMouseTo(Player.ScreenSpaceDrawQuad.TopLeft - new Vector2(10)));
-
-            pauseAndConfirm();
-
-            resume();
-            pauseViaBackAction();
-            confirmPaused();
-        }
-
-        [Test]
         public void TestQuickExitDuringCooldownTooSoon()
         {
-            AddStep("seek to gameplay", () => Player.GameplayClockContainer.Seek(0));
             AddStep("move cursor outside", () => InputManager.MoveMouseTo(Player.ScreenSpaceDrawQuad.TopLeft - new Vector2(10)));
 
             pauseAndConfirm();
@@ -344,8 +320,6 @@ namespace osu.Game.Tests.Visual.Gameplay
         [Test]
         public void TestExitViaHoldToExit()
         {
-            AddStep("set hold button always visible", () => LocalConfig.SetValue(OsuSetting.AlwaysShowHoldForMenuButton, true));
-
             AddStep("exit", () =>
             {
                 InputManager.MoveMouseTo(Player.HUDOverlay.HoldToQuit.First(c => c is HoldToConfirmContainer));

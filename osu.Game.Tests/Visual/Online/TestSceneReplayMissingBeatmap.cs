@@ -40,13 +40,15 @@ namespace osu.Game.Tests.Visual.Online
 
             AddStep("import score", () =>
             {
-                var resourceStream = TestResources.OpenResource("Replays/mania-replay.osr");
-                var importTask = new ImportTask(resourceStream, "replay.osr");
+                using (var resourceStream = TestResources.OpenResource("Replays/mania-replay.osr"))
+                {
+                    var importTask = new ImportTask(resourceStream, "replay.osr");
 
-                Game.ScoreManager.Import(new[] { importTask });
+                    Game.ScoreManager.Import(new[] { importTask });
+                }
             });
 
-            AddUntilStep("Replay missing notification shown", () => Game.Notifications.ChildrenOfType<MissingBeatmapNotification>().Any());
+            AddUntilStep("Replay missing notification show", () => Game.Notifications.ChildrenOfType<MissingBeatmapNotification>().Any());
         }
 
         [Test]
@@ -56,13 +58,15 @@ namespace osu.Game.Tests.Visual.Online
 
             AddStep("import score", () =>
             {
-                var resourceStream = TestResources.OpenResource("Replays/mania-replay.osr");
-                var importTask = new ImportTask(resourceStream, "replay.osr");
+                using (var resourceStream = TestResources.OpenResource("Replays/mania-replay.osr"))
+                {
+                    var importTask = new ImportTask(resourceStream, "replay.osr");
 
-                Game.ScoreManager.Import(new[] { importTask });
+                    Game.ScoreManager.Import(new[] { importTask });
+                }
             });
 
-            AddUntilStep("Replay missing notification not shown", () => !Game.Notifications.ChildrenOfType<MissingBeatmapNotification>().Any());
+            AddUntilStep("Replay missing notification not show", () => !Game.Notifications.ChildrenOfType<MissingBeatmapNotification>().Any());
         }
 
         private void setupBeatmapResponse(APIBeatmap b)

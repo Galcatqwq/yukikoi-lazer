@@ -1,8 +1,9 @@
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using System.Collections.Generic;
+using System.Linq;
 using osu.Framework.Bindables;
+using osu.Framework.Graphics;
 using osu.Framework.Localisation;
 using osu.Game.Beatmaps;
 using osu.Game.Beatmaps.ControlPoints;
@@ -36,18 +37,19 @@ namespace osu.Game.Rulesets.Osu.Mods
             ReadCurrentFromDifficulty = diff => diff.ApproachRate,
         };
 
-        public override IEnumerable<(LocalisableString setting, LocalisableString value)> SettingDescription
+        public override string SettingDescription
         {
             get
             {
-                if (!CircleSize.IsDefault)
-                    yield return ("Circle size", $"{CircleSize.Value:N1}");
+                string circleSize = CircleSize.IsDefault ? string.Empty : $"CS {CircleSize.Value:N1}";
+                string approachRate = ApproachRate.IsDefault ? string.Empty : $"AR {ApproachRate.Value:N1}";
 
-                foreach (var setting in base.SettingDescription)
-                    yield return setting;
-
-                if (!ApproachRate.IsDefault)
-                    yield return ("Approach rate", $"{ApproachRate.Value:N1}");
+                return string.Join(", ", new[]
+                {
+                    circleSize,
+                    base.SettingDescription,
+                    approachRate
+                }.Where(s => !string.IsNullOrEmpty(s)));
             }
         }
 
@@ -61,7 +63,13 @@ namespace osu.Game.Rulesets.Osu.Mods
 
         private partial class ApproachRateSettingsControl : DifficultyAdjustSettingsControl
         {
-            protected override RoundedSliderBar<float> CreateSlider(BindableNumber<float> current) => new ApproachRateSlider();
+            protected override RoundedSliderBar<float> CreateSlider(BindableNumber<float> current) =>
+                new ApproachRateSlider
+                {
+                    RelativeSizeAxes = Axes.X,
+                    Current = current,
+                    KeyboardStep = 0.1f,
+                };
 
             /// <summary>
             /// A slider bar with more detailed approach rate info for its given value

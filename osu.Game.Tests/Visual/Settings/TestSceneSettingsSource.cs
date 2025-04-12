@@ -5,7 +5,6 @@ using NUnit.Framework;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.Cursor;
 using osu.Framework.Localisation;
 using osu.Game.Configuration;
 using osu.Game.Overlays.Settings;
@@ -20,20 +19,16 @@ namespace osu.Game.Tests.Visual.Settings
         {
             Children = new Drawable[]
             {
-                new PopoverContainer
+                new FillFlowContainer
                 {
                     RelativeSizeAxes = Axes.Both,
-                    Child = new FillFlowContainer
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Direction = FillDirection.Vertical,
-                        Spacing = new Vector2(20),
-                        Width = 0.5f,
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Padding = new MarginPadding(50),
-                        ChildrenEnumerable = new TestTargetClass().CreateSettingsControls()
-                    },
+                    Direction = FillDirection.Vertical,
+                    Spacing = new Vector2(20),
+                    Width = 0.5f,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Padding = new MarginPadding(50),
+                    ChildrenEnumerable = new TestTargetClass().CreateSettingsControls()
                 },
             };
         }
@@ -71,13 +66,6 @@ namespace osu.Game.Tests.Visual.Settings
 
             [SettingSource("Sample number textbox", "Textbox number entry", SettingControlType = typeof(SettingsNumberBox))]
             public Bindable<int?> IntTextBoxBindable { get; } = new Bindable<int?>();
-
-            [SettingSource("Sample colour", "Change the colour", SettingControlType = typeof(SettingsColour))]
-            public BindableColour4 ColourBindable { get; } = new BindableColour4
-            {
-                Default = Colour4.White,
-                Value = Colour4.Red
-            };
         }
 
         private enum TestEnum

@@ -82,10 +82,9 @@ namespace osu.Game.Users
                                         AutoSizeAxes = Axes.Both,
                                         Direction = FillDirection.Horizontal,
                                         Spacing = new Vector2(6),
-                                        Children = new[]
+                                        Children = new Drawable[]
                                         {
                                             CreateFlag(),
-                                            CreateTeamLogo(),
                                             // supporter icon is being added later
                                         }
                                     }

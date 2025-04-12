@@ -1,8 +1,10 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using System;
+#nullable disable
+
 using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -13,49 +15,41 @@ using osu.Game.Users.Drawables;
 using osu.Framework.Input.Events;
 using osu.Framework.Localisation;
 using osu.Game.Online.API.Requests.Responses;
-using osu.Game.Online.Metadata;
 
 namespace osu.Game.Users
 {
     public abstract partial class ExtendedUserPanel : UserPanel
     {
-        protected TextFlowContainer LastVisitMessage { get; private set; } = null!;
+        public readonly Bindable<UserStatus?> Status = new Bindable<UserStatus?>();
 
-        private StatusIcon statusIcon = null!;
-        private StatusText statusMessage = null!;
+        public readonly IBindable<UserActivity> Activity = new Bindable<UserActivity>();
 
-        [Resolved]
-        private MetadataClient? metadata { get; set; }
+        protected TextFlowContainer LastVisitMessage { get; private set; }
 
-        private UserStatus? lastStatus;
-        private UserActivity? lastActivity;
-        private DateTimeOffset? lastVisit;
+        private StatusIcon statusIcon;
+        private StatusText statusMessage;
 
         protected ExtendedUserPanel(APIUser user)
             : base(user)
         {
-            lastVisit = user.LastVisit;
         }
 
         [BackgroundDependencyLoader]
         private void load()
         {
             BorderColour = ColourProvider?.Light1 ?? Colours.GreyVioletLighter;
+
+            Status.ValueChanged += status => displayStatus(status.NewValue, Activity.Value);
+            Activity.ValueChanged += activity => displayStatus(Status.Value, activity.NewValue);
         }
 
         protected override void LoadComplete()
         {
             base.LoadComplete();
-            updatePresence();
+            Status.TriggerChange();
 
             // Colour should be applied immediately on first load.
             statusIcon.FinishTransforms();
-        }
-
-        protected override void Update()
-        {
-            base.Update();
-            updatePresence();
         }
 
         protected Container CreateStatusIcon() => statusIcon = new StatusIcon();
@@ -76,6 +70,15 @@ namespace osu.Game.Users
                 text.Origin = alignment;
                 text.AutoSizeAxes = Axes.Both;
                 text.Alpha = 0;
+
+                if (User.LastVisit.HasValue)
+                {
+                    text.AddText(@"Last seen ");
+                    text.AddText(new DrawableDate(User.LastVisit.Value, italic: false)
+                    {
+                        Shadow = false
+                    });
+                }
             }));
 
             statusContainer.Add(statusMessage = new StatusText
@@ -88,48 +91,37 @@ namespace osu.Game.Users
             return statusContainer;
         }
 
-        private void updatePresence()
+        private void displayStatus(UserStatus? status, UserActivity activity = null)
         {
-            // TODO: we probably don't want to do this every frame.
-            UserPresence? presence = metadata?.GetPresence(User.OnlineID);
-            UserStatus status = presence?.Status ?? UserStatus.Offline;
-            UserActivity? activity = presence?.Activity;
-
-            if (status == lastStatus && activity == lastActivity)
-                return;
-
-            if (status == UserStatus.Offline && lastVisit != null)
+            if (status != null)
             {
-                LastVisitMessage.FadeTo(1);
-                LastVisitMessage.Clear();
-                LastVisitMessage.AddText(@"Last seen ");
-                LastVisitMessage.AddText(new DrawableDate(lastVisit.Value, italic: false)
+                LastVisitMessage.FadeTo(status == UserStatus.Offline && User.LastVisit.HasValue ? 1 : 0);
+
+                // Set status message based on activity (if we have one) and status is not offline
+                if (activity != null && status != UserStatus.Offline)
                 {
-                    Shadow = false
-                });
-            }
-            else
-                LastVisitMessage.FadeTo(0);
+                    statusMessage.Text = activity.GetStatus();
+                    statusMessage.TooltipText = activity.GetDetails();
+                    statusIcon.FadeColour(activity.GetAppropriateColour(Colours), 500, Easing.OutQuint);
+                    return;
+                }
 
-            // Set status message based on activity (if we have one) and status is not offline
-            if (activity != null && status != UserStatus.Offline)
-            {
-                statusMessage.Text = activity.GetStatus();
-                statusMessage.TooltipText = activity.GetDetails() ?? string.Empty;
-                statusIcon.FadeColour(activity.GetAppropriateColour(Colours), 500, Easing.OutQuint);
-            }
-
-            // Otherwise use only status
-            else
-            {
+                // Otherwise use only status
                 statusMessage.Text = status.GetLocalisableDescription();
                 statusMessage.TooltipText = string.Empty;
-                statusIcon.FadeColour(status.GetAppropriateColour(Colours), 500, Easing.OutQuint);
+                statusIcon.FadeColour(status.Value.GetAppropriateColour(Colours), 500, Easing.OutQuint);
+
+                return;
             }
 
-            lastStatus = status;
-            lastActivity = activity;
-            lastVisit = status != UserStatus.Offline ? DateTimeOffset.Now : lastVisit;
+            // Fallback to web status if local one is null
+            if (User.IsOnline)
+            {
+                Status.Value = UserStatus.Online;
+                return;
+            }
+
+            Status.Value = UserStatus.Offline;
         }
 
         protected override bool OnHover(HoverEvent e)

@@ -47,6 +47,7 @@ namespace osu.Game.Rulesets.Osu.Edit
 
         private OsuHitObject[]? objectsInRotation;
 
+        private Vector2? defaultOrigin;
         private Dictionary<OsuHitObject, Vector2>? originalPositions;
         private Dictionary<IHasPath, Vector2[]>? originalPathControlPointPositions;
 
@@ -60,7 +61,7 @@ namespace osu.Game.Rulesets.Osu.Edit
             changeHandler?.BeginChange();
 
             objectsInRotation = selectedMovableObjects.ToArray();
-            DefaultOrigin = GeometryUtils.MinimumEnclosingCircle(objectsInRotation).Item1;
+            defaultOrigin = GeometryUtils.GetSurroundingQuad(objectsInRotation).Centre;
             originalPositions = objectsInRotation.ToDictionary(obj => obj, obj => obj.Position);
             originalPathControlPointPositions = objectsInRotation.OfType<IHasPath>().ToDictionary(
                 obj => obj,
@@ -72,9 +73,9 @@ namespace osu.Game.Rulesets.Osu.Edit
             if (!OperationInProgress.Value)
                 throw new InvalidOperationException($"Cannot {nameof(Update)} a rotate operation without calling {nameof(Begin)} first!");
 
-            Debug.Assert(objectsInRotation != null && originalPositions != null && originalPathControlPointPositions != null && DefaultOrigin != null);
+            Debug.Assert(objectsInRotation != null && originalPositions != null && originalPathControlPointPositions != null && defaultOrigin != null);
 
-            Vector2 actualOrigin = origin ?? DefaultOrigin.Value;
+            Vector2 actualOrigin = origin ?? defaultOrigin.Value;
 
             foreach (var ho in objectsInRotation)
             {
@@ -102,7 +103,7 @@ namespace osu.Game.Rulesets.Osu.Edit
             objectsInRotation = null;
             originalPositions = null;
             originalPathControlPointPositions = null;
-            DefaultOrigin = null;
+            defaultOrigin = null;
         }
 
         private IEnumerable<OsuHitObject> selectedMovableObjects => selectedItems.Cast<OsuHitObject>()

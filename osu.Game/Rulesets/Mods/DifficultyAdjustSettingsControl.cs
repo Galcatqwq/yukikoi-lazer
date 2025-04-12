@@ -31,7 +31,12 @@ namespace osu.Game.Rulesets.Mods
 
         protected sealed override Drawable CreateControl() => new SliderControl(sliderDisplayCurrent, CreateSlider);
 
-        protected virtual RoundedSliderBar<float> CreateSlider(BindableNumber<float> current) => new RoundedSliderBar<float>();
+        protected virtual RoundedSliderBar<float> CreateSlider(BindableNumber<float> current) => new RoundedSliderBar<float>
+        {
+            RelativeSizeAxes = Axes.X,
+            Current = current,
+            KeyboardStep = 0.1f,
+        };
 
         /// <summary>
         /// Guards against beatmap values displayed on slider bars being transferred to user override.
@@ -106,21 +111,7 @@ namespace osu.Game.Rulesets.Mods
             {
                 InternalChildren = new Drawable[]
                 {
-                    createSlider(currentNumber).With(slider =>
-                    {
-                        slider.RelativeSizeAxes = Axes.X;
-                        slider.Current = currentNumber;
-                        slider.KeyboardStep = 0.1f;
-                        // this looks redundant, but isn't because of the various games this component plays
-                        // (`Current` is nullable and represents the underlying setting value,
-                        // `currentNumber` is not nullable and represents what is getting displayed,
-                        // therefore without this, double-clicking the slider would reset `currentNumber` to its bogus default of 0).
-                        slider.ResetToDefault = () =>
-                        {
-                            if (!Current.Disabled)
-                                Current.SetDefault();
-                        };
-                    })
+                    createSlider(currentNumber)
                 };
 
                 AutoSizeAxes = Axes.Y;

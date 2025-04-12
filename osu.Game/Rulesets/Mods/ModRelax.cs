@@ -13,7 +13,8 @@ namespace osu.Game.Rulesets.Mods
         public override string Acronym => "RX";
         public override IconUsage? Icon => OsuIcon.ModRelax;
         public override ModType Type => ModType.Automation;
-        public override double ScoreMultiplier => 0.1;
+        public override double ScoreMultiplier => 1;
+        public override bool Ranked => true;
         public override Type[] IncompatibleMods => new[] { typeof(ModAutoplay) };
     }
 }

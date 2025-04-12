@@ -198,11 +198,8 @@ namespace osu.Game.Beatmaps
 
             if (beatmapSet.OnlineID > 0)
             {
-                // Required local for iOS. Will cause runtime crash if inlined.
-                int onlineId = beatmapSet.OnlineID;
-
                 // OnlineID should really be unique, but to avoid catastrophic failure let's iterate just to be sure.
-                foreach (var existingSetWithSameOnlineID in realm.All<BeatmapSetInfo>().Where(b => b.OnlineID == onlineId))
+                foreach (var existingSetWithSameOnlineID in realm.All<BeatmapSetInfo>().Where(b => b.OnlineID == beatmapSet.OnlineID))
                 {
                     existingSetWithSameOnlineID.DeletePending = true;
                     existingSetWithSameOnlineID.OnlineID = -1;
@@ -428,7 +425,17 @@ namespace osu.Game.Beatmaps
                         Hash = hash,
                         DifficultyName = decodedInfo.DifficultyName,
                         OnlineID = decodedInfo.OnlineID,
+                        AudioLeadIn = decodedInfo.AudioLeadIn,
+                        StackLeniency = decodedInfo.StackLeniency,
+                        SpecialStyle = decodedInfo.SpecialStyle,
+                        LetterboxInBreaks = decodedInfo.LetterboxInBreaks,
+                        WidescreenStoryboard = decodedInfo.WidescreenStoryboard,
+                        EpilepsyWarning = decodedInfo.EpilepsyWarning,
+                        SamplesMatchPlaybackRate = decodedInfo.SamplesMatchPlaybackRate,
+                        DistanceSpacing = decodedInfo.DistanceSpacing,
                         BeatDivisor = decodedInfo.BeatDivisor,
+                        GridSize = decodedInfo.GridSize,
+                        TimelineZoom = decodedInfo.TimelineZoom,
                         MD5Hash = memoryStream.ComputeMD5Hash(),
                         EndTimeObjectCount = decoded.HitObjects.Count(h => h is IHasDuration),
                         TotalObjectCount = decoded.HitObjects.Count

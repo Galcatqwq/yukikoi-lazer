@@ -17,8 +17,6 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
     {
         protected OsuSpriteText Label { get; private set; }
 
-        protected Container LabelContainer { get; private set; }
-
         [BackgroundDependencyLoader]
         private void load(OsuColour colours)
         {
@@ -28,7 +26,7 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
 
             InternalChildren = new Drawable[]
             {
-                LabelContainer = new Container
+                new Container
                 {
                     AutoSizeAxes = Axes.X,
                     Height = 16,

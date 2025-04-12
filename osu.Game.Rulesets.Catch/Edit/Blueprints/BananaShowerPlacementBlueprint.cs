@@ -7,7 +7,6 @@ using osu.Framework.Utils;
 using osu.Game.Rulesets.Catch.Edit.Blueprints.Components;
 using osu.Game.Rulesets.Catch.Objects;
 using osu.Game.Rulesets.Edit;
-using osuTK;
 using osuTK.Input;
 
 namespace osu.Game.Rulesets.Catch.Edit.Blueprints
@@ -60,13 +59,11 @@ namespace osu.Game.Rulesets.Catch.Edit.Blueprints
             return base.OnMouseDown(e);
         }
 
-        public override SnapResult UpdateTimeAndPosition(Vector2 screenSpacePosition, double fallbackTime)
+        public override void UpdateTimeAndPosition(SnapResult result)
         {
-            var result = Composer?.FindSnappedPositionAndTime(screenSpacePosition) ?? new SnapResult(screenSpacePosition, fallbackTime);
+            base.UpdateTimeAndPosition(result);
 
-            base.UpdateTimeAndPosition(result.ScreenSpacePosition, result.Time ?? fallbackTime);
-
-            if (!(result.Time is double time)) return result;
+            if (!(result.Time is double time)) return;
 
             switch (PlacementActive)
             {
@@ -81,7 +78,6 @@ namespace osu.Game.Rulesets.Catch.Edit.Blueprints
 
             HitObject.StartTime = Math.Min(placementStartTime, placementEndTime);
             HitObject.EndTime = Math.Max(placementStartTime, placementEndTime);
-            return result;
         }
     }
 }

@@ -13,12 +13,12 @@ namespace osu.Game.Rulesets.Mods
 {
     public abstract class ModNoFail : Mod, IApplicableFailOverride, IApplicableToHUD, IReadFromConfig
     {
-        public override string Name => "No Fail";
+        public override string Name => "无敌";
         public override string Acronym => "NF";
         public override IconUsage? Icon => OsuIcon.ModNoFail;
         public override ModType Type => ModType.DifficultyReduction;
-        public override LocalisableString Description => "You can't fail, no matter what.";
-        public override double ScoreMultiplier => 0.5;
+        public override LocalisableString Description => "开了就是开?";
+        public override double ScoreMultiplier => 1;
         public override Type[] IncompatibleMods => new[] { typeof(ModFailCondition), typeof(ModCinema) };
         public override bool Ranked => UsesDefaultConfiguration;
 

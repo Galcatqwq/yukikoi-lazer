@@ -3,16 +3,15 @@
 
 using osu.Framework.Bindables;
 using osu.Framework.Input;
-using osu.Game.Screens.Play;
 using osuTK.Input;
 
 namespace osu.Game.Input
 {
     public partial class OsuUserInputManager : UserInputManager
     {
-        protected override bool AllowRightClickFromLongTouch => PlayingState.Value != LocalUserPlayingState.Playing;
+        protected override bool AllowRightClickFromLongTouch => !LocalUserPlaying.Value;
 
-        public readonly IBindable<LocalUserPlayingState> PlayingState = new Bindable<LocalUserPlayingState>();
+        public readonly BindableBool LocalUserPlaying = new BindableBool();
 
         internal OsuUserInputManager()
         {

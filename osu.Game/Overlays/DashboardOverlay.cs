@@ -6,6 +6,7 @@ using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics.Containers;
 using osu.Game.Online.Metadata;
+using osu.Game.Online.Multiplayer;
 using osu.Game.Overlays.Dashboard;
 using osu.Game.Overlays.Dashboard.Friends;
 
@@ -17,7 +18,6 @@ namespace osu.Game.Overlays
         private MetadataClient metadataClient { get; set; } = null!;
 
         private IBindable<bool> metadataConnected = null!;
-        private IDisposable? userPresenceWatchToken;
 
         public DashboardOverlay()
             : base(OverlayColourScheme.Purple)
@@ -61,12 +61,9 @@ namespace osu.Game.Overlays
                 return;
 
             if (State.Value == Visibility.Visible)
-                userPresenceWatchToken ??= metadataClient.BeginWatchingUserPresence();
+                metadataClient.BeginWatchingUserPresence().FireAndForget();
             else
-            {
-                userPresenceWatchToken?.Dispose();
-                userPresenceWatchToken = null;
-            }
+                metadataClient.EndWatchingUserPresence().FireAndForget();
         }
     }
 }

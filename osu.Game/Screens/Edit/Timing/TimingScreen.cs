@@ -1,7 +1,6 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using System;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
@@ -15,8 +14,6 @@ namespace osu.Game.Screens.Edit.Timing
     {
         [Cached]
         public readonly Bindable<ControlPointGroup> SelectedGroup = new Bindable<ControlPointGroup>();
-
-        private readonly Bindable<EditorScreenMode> currentEditorMode = new Bindable<EditorScreenMode>();
 
         [Resolved]
         private EditorClock? editorClock { get; set; }
@@ -38,53 +35,23 @@ namespace osu.Game.Screens.Edit.Timing
             {
                 new Drawable[]
                 {
-                    new ControlPointList
-                    {
-                        SelectClosestTimingPoint = selectClosestTimingPoint,
-                    },
+                    new ControlPointList(),
                     new ControlPointSettings(),
                 },
             }
         };
 
-        [BackgroundDependencyLoader]
-        private void load(Editor? editor)
-        {
-            if (editor != null)
-                currentEditorMode.BindTo(editor.Mode);
-        }
-
         protected override void LoadComplete()
         {
             base.LoadComplete();
 
-            // When entering the timing screen, let's choose the closest valid timing point.
-            // This will emulate the osu-stable behaviour where a metronome and timing information
-            // are presented on entering the screen.
-            currentEditorMode.BindValueChanged(mode =>
+            if (editorClock != null)
             {
-                if (mode.NewValue == EditorScreenMode.Timing)
-                    selectClosestTimingPoint();
-            });
-            selectClosestTimingPoint();
-        }
-
-        private void selectClosestTimingPoint()
-        {
-            if (editorClock == null)
-                return;
-
-            double accurateTime = editorClock.CurrentTimeAccurate;
-
-            var activeTimingPoint = EditorBeatmap.ControlPointInfo.TimingPointAt(accurateTime);
-            var activeEffectPoint = EditorBeatmap.ControlPointInfo.EffectPointAt(accurateTime);
-
-            if (activeEffectPoint.Equals(EffectControlPoint.DEFAULT))
-                SelectedGroup.Value = EditorBeatmap.ControlPointInfo.GroupAt(activeTimingPoint.Time);
-            else
-            {
-                double latestActiveTime = Math.Max(activeTimingPoint.Time, activeEffectPoint.Time);
-                SelectedGroup.Value = EditorBeatmap.ControlPointInfo.GroupAt(latestActiveTime);
+                // When entering the timing screen, let's choose the closest valid timing point.
+                // This will emulate the osu-stable behaviour where a metronome and timing information
+                // are presented on entering the screen.
+                var nearestTimingPoint = EditorBeatmap.ControlPointInfo.TimingPointAt(editorClock.CurrentTime);
+                SelectedGroup.Value = EditorBeatmap.ControlPointInfo.GroupAt(nearestTimingPoint.Time);
             }
         }
 

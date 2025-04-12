@@ -21,7 +21,7 @@ namespace osu.Game.Tests.Visual.Mods
         protected override TestPlayer CreateModPlayer(Ruleset ruleset)
         {
             var player = base.CreateModPlayer(ruleset);
-            player.PrepareLoaderForRestart = _ => restartRequested = true;
+            player.RestartRequested = _ => restartRequested = true;
             return player;
         }
 

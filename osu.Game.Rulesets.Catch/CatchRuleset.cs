@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using osu.Framework.Graphics;
-using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Input.Bindings;
 using osu.Framework.Localisation;
@@ -14,7 +13,6 @@ using osu.Game.Graphics;
 using osu.Game.Rulesets.Catch.Beatmaps;
 using osu.Game.Rulesets.Catch.Difficulty;
 using osu.Game.Rulesets.Catch.Edit;
-using osu.Game.Rulesets.Catch.Edit.Setup;
 using osu.Game.Rulesets.Catch.Mods;
 using osu.Game.Rulesets.Catch.Objects;
 using osu.Game.Rulesets.Catch.Replays;
@@ -33,7 +31,6 @@ using osu.Game.Scoring;
 using osu.Game.Screens.Edit.Setup;
 using osu.Game.Screens.Ranking.Statistics;
 using osu.Game.Skinning;
-using osuTK;
 
 namespace osu.Game.Rulesets.Catch
 {
@@ -146,9 +143,7 @@ namespace osu.Game.Rulesets.Catch
                 case ModType.Fun:
                     return new Mod[]
                     {
-                        new MultiMod(new ModWindUp(), new ModWindDown()),
                         new CatchModFloatingFruits(),
-                        new CatchModMuted(),
                         new CatchModNoScope(),
                     };
 
@@ -226,28 +221,10 @@ namespace osu.Game.Rulesets.Catch
 
         public override HitObjectComposer CreateHitObjectComposer() => new CatchHitObjectComposer(this);
 
-        public override IEnumerable<Drawable> CreateEditorSetupSections() =>
+        public override IEnumerable<SetupSection> CreateEditorSetupSections() =>
         [
-            new MetadataSection(),
-            new CatchDifficultySection(),
-            new FillFlowContainer
-            {
-                AutoSizeAxes = Axes.Y,
-                Direction = FillDirection.Vertical,
-                Spacing = new Vector2(SetupScreen.SPACING),
-                Children = new Drawable[]
-                {
-                    new ResourcesSection
-                    {
-                        RelativeSizeAxes = Axes.X,
-                    },
-                    new ColoursSection
-                    {
-                        RelativeSizeAxes = Axes.X,
-                    }
-                }
-            },
-            new DesignSection(),
+            new DifficultySection(),
+            new ColoursSection(),
         ];
 
         public override IBeatmapVerifier CreateBeatmapVerifier() => new CatchBeatmapVerifier();
@@ -275,7 +252,5 @@ namespace osu.Game.Rulesets.Catch
 
             return adjustedDifficulty;
         }
-
-        public override bool EditorShowScrollSpeed => false;
     }
 }

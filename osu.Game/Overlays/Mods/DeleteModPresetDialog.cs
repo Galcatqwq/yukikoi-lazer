@@ -7,7 +7,7 @@ using osu.Game.Rulesets.Mods;
 
 namespace osu.Game.Overlays.Mods
 {
-    public partial class DeleteModPresetDialog : DeletionDialog
+    public partial class DeleteModPresetDialog : DangerousActionDialog
     {
         public DeleteModPresetDialog(Live<ModPreset> modPreset)
         {

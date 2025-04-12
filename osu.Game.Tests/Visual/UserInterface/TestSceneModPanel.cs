@@ -39,7 +39,6 @@ namespace osu.Game.Tests.Visual.UserInterface
                     new ModPanel(new OsuModFlashlight()),
                     new ModPanel(new OsuModAutoplay()),
                     new ModPanel(new OsuModAlternate()),
-                    new ModPanel(new OsuModApproachDifferent())
                 }
             });
         }

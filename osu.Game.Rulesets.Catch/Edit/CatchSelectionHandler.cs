@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using osu.Framework.Allocation;
-using osu.Framework.Input.Events;
 using osu.Game.Rulesets.Catch.Objects;
 using osu.Game.Rulesets.Catch.UI;
 using osu.Game.Rulesets.Objects;
@@ -13,7 +12,6 @@ using osu.Game.Rulesets.UI;
 using osu.Game.Rulesets.UI.Scrolling;
 using osu.Game.Screens.Edit.Compose.Components;
 using osuTK;
-using osuTK.Input;
 using Direction = osu.Framework.Graphics.Direction;
 
 namespace osu.Game.Rulesets.Catch.Edit
@@ -40,13 +38,6 @@ namespace osu.Game.Rulesets.Catch.Edit
                 return true;
             }
 
-            moveSelection(deltaX);
-
-            return true;
-        }
-
-        private void moveSelection(float deltaX)
-        {
             EditorBeatmap.PerformOnSelection(h =>
             {
                 if (!(h is CatchHitObject catchObject)) return;
@@ -57,60 +48,7 @@ namespace osu.Game.Rulesets.Catch.Edit
                 foreach (var nested in catchObject.NestedHitObjects.OfType<CatchHitObject>())
                     nested.OriginalX += deltaX;
             });
-        }
 
-        private bool nudgeMovementActive;
-
-        protected override bool OnKeyDown(KeyDownEvent e)
-        {
-            // Until the keys below are global actions, this will prevent conflicts with "seek between sample points"
-            // which has a default of ctrl+shift+arrows.
-            if (e.ShiftPressed)
-                return false;
-
-            if (e.ControlPressed)
-            {
-                switch (e.Key)
-                {
-                    case Key.Left:
-                        return nudgeSelection(-1);
-
-                    case Key.Right:
-                        return nudgeSelection(1);
-                }
-            }
-
-            return false;
-        }
-
-        protected override void OnKeyUp(KeyUpEvent e)
-        {
-            base.OnKeyUp(e);
-
-            if (nudgeMovementActive && !e.ControlPressed)
-            {
-                EditorBeatmap.EndChange();
-                nudgeMovementActive = false;
-            }
-        }
-
-        /// <summary>
-        /// Move the current selection spatially by the specified delta, in gamefield coordinates (ie. the same coordinates as the blueprints).
-        /// </summary>
-        private bool nudgeSelection(float deltaX)
-        {
-            if (!nudgeMovementActive)
-            {
-                nudgeMovementActive = true;
-                EditorBeatmap.BeginChange();
-            }
-
-            var firstBlueprint = SelectedBlueprints.FirstOrDefault();
-
-            if (firstBlueprint == null)
-                return false;
-
-            moveSelection(deltaX);
             return true;
         }
 

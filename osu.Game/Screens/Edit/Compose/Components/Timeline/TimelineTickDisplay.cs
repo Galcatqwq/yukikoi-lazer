@@ -17,8 +17,6 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
 {
     public partial class TimelineTickDisplay : TimelinePart<PointVisualisation>
     {
-        public const float TICK_WIDTH = 3;
-
         // With current implementation every tick in the sub-tree should be visible, no need to check whether they are masked away.
         public override bool UpdateSubTreeMasking() => false;
 
@@ -140,15 +138,20 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
 
                         // even though "bar lines" take up the full vertical space, we render them in two pieces because it allows for less anchor/origin churn.
 
-                        var size = indexInBar == 0
-                            ? new Vector2(1.3f, 1)
-                            : BindableBeatDivisor.GetSize(divisor);
+                        Vector2 size = Vector2.One;
+
+                        if (indexInBar != 0)
+                            size = BindableBeatDivisor.GetSize(divisor);
 
                         var line = getNextUsableLine();
                         line.X = xPos;
 
-                        line.Width = TICK_WIDTH * size.X;
-                        line.Height = size.Y;
+                        line.Anchor = Anchor.CentreLeft;
+                        line.Origin = Anchor.Centre;
+
+                        line.Height = 0.6f + size.Y * 0.4f;
+                        line.Width = PointVisualisation.MAX_WIDTH * (0.6f + 0.4f * size.X);
+
                         line.Colour = colour;
                     }
 
@@ -171,15 +174,8 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
             Drawable getNextUsableLine()
             {
                 PointVisualisation point;
-
                 if (drawableIndex >= Count)
-                {
-                    Add(point = new PointVisualisation(0)
-                    {
-                        Anchor = Anchor.CentreLeft,
-                        Origin = Anchor.Centre,
-                    });
-                }
+                    Add(point = new PointVisualisation(0));
                 else
                     point = Children[drawableIndex];
 

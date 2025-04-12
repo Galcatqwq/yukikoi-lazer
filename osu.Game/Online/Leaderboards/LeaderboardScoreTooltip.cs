@@ -1,7 +1,6 @@
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using System.Linq;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Containers;
@@ -220,7 +219,7 @@ namespace osu.Game.Online.Leaderboards
                     }
                 };
 
-                string description = string.Join(", ", mod.SettingDescription.Select(svp => $"{svp.setting}: {svp.value}"));
+                string description = mod.SettingDescription;
 
                 if (!string.IsNullOrEmpty(description))
                 {
@@ -228,7 +227,7 @@ namespace osu.Game.Online.Leaderboards
                     {
                         RelativeSizeAxes = Axes.Y,
                         Font = OsuFont.GetFont(size: 12, weight: FontWeight.SemiBold),
-                        Text = description,
+                        Text = mod.SettingDescription,
                         Origin = Anchor.CentreLeft,
                         Anchor = Anchor.CentreLeft,
                         Margin = new MarginPadding { Top = 1 },

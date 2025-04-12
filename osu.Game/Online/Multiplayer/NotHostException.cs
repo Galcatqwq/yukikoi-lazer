@@ -2,6 +2,7 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
+using System.Runtime.Serialization;
 using Microsoft.AspNetCore.SignalR;
 
 namespace osu.Game.Online.Multiplayer
@@ -11,6 +12,11 @@ namespace osu.Game.Online.Multiplayer
     {
         public NotHostException()
             : base("User is attempting to perform a host level operation while not the host")
+        {
+        }
+
+        protected NotHostException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
         {
         }
     }

@@ -83,22 +83,15 @@ namespace osu.Game.Rulesets.Catch.Edit.Blueprints
             return base.OnMouseDown(e);
         }
 
-        public override SnapResult UpdateTimeAndPosition(Vector2 screenSpacePosition, double fallbackTime)
+        public override void UpdateTimeAndPosition(SnapResult result)
         {
-            var gridSnapResult = Composer?.FindSnappedPositionAndTime(screenSpacePosition) ?? new SnapResult(screenSpacePosition, fallbackTime);
-            gridSnapResult.ScreenSpacePosition.X = screenSpacePosition.X;
-            var distanceSnapResult = Composer?.TryDistanceSnap(gridSnapResult.ScreenSpacePosition);
-
-            var result = distanceSnapResult != null && Vector2.Distance(gridSnapResult.ScreenSpacePosition, distanceSnapResult.ScreenSpacePosition) < CatchHitObjectComposer.DISTANCE_SNAP_RADIUS
-                ? distanceSnapResult
-                : gridSnapResult;
-
             switch (PlacementActive)
             {
                 case PlacementState.Waiting:
+                    if (!(result.Time is double snappedTime)) return;
+
                     HitObject.OriginalX = ToLocalSpace(result.ScreenSpacePosition).X;
-                    if (result.Time is double snappedTime)
-                        HitObject.StartTime = snappedTime;
+                    HitObject.StartTime = snappedTime;
                     break;
 
                 case PlacementState.Active:
@@ -107,21 +100,28 @@ namespace osu.Game.Rulesets.Catch.Edit.Blueprints
                     break;
 
                 default:
-                    return result;
+                    return;
             }
 
             // Make sure the up-to-date position is used for outlines.
             Vector2 startPosition = CatchHitObjectUtils.GetStartPosition(HitObjectContainer, HitObject);
             editablePath.Position = nestedOutlineContainer.Position = scrollingPath.Position = startPosition;
 
-            if (lastEditablePathId != editablePath.PathId)
-                editablePath.UpdateHitObjectFromPath(HitObject);
-            lastEditablePathId = editablePath.PathId;
+            updateHitObjectFromPath();
+        }
 
+        private void updateHitObjectFromPath()
+        {
+            if (lastEditablePathId == editablePath.PathId)
+                return;
+
+            editablePath.UpdateHitObjectFromPath(HitObject);
             ApplyDefaultsToHitObject();
+
             scrollingPath.UpdatePathFrom(HitObjectContainer, HitObject);
             nestedOutlineContainer.UpdateNestedObjectsFrom(HitObjectContainer, HitObject);
-            return result;
+
+            lastEditablePathId = editablePath.PathId;
         }
 
         private double positionToTime(float relativeYPosition)

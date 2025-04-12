@@ -31,22 +31,7 @@ namespace osu.Game.Rulesets.Osu.UI.Cursor
 
         private SkinnableCursor skinnableCursor => (SkinnableCursor)cursorSprite.Drawable;
 
-        /// <summary>
-        /// The current expanded scale of the cursor.
-        /// </summary>
-        public Vector2 CurrentExpandedScale => skinnableCursor.ExpandTarget?.Scale ?? Vector2.One;
-
-        /// <summary>
-        /// The current rotation of the cursor.
-        /// </summary>
-        public float CurrentRotation => skinnableCursor.ExpandTarget?.Rotation ?? 0;
-
         public IBindable<float> CursorScale => cursorScale;
-
-        /// <summary>
-        /// Mods which want to adjust cursor size should do so via this bindable.
-        /// </summary>
-        public readonly Bindable<float> ModScaleAdjust = new Bindable<float>(1);
 
         private readonly Bindable<float> cursorScale = new BindableFloat(1);
 
@@ -77,8 +62,6 @@ namespace osu.Game.Rulesets.Osu.UI.Cursor
             autoCursorScale = config.GetBindable<bool>(OsuSetting.AutoCursorSize);
             autoCursorScale.ValueChanged += _ => cursorScale.Value = CalculateCursorScale();
 
-            ModScaleAdjust.ValueChanged += _ => cursorScale.Value = CalculateCursorScale();
-
             cursorScale.BindValueChanged(e => cursorScaleContainer.Scale = new Vector2(e.NewValue), true);
         }
 
@@ -102,7 +85,7 @@ namespace osu.Game.Rulesets.Osu.UI.Cursor
 
         protected virtual float CalculateCursorScale()
         {
-            float scale = userCursorScale.Value * ModScaleAdjust.Value;
+            float scale = userCursorScale.Value;
 
             if (autoCursorScale.Value && state != null)
             {

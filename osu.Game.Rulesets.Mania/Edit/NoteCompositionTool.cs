@@ -10,7 +10,7 @@ using osu.Game.Rulesets.Mania.Objects;
 
 namespace osu.Game.Rulesets.Mania.Edit
 {
-    public class NoteCompositionTool : CompositionTool
+    public class NoteCompositionTool : HitObjectCompositionTool
     {
         public NoteCompositionTool()
             : base(nameof(Note))
@@ -19,6 +19,6 @@ namespace osu.Game.Rulesets.Mania.Edit
 
         public override Drawable CreateIcon() => new BeatmapStatisticIcon(BeatmapStatisticsIconType.Circles);
 
-        public override HitObjectPlacementBlueprint CreatePlacementBlueprint() => new NotePlacementBlueprint();
+        public override PlacementBlueprint CreatePlacementBlueprint() => new NotePlacementBlueprint();
     }
 }

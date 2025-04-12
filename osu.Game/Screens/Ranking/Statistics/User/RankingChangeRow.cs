@@ -19,7 +19,7 @@ namespace osu.Game.Screens.Ranking.Statistics.User
 {
     public abstract partial class RankingChangeRow<T> : CompositeDrawable
     {
-        public Bindable<ScoreBasedUserStatisticsUpdate?> StatisticsUpdate { get; } = new Bindable<ScoreBasedUserStatisticsUpdate?>();
+        public Bindable<UserStatisticsUpdate?> StatisticsUpdate { get; } = new Bindable<UserStatisticsUpdate?>();
 
         private readonly Func<UserStatistics, T> accessor;
 
@@ -113,7 +113,7 @@ namespace osu.Game.Screens.Ranking.Statistics.User
             StatisticsUpdate.BindValueChanged(onStatisticsUpdate, true);
         }
 
-        private void onStatisticsUpdate(ValueChangedEvent<ScoreBasedUserStatisticsUpdate?> statisticsUpdate)
+        private void onStatisticsUpdate(ValueChangedEvent<UserStatisticsUpdate?> statisticsUpdate)
         {
             var update = statisticsUpdate.NewValue;
 

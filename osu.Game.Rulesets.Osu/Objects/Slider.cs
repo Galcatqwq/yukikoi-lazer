@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using osu.Game.Rulesets.Objects;
 using System.Linq;
 using System.Threading;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
 using osu.Framework.Bindables;
 using osu.Framework.Caching;
@@ -163,10 +162,6 @@ namespace osu.Game.Rulesets.Osu.Objects
         [JsonIgnore]
         public SliderTailCircle TailCircle { get; protected set; }
 
-        [JsonIgnore]
-        [CanBeNull]
-        public SliderRepeat LastRepeat { get; protected set; }
-
         public Slider()
         {
             SamplesBindable.CollectionChanged += (_, _) => UpdateNestedSamples();
@@ -204,7 +199,6 @@ namespace osu.Game.Rulesets.Osu.Objects
                             SpanStartTime = e.SpanStartTime,
                             StartTime = e.Time,
                             Position = Position + Path.PositionAt(e.PathProgress),
-                            PathProgress = e.PathProgress,
                             StackHeight = StackHeight,
                         });
                         break;
@@ -231,13 +225,12 @@ namespace osu.Game.Rulesets.Osu.Objects
                         break;
 
                     case SliderEventType.Repeat:
-                        AddNested(LastRepeat = new SliderRepeat(this)
+                        AddNested(new SliderRepeat(this)
                         {
                             RepeatIndex = e.SpanIndex,
                             StartTime = StartTime + (e.SpanIndex + 1) * SpanDuration,
                             Position = Position + Path.PositionAt(e.PathProgress),
                             StackHeight = StackHeight,
-                            PathProgress = e.PathProgress,
                         });
                         break;
                 }
@@ -250,27 +243,11 @@ namespace osu.Game.Rulesets.Osu.Objects
         {
             endPositionCache.Invalidate();
 
-            foreach (var nested in NestedHitObjects)
-            {
-                switch (nested)
-                {
-                    case SliderHeadCircle headCircle:
-                        headCircle.Position = Position;
-                        break;
+            if (HeadCircle != null)
+                HeadCircle.Position = Position;
 
-                    case SliderTailCircle tailCircle:
-                        tailCircle.Position = EndPosition;
-                        break;
-
-                    case SliderRepeat repeat:
-                        repeat.Position = Position + Path.PositionAt(repeat.PathProgress);
-                        break;
-
-                    case SliderTick tick:
-                        tick.Position = Position + Path.PositionAt(tick.PathProgress);
-                        break;
-                }
-            }
+            if (TailCircle != null)
+                TailCircle.Position = EndPosition;
         }
 
         protected void UpdateNestedSamples()

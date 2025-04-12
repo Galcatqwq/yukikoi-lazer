@@ -5,28 +5,43 @@ using osu.Framework.Allocation;
 using osu.Framework.Configuration;
 using osu.Framework.Graphics;
 using osu.Framework.Localisation;
+using osu.Framework.Screens;
+using osu.Game.Localisation;
+using osu.Game.Screens;
+using osu.Game.Screens.Import;
+using osu.Game.Screens.Utility;
 
 namespace osu.Game.Overlays.Settings.Sections.DebugSettings
 {
     public partial class GeneralSettings : SettingsSubsection
     {
-        protected override LocalisableString Header => @"General";
+        protected override LocalisableString Header => CommonStrings.General;
 
         [BackgroundDependencyLoader]
-        private void load(FrameworkDebugConfigManager config, FrameworkConfigManager frameworkConfig)
+        private void load(FrameworkDebugConfigManager config, FrameworkConfigManager frameworkConfig, IPerformFromScreenRunner? performer)
         {
             Children = new Drawable[]
             {
                 new SettingsCheckbox
                 {
-                    LabelText = @"Show log overlay",
+                    LabelText = DebugSettingsStrings.ShowLogOverlay,
                     Current = frameworkConfig.GetBindable<bool>(FrameworkSetting.ShowLogOverlay)
                 },
                 new SettingsCheckbox
                 {
-                    LabelText = @"Bypass front-to-back render pass",
+                    LabelText = DebugSettingsStrings.BypassFrontToBackPass,
                     Current = config.GetBindable<bool>(DebugSetting.BypassFrontToBackPass)
                 },
+                new SettingsButton
+                {
+                    Text = DebugSettingsStrings.ImportFiles,
+                    Action = () => performer?.PerformFromScreen(menu => menu.Push(new FileImportScreen()))
+                },
+                new SettingsButton
+                {
+                    Text = DebugSettingsStrings.RunLatencyCertifier,
+                    Action = () => performer?.PerformFromScreen(menu => menu.Push(new LatencyCertifierScreen()))
+                }
             };
         }
     }

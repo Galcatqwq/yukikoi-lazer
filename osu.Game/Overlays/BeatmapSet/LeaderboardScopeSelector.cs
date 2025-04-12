@@ -22,7 +22,6 @@ namespace osu.Game.Overlays.BeatmapSet
             AddItem(BeatmapLeaderboardScope.Global);
             AddItem(BeatmapLeaderboardScope.Country);
             AddItem(BeatmapLeaderboardScope.Friend);
-            AddItem(BeatmapLeaderboardScope.Team);
         }
 
         [BackgroundDependencyLoader]

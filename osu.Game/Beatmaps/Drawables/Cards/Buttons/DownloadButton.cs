@@ -8,8 +8,10 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Sprites;
 using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Configuration;
+using osu.Game.Graphics.UserInterface;
 using osu.Game.Online;
 using osu.Game.Resources.Localisation.Web;
+using osuTK;
 
 namespace osu.Game.Beatmaps.Drawables.Cards.Buttons
 {
@@ -21,11 +23,17 @@ namespace osu.Game.Beatmaps.Drawables.Cards.Buttons
 
         private Bindable<bool> preferNoVideo = null!;
 
+        private readonly LoadingSpinner spinner;
+
         [Resolved]
         private BeatmapModelDownloader beatmaps { get; set; } = null!;
 
         public DownloadButton(APIBeatmapSet beatmapSet)
         {
+            Icon.Icon = FontAwesome.Solid.Download;
+
+            Content.Add(spinner = new LoadingSpinner { Size = new Vector2(IconSize) });
+
             this.beatmapSet = beatmapSet;
         }
 
@@ -33,7 +41,6 @@ namespace osu.Game.Beatmaps.Drawables.Cards.Buttons
         private void load(OsuConfigManager config)
         {
             preferNoVideo = config.GetBindable<bool>(OsuSetting.PreferNoVideo);
-            Icon.Icon = FontAwesome.Solid.Download;
         }
 
         protected override void LoadComplete()
@@ -57,7 +64,8 @@ namespace osu.Game.Beatmaps.Drawables.Cards.Buttons
                 case DownloadState.Importing:
                     Action = null;
                     TooltipText = string.Empty;
-                    SetLoading(true);
+                    spinner.Show();
+                    Icon.Hide();
                     break;
 
                 case DownloadState.LocallyAvailable:
@@ -76,7 +84,8 @@ namespace osu.Game.Beatmaps.Drawables.Cards.Buttons
 
                     Action = () => beatmaps.Download(beatmapSet, preferNoVideo.Value);
                     this.FadeIn(BeatmapCard.TRANSITION_DURATION, Easing.OutQuint);
-                    SetLoading(false);
+                    spinner.Hide();
+                    Icon.Show();
 
                     if (!beatmapSet.HasVideo)
                         TooltipText = BeatmapsetsStrings.PanelDownloadAll;

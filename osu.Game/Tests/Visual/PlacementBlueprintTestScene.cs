@@ -3,11 +3,9 @@
 
 #nullable disable
 
-using System;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Input.Events;
 using osu.Framework.Timing;
 using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Edit;
@@ -21,15 +19,11 @@ namespace osu.Game.Tests.Visual
     public abstract partial class PlacementBlueprintTestScene : OsuManualInputManagerTestScene, IPlacementHandler
     {
         protected readonly Container HitObjectContainer;
-        protected HitObjectPlacementBlueprint CurrentBlueprint { get; private set; }
+        protected PlacementBlueprint CurrentBlueprint { get; private set; }
 
         protected PlacementBlueprintTestScene()
         {
             base.Content.Add(HitObjectContainer = CreateHitObjectContainer().With(c => c.Clock = new FramedClock(new StopwatchClock())));
-            base.Content.Add(new MouseMovementInterceptor
-            {
-                MouseMoved = UpdatePlacementTimeAndPosition,
-            });
         }
 
         protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
@@ -51,9 +45,7 @@ namespace osu.Game.Tests.Visual
 
         protected virtual IBeatmap GetPlayableBeatmap()
         {
-            var rulesetInfo = CreateRuleset()!.RulesetInfo;
-            var playable = Beatmap.Value.GetPlayableBeatmap(rulesetInfo);
-            playable.BeatmapInfo.Ruleset = rulesetInfo;
+            var playable = Beatmap.Value.GetPlayableBeatmap(Beatmap.Value.BeatmapInfo.Ruleset);
             playable.Difficulty.CircleSize = 2;
             return playable;
         }
@@ -61,20 +53,20 @@ namespace osu.Game.Tests.Visual
         protected override void LoadComplete()
         {
             base.LoadComplete();
+
             ResetPlacement();
         }
 
-        public void ShowPlacement(HitObject hitObject)
+        public void BeginPlacement(HitObject hitObject)
         {
         }
 
-        public void HidePlacement()
+        public void EndPlacement(HitObject hitObject, bool commit)
         {
-        }
+            if (commit)
+                AddHitObject(CreateHitObject(hitObject));
 
-        public void CommitPlacement(HitObject hitObject)
-        {
-            AddHitObject(CreateHitObject(hitObject));
+            ResetPlacement();
         }
 
         protected void ResetPlacement()
@@ -92,22 +84,20 @@ namespace osu.Game.Tests.Visual
         {
             base.Update();
 
-            if (CurrentBlueprint.PlacementActive == PlacementBlueprint.PlacementState.Finished)
-                ResetPlacement();
-
-            UpdatePlacementTimeAndPosition();
+            CurrentBlueprint.UpdateTimeAndPosition(SnapForBlueprint(CurrentBlueprint));
         }
 
-        protected virtual void UpdatePlacementTimeAndPosition() => CurrentBlueprint.UpdateTimeAndPosition(InputManager.CurrentState.Mouse.Position, 0);
+        protected virtual SnapResult SnapForBlueprint(PlacementBlueprint blueprint) =>
+            new SnapResult(InputManager.CurrentState.Mouse.Position, null);
 
         public override void Add(Drawable drawable)
         {
             base.Add(drawable);
 
-            if (drawable is HitObjectPlacementBlueprint blueprint)
+            if (drawable is PlacementBlueprint blueprint)
             {
                 blueprint.Show();
-                UpdatePlacementTimeAndPosition();
+                blueprint.UpdateTimeAndPosition(SnapForBlueprint(blueprint));
             }
         }
 
@@ -116,23 +106,6 @@ namespace osu.Game.Tests.Visual
         protected virtual Container CreateHitObjectContainer() => new Container { RelativeSizeAxes = Axes.Both };
 
         protected abstract DrawableHitObject CreateHitObject(HitObject hitObject);
-        protected abstract HitObjectPlacementBlueprint CreateBlueprint();
-
-        private partial class MouseMovementInterceptor : Drawable
-        {
-            public Action MouseMoved;
-
-            public MouseMovementInterceptor()
-            {
-                RelativeSizeAxes = Axes.Both;
-                Depth = float.MinValue;
-            }
-
-            protected override bool OnMouseMove(MouseMoveEvent e)
-            {
-                MouseMoved?.Invoke();
-                return base.OnMouseMove(e);
-            }
-        }
+        protected abstract PlacementBlueprint CreateBlueprint();
     }
 }

@@ -288,9 +288,6 @@ namespace osu.Game.Rulesets.Mania
                 case ModType.Fun:
                     return new Mod[]
                     {
-                        new MultiMod(new ModWindUp(), new ModWindDown()),
-                        new ManiaModMuted(),
-                        new ModAdaptiveSpeed()
                     };
 
                 case ModType.System:
@@ -419,12 +416,9 @@ namespace osu.Game.Rulesets.Mania
             return new ManiaFilterCriteria();
         }
 
-        public override IEnumerable<Drawable> CreateEditorSetupSections() =>
+        public override IEnumerable<SetupSection> CreateEditorSetupSections() =>
         [
-            new MetadataSection(),
             new ManiaDifficultySection(),
-            new ResourcesSection(),
-            new DesignSection(),
         ];
 
         public int GetKeyCount(IBeatmapInfo beatmapInfo, IReadOnlyList<Mod>? mods = null)

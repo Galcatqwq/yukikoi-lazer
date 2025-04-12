@@ -99,35 +99,8 @@ namespace osu.Game.Tests.Visual.Online
                                 Fails = Enumerable.Range(1, 100).Select(i => i % 12 - 6).ToArray(),
                                 Retries = Enumerable.Range(-2, 100).Select(i => i % 12 - 6).ToArray(),
                             },
-                            TopTags =
-                            [
-                                new APIBeatmapTag { TagId = 4, VoteCount = 1 },
-                                new APIBeatmapTag { TagId = 2, VoteCount = 1 },
-                                new APIBeatmapTag { TagId = 23, VoteCount = 5 },
-                            ],
                         },
                     },
-                    RelatedTags =
-                    [
-                        new APITag
-                        {
-                            Id = 2,
-                            Name = "song representation/simple",
-                            Description = "Accessible and straightforward map design."
-                        },
-                        new APITag
-                        {
-                            Id = 4,
-                            Name = "style/clean",
-                            Description = "Visually uncluttered and organised patterns, often involving few overlaps and equal visual spacing between objects."
-                        },
-                        new APITag
-                        {
-                            Id = 23,
-                            Name = "aim/aim control",
-                            Description = "Patterns with velocity or direction changes which strongly go against a player's natural movement pattern."
-                        }
-                    ]
                 });
             });
 
@@ -316,37 +289,12 @@ namespace osu.Game.Tests.Visual.Online
             {
                 InputManager.MoveMouseTo(overlay.ChildrenOfType<DifficultyIcon>().ElementAt(0));
             });
-            AddAssert("guest mapper information not shown", () => overlay.ChildrenOfType<BeatmapPicker>().Single().ChildrenOfType<OsuSpriteText>().All(s => s.Text != "BanchoBot0"));
+            AddAssert("guest mapper information not shown", () => overlay.ChildrenOfType<BeatmapPicker>().Single().ChildrenOfType<OsuSpriteText>().All(s => s.Text != "BanchoBot"));
             AddStep("move mouse to guest difficulty", () =>
             {
                 InputManager.MoveMouseTo(overlay.ChildrenOfType<DifficultyIcon>().ElementAt(1));
             });
-            AddAssert("guest mapper information shown", () => overlay.ChildrenOfType<BeatmapPicker>().Single().ChildrenOfType<OsuSpriteText>().Any(s => s.Text == "BanchoBot0"));
-        }
-
-        [Test]
-        public void TestBeatmapsetWithALotGuestOwner()
-        {
-            AddStep("show map with 2 mapper", () => overlay.ShowBeatmapSet(createBeatmapSetWithGuestDifficulty(2)));
-            AddStep("move mouse to guest difficulty", () =>
-            {
-                InputManager.MoveMouseTo(overlay.ChildrenOfType<DifficultyIcon>().ElementAt(1));
-            });
-            AddStep("show map with 3 mapper", () => overlay.ShowBeatmapSet(createBeatmapSetWithGuestDifficulty(3)));
-            AddStep("move mouse to guest difficulty", () =>
-            {
-                InputManager.MoveMouseTo(overlay.ChildrenOfType<DifficultyIcon>().ElementAt(1));
-            });
-            AddStep("show map with 10 mapper", () => overlay.ShowBeatmapSet(createBeatmapSetWithGuestDifficulty(10)));
-            AddStep("move mouse to guest difficulty", () =>
-            {
-                InputManager.MoveMouseTo(overlay.ChildrenOfType<DifficultyIcon>().ElementAt(1));
-            });
-            AddStep("show map with 20 mapper", () => overlay.ShowBeatmapSet(createBeatmapSetWithGuestDifficulty(20)));
-            AddStep("move mouse to guest difficulty", () =>
-            {
-                InputManager.MoveMouseTo(overlay.ChildrenOfType<DifficultyIcon>().ElementAt(1));
-            });
+            AddAssert("guest mapper information shown", () => overlay.ChildrenOfType<BeatmapPicker>().Single().ChildrenOfType<OsuSpriteText>().Any(s => s.Text == "BanchoBot"));
         }
 
         private APIBeatmapSet createManyDifficultiesBeatmapSet()
@@ -388,31 +336,22 @@ namespace osu.Game.Tests.Visual.Online
             return beatmapSet;
         }
 
-        private APIBeatmapSet createBeatmapSetWithGuestDifficulty(int guestCount = 1)
+        private APIBeatmapSet createBeatmapSetWithGuestDifficulty()
         {
             var set = getBeatmapSet();
 
             var beatmaps = new List<APIBeatmap>();
-            var beatmapOwners = new List<APIBeatmap.BeatmapOwner>();
-            var ownersAPIUser = new List<APIUser>();
 
-            for (int i = 0; i < guestCount; i++)
+            var guestUser = new APIUser
             {
-                var guestUser = new APIUser
-                {
-                    Username = @$"BanchoBot{i}",
-                    Id = i + 3,
-                };
+                Username = @"BanchoBot",
+                Id = 3,
+            };
 
-                beatmapOwners.Add(new APIBeatmap.BeatmapOwner
-                {
-                    Username = @$"BanchoBot{i}",
-                    Id = i + 3,
-                });
-                ownersAPIUser.Add(guestUser);
-            }
-
-            set.RelatedUsers = new[] { set.Author }.Concat(ownersAPIUser).ToArray();
+            set.RelatedUsers = new[]
+            {
+                set.Author, guestUser
+            };
 
             beatmaps.Add(new APIBeatmap
             {
@@ -427,7 +366,7 @@ namespace osu.Game.Tests.Visual.Online
                     Fails = Enumerable.Range(1, 100).Select(j => j % 12 - 6).ToArray(),
                     Retries = Enumerable.Range(-2, 100).Select(j => j % 12 - 6).ToArray(),
                 },
-                Status = BeatmapOnlineStatus.Graveyard,
+                Status = BeatmapOnlineStatus.Graveyard
             });
 
             beatmaps.Add(new APIBeatmap
@@ -443,8 +382,7 @@ namespace osu.Game.Tests.Visual.Online
                     Fails = Enumerable.Range(1, 100).Select(j => j % 12 - 6).ToArray(),
                     Retries = Enumerable.Range(-2, 100).Select(j => j % 12 - 6).ToArray(),
                 },
-                Status = BeatmapOnlineStatus.Graveyard,
-                BeatmapOwners = beatmapOwners.ToArray(),
+                Status = BeatmapOnlineStatus.Graveyard
             });
 
             set.Beatmaps = beatmaps.ToArray();

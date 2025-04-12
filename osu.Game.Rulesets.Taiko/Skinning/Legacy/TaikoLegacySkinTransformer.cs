@@ -29,7 +29,7 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Legacy
 
         public override Drawable? GetDrawableComponent(ISkinComponentLookup lookup)
         {
-            if (lookup is SkinComponentLookup<HitResult>)
+            if (lookup is GameplaySkinComponentLookup<HitResult>)
             {
                 // if a taiko skin is providing explosion sprites, hide the judgements completely
                 if (hasExplosion.Value)
@@ -66,9 +66,7 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Legacy
                         return this.GetAnimation("sliderscorepoint", false, false);
 
                     case TaikoSkinComponents.Swell:
-                        if (GetTexture("spinner-circle") != null)
-                            return new LegacySwell();
-
+                        // todo: support taiko legacy swell (https://github.com/ppy/osu/issues/13601).
                         return null;
 
                     case TaikoSkinComponents.HitTarget:

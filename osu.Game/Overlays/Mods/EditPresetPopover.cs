@@ -8,7 +8,6 @@ using osu.Framework.Bindables;
 using osu.Framework.Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Events;
 using osu.Game.Database;
 using osu.Game.Graphics;
@@ -76,31 +75,17 @@ namespace osu.Game.Overlays.Mods
                         TabbableContentContainer = this,
                         Current = { Value = preset.PerformRead(p => p.Description) },
                     },
-                    new Container
+                    new OsuScrollContainer
                     {
                         RelativeSizeAxes = Axes.X,
                         Height = 100,
-                        CornerRadius = 10,
-                        Masking = true,
-                        Children = new Drawable[]
+                        Padding = new MarginPadding(7),
+                        Child = scrollContent = new FillFlowContainer
                         {
-                            new Box
-                            {
-                                RelativeSizeAxes = Axes.Both,
-                                Colour = colourProvider.Background5,
-                            },
-                            new OsuScrollContainer
-                            {
-                                RelativeSizeAxes = Axes.Both,
-                                Padding = new MarginPadding(7),
-                                Child = scrollContent = new FillFlowContainer
-                                {
-                                    RelativeSizeAxes = Axes.X,
-                                    AutoSizeAxes = Axes.Y,
-                                    Padding = new MarginPadding(7),
-                                    Spacing = new Vector2(7),
-                                }
-                            },
+                            RelativeSizeAxes = Axes.X,
+                            AutoSizeAxes = Axes.Y,
+                            Padding = new MarginPadding(7),
+                            Spacing = new Vector2(7),
                         }
                     },
                     new FillFlowContainer

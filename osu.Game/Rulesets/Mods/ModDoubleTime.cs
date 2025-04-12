@@ -17,7 +17,7 @@ namespace osu.Game.Rulesets.Mods
         public override string Acronym => "DT";
         public override IconUsage? Icon => OsuIcon.ModDoubleTime;
         public override ModType Type => ModType.DifficultyIncrease;
-        public override LocalisableString Description => "Zoooooooooom...";
+        public override LocalisableString Description => "加速>>>>>>>>>>";
         public override bool Ranked => SpeedChange.IsDefault;
 
         [SettingSource("Speed increase", "The actual increase to apply", SettingControlType = typeof(MultiplierSettingsSlider))]

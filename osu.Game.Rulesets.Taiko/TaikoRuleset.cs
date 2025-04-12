@@ -164,9 +164,6 @@ namespace osu.Game.Rulesets.Taiko
                 case ModType.Fun:
                     return new Mod[]
                     {
-                        new MultiMod(new ModWindUp(), new ModWindDown()),
-                        new TaikoModMuted(),
-                        new ModAdaptiveSpeed()
                     };
 
                 case ModType.System:
@@ -190,12 +187,9 @@ namespace osu.Game.Rulesets.Taiko
 
         public override HitObjectComposer CreateHitObjectComposer() => new TaikoHitObjectComposer(this);
 
-        public override IEnumerable<Drawable> CreateEditorSetupSections() =>
+        public override IEnumerable<SetupSection> CreateEditorSetupSections() =>
         [
-            new MetadataSection(),
             new TaikoDifficultySection(),
-            new ResourcesSection(),
-            new DesignSection(),
         ];
 
         public override IBeatmapVerifier CreateBeatmapVerifier() => new TaikoBeatmapVerifier();

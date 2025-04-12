@@ -2,10 +2,10 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Runtime.Versioning;
-using System.Threading.Tasks;
 using Microsoft.Win32;
 using osu.Desktop.Performance;
 using osu.Desktop.Security;
@@ -67,12 +67,7 @@ namespace osu.Desktop
             {
                 try
                 {
-                    stableInstallPath = getStableInstallPathFromRegistry("osustable.File.osz");
-
-                    if (!string.IsNullOrEmpty(stableInstallPath) && checkExists(stableInstallPath))
-                        return stableInstallPath;
-
-                    stableInstallPath = getStableInstallPathFromRegistry("osu!");
+                    stableInstallPath = getStableInstallPathFromRegistry();
 
                     if (!string.IsNullOrEmpty(stableInstallPath) && checkExists(stableInstallPath))
                         return stableInstallPath;
@@ -94,26 +89,48 @@ namespace osu.Desktop
         }
 
         [SupportedOSPlatform("windows")]
-        private string? getStableInstallPathFromRegistry(string progId)
+        private string? getStableInstallPathFromRegistry()
         {
-            using (RegistryKey? key = Registry.ClassesRoot.OpenSubKey(progId))
+            using (RegistryKey? key = Registry.ClassesRoot.OpenSubKey("osu!"))
                 return key?.OpenSubKey(WindowsAssociationManager.SHELL_OPEN_COMMAND)?.GetValue(string.Empty)?.ToString()?.Split('"')[1].Replace("osu!.exe", "");
         }
 
-        public static bool IsPackageManaged => !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("OSU_EXTERNAL_UPDATE_PROVIDER"));
-
         protected override UpdateManager CreateUpdateManager()
         {
-            if (IsPackageManaged)
+            string? packageManaged = Environment.GetEnvironmentVariable("OSU_EXTERNAL_UPDATE_PROVIDER");
+
+            if (!string.IsNullOrEmpty(packageManaged))
                 return new NoActionUpdateManager();
 
-            return new VelopackUpdateManager();
+            switch (RuntimeInfo.OS)
+            {
+                case RuntimeInfo.Platform.Windows:
+                    Debug.Assert(OperatingSystem.IsWindows());
+
+                    return new SquirrelUpdateManager();
+
+                default:
+                    return new SimpleUpdateManager();
+            }
         }
 
         public override bool RestartAppWhenExited()
         {
-            Task.Run(() => Velopack.UpdateExe.Start()).FireAndForget();
-            return true;
+            switch (RuntimeInfo.OS)
+            {
+                case RuntimeInfo.Platform.Windows:
+                    Debug.Assert(OperatingSystem.IsWindows());
+
+                    // Of note, this is an async method in squirrel that adds an arbitrary delay before returning
+                    // likely to ensure the external process is in a good state.
+                    //
+                    // We're not waiting on that here, but the outro playing before the actual exit should be enough
+                    // to cover this.
+                    Squirrel.UpdateManager.RestartAppWhenExited().FireAndForget();
+                    return true;
+            }
+
+            return base.RestartAppWhenExited();
         }
 
         protected override void LoadComplete()
@@ -139,6 +156,7 @@ namespace osu.Desktop
             if (iconStream != null)
                 host.Window.SetIconFromStream(iconStream);
 
+            host.Window.CursorState |= CursorState.Hidden;
             host.Window.Title = Name;
         }
 

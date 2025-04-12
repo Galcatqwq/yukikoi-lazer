@@ -26,10 +26,9 @@ namespace osu.Game.Rulesets.Mania.Objects.Drawables
             : base(barLine)
         {
             RelativeSizeAxes = Axes.X;
-            Height = 1;
         }
 
-        [BackgroundDependencyLoader(true)]
+        [BackgroundDependencyLoader]
         private void load()
         {
             AddInternal(new SkinnableDrawable(new ManiaSkinComponentLookup(ManiaSkinComponents.BarLine), _ => new DefaultBarLine())
@@ -37,6 +36,8 @@ namespace osu.Game.Rulesets.Mania.Objects.Drawables
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
             });
+
+            Major.BindValueChanged(major => Height = major.NewValue ? 1.7f : 1.2f, true);
         }
 
         protected override void OnApply()

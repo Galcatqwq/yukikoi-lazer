@@ -8,15 +8,15 @@ namespace osu.Game.Rulesets.Mods
 {
     public abstract class ModClassic : Mod
     {
-        public override string Name => "Classic";
+        public override string Name => "经典";
 
         public override string Acronym => "CL";
 
-        public override double ScoreMultiplier => 0.96;
+        public override double ScoreMultiplier => 0.9999;
 
         public override IconUsage? Icon => FontAwesome.Solid.History;
 
-        public override LocalisableString Description => "Feeling nostalgic?";
+        public override LocalisableString Description => "梦回V1";
 
         public override ModType Type => ModType.Conversion;
 

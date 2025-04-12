@@ -1,6 +1,8 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
+#nullable disable
+
 using System.Diagnostics;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
@@ -11,6 +13,7 @@ using osu.Game.Graphics.Containers;
 using osu.Game.Online.API;
 using osu.Game.Overlays;
 using osu.Game.Screens.Menu;
+using osu.Game.Screens.OnlinePlay.Components;
 using osu.Game.Screens.OnlinePlay.Lounge;
 using osu.Game.Users;
 
@@ -24,22 +27,25 @@ namespace osu.Game.Screens.OnlinePlay
 
         public IScreen CurrentSubScreen => screenStack.CurrentScreen;
 
-        public override bool CursorVisible => (screenStack.CurrentScreen as IOnlinePlaySubScreen)?.CursorVisible ?? true;
+        public override bool CursorVisible => (screenStack?.CurrentScreen as IOnlinePlaySubScreen)?.CursorVisible ?? true;
 
         // this is required due to PlayerLoader eventually being pushed to the main stack
         // while leases may be taken out by a subscreen.
         public override bool DisallowExternalBeatmapRulesetChanges => true;
 
-        protected LoungeSubScreen Lounge { get; private set; } = null!;
+        protected LoungeSubScreen Lounge { get; private set; }
 
-        private readonly ScreenStack screenStack = new OnlinePlaySubScreenStack { RelativeSizeAxes = Axes.Both };
-        private OnlinePlayScreenWaveContainer waves = null!;
+        private OnlinePlayScreenWaveContainer waves;
+        private ScreenStack screenStack;
+
+        [Cached(Type = typeof(IRoomManager))]
+        protected RoomManager RoomManager { get; private set; }
 
         [Cached]
         private readonly OngoingOperationTracker ongoingOperationTracker = new OngoingOperationTracker();
 
         [Resolved]
-        protected IAPIProvider API { get; private set; } = null!;
+        protected IAPIProvider API { get; private set; }
 
         protected OnlinePlayScreen()
         {
@@ -47,6 +53,8 @@ namespace osu.Game.Screens.OnlinePlay
             Origin = Anchor.Centre;
             RelativeSizeAxes = Axes.Both;
             Padding = new MarginPadding { Horizontal = -HORIZONTAL_OVERFLOW_PADDING };
+
+            RoomManager = CreateRoomManager();
         }
 
         private readonly IBindable<APIState> apiState = new Bindable<APIState>();
@@ -59,8 +67,9 @@ namespace osu.Game.Screens.OnlinePlay
                 RelativeSizeAxes = Axes.Both,
                 Children = new Drawable[]
                 {
-                    screenStack,
+                    screenStack = new OnlinePlaySubScreenStack { RelativeSizeAxes = Axes.Both },
                     new Header(ScreenTitle, screenStack),
+                    RoomManager,
                     ongoingOperationTracker,
                 }
             };
@@ -158,6 +167,8 @@ namespace osu.Game.Screens.OnlinePlay
                 subScreen.Exit();
             }
 
+            RoomManager.PartRoom();
+
             waves.Hide();
 
             this.Delay(WaveContainer.DISAPPEAR_DURATION).FadeOut();
@@ -171,7 +182,7 @@ namespace osu.Game.Screens.OnlinePlay
             if (!(screenStack.CurrentScreen is IOnlinePlaySubScreen onlineSubScreen))
                 return false;
 
-            if (((Drawable)onlineSubScreen).IsLoaded && onlineSubScreen.AllowUserExit && onlineSubScreen.OnBackButton())
+            if (((Drawable)onlineSubScreen).IsLoaded && onlineSubScreen.AllowBackButton && onlineSubScreen.OnBackButton())
                 return true;
 
             if (screenStack.CurrentScreen != null && !(screenStack.CurrentScreen is LoungeSubScreen))
@@ -214,6 +225,8 @@ namespace osu.Game.Screens.OnlinePlay
         }
 
         protected abstract string ScreenTitle { get; }
+
+        protected virtual RoomManager CreateRoomManager() => new RoomManager();
 
         protected abstract LoungeSubScreen CreateLounge();
 

@@ -87,7 +87,7 @@ namespace osu.Game.Online
                     break;
 
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(state.NewValue));
+                    throw new ArgumentOutOfRangeException();
             }
         });
 

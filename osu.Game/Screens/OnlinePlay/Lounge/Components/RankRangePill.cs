@@ -1,25 +1,23 @@
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
+#nullable disable
+
 using System.Linq;
 using osu.Framework.Allocation;
-using osu.Framework.Extensions.ObjectExtensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Containers;
-using osu.Game.Online.Multiplayer;
+using osu.Game.Screens.OnlinePlay.Multiplayer;
 using osuTK;
 
 namespace osu.Game.Screens.OnlinePlay.Lounge.Components
 {
-    public partial class RankRangePill : CompositeDrawable
+    public partial class RankRangePill : MultiplayerRoomComposite
     {
-        private OsuTextFlowContainer rankFlow = null!;
-
-        [Resolved]
-        private MultiplayerClient client { get; set; } = null!;
+        private OsuTextFlowContainer rankFlow;
 
         public RankRangePill()
         {
@@ -57,28 +55,20 @@ namespace osu.Game.Screens.OnlinePlay.Lounge.Components
             };
         }
 
-        protected override void LoadComplete()
+        protected override void OnRoomUpdated()
         {
-            base.LoadComplete();
+            base.OnRoomUpdated();
 
-            client.RoomUpdated += onRoomUpdated;
-            updateState();
-        }
-
-        private void onRoomUpdated() => Scheduler.AddOnce(updateState);
-
-        private void updateState()
-        {
             rankFlow.Clear();
 
-            if (client.Room == null || client.Room.Users.All(u => u.User == null))
+            if (Room == null || Room.Users.All(u => u.User == null))
             {
                 rankFlow.AddText("-");
                 return;
             }
 
-            int minRank = client.Room.Users.Select(u => u.User?.Statistics.GlobalRank ?? 0).DefaultIfEmpty(0).Min();
-            int maxRank = client.Room.Users.Select(u => u.User?.Statistics.GlobalRank ?? 0).DefaultIfEmpty(0).Max();
+            int minRank = Room.Users.Select(u => u.User?.Statistics.GlobalRank ?? 0).DefaultIfEmpty(0).Min();
+            int maxRank = Room.Users.Select(u => u.User?.Statistics.GlobalRank ?? 0).DefaultIfEmpty(0).Max();
 
             rankFlow.AddText("#");
             rankFlow.AddText(minRank.ToString("#,0"), s => s.Font = s.Font.With(weight: FontWeight.Bold));
@@ -87,14 +77,6 @@ namespace osu.Game.Screens.OnlinePlay.Lounge.Components
 
             rankFlow.AddText("#");
             rankFlow.AddText(maxRank.ToString("#,0"), s => s.Font = s.Font.With(weight: FontWeight.Bold));
-        }
-
-        protected override void Dispose(bool isDisposing)
-        {
-            base.Dispose(isDisposing);
-
-            if (client.IsNotNull())
-                client.RoomUpdated -= onRoomUpdated;
         }
     }
 }

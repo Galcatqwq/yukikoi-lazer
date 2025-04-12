@@ -19,7 +19,6 @@ using osu.Game.Rulesets.UI;
 using osu.Game.Scoring;
 using osu.Game.Screens;
 using osu.Game.Screens.Play;
-using osu.Game.Screens.Play.HUD.JudgementCounter;
 using osu.Game.Tests.Beatmaps.IO;
 using osu.Game.Tests.Gameplay;
 using osu.Game.Tests.Visual.Multiplayer;
@@ -168,16 +167,14 @@ namespace osu.Game.Tests.Visual.Gameplay
         public void TestSpectatingDuringGameplay()
         {
             start();
-            sendFrames(300, initialResultCount: 100);
+            sendFrames(300);
 
             loadSpectatingScreen();
             waitForPlayerCurrent();
 
-            sendFrames(300, initialResultCount: 100);
+            sendFrames(300);
 
             AddUntilStep("playing from correct point in time", () => player.ChildrenOfType<DrawableRuleset>().First().FrameStableClock.CurrentTime, () => Is.GreaterThan(30000));
-            AddAssert("check judgement counts are correct", () => player.ChildrenOfType<JudgementCountController>().Single().Counters.Sum(c => c.ResultCount.Value),
-                () => Is.GreaterThanOrEqualTo(100));
         }
 
         [Test]
@@ -408,9 +405,9 @@ namespace osu.Game.Tests.Visual.Gameplay
         private void checkPaused(bool state) =>
             AddUntilStep($"game is {(state ? "paused" : "playing")}", () => player.ChildrenOfType<DrawableRuleset>().First().IsPaused.Value == state);
 
-        private void sendFrames(int count = 10, double startTime = 0, int initialResultCount = 0)
+        private void sendFrames(int count = 10, double startTime = 0)
         {
-            AddStep("send frames", () => spectatorClient.SendFramesFromUser(streamingUser.Id, count, startTime, initialResultCount));
+            AddStep("send frames", () => spectatorClient.SendFramesFromUser(streamingUser.Id, count, startTime));
         }
 
         private void loadSpectatingScreen()

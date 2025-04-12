@@ -14,7 +14,6 @@ namespace osu.Game.Overlays.Profile.Header.Components
     public abstract partial class ProfileHeaderStatisticsButton : ProfileHeaderButton
     {
         private readonly OsuSpriteText drawableText;
-        private readonly Container iconContainer;
 
         protected ProfileHeaderStatisticsButton()
         {
@@ -27,11 +26,13 @@ namespace osu.Game.Overlays.Profile.Header.Components
                 Direction = FillDirection.Horizontal,
                 Children = new Drawable[]
                 {
-                    iconContainer = new Container
+                    new SpriteIcon
                     {
                         Anchor = Anchor.CentreLeft,
                         Origin = Anchor.CentreLeft,
-                        AutoSizeAxes = Axes.Both,
+                        Icon = Icon,
+                        FillMode = FillMode.Fit,
+                        Size = new Vector2(50, 14)
                     },
                     drawableText = new OsuSpriteText
                     {
@@ -42,23 +43,9 @@ namespace osu.Game.Overlays.Profile.Header.Components
                     }
                 }
             };
-
-            SetIcon(Icon);
         }
 
         protected abstract IconUsage Icon { get; }
-
-        protected void SetIcon(IconUsage icon)
-        {
-            iconContainer.Child = new SpriteIcon
-            {
-                Anchor = Anchor.CentreLeft,
-                Origin = Anchor.CentreLeft,
-                Icon = icon,
-                FillMode = FillMode.Fit,
-                Size = new Vector2(50, 14)
-            };
-        }
 
         protected void SetValue(int value) => drawableText.Text = value.ToLocalisableString("#,##0");
     }

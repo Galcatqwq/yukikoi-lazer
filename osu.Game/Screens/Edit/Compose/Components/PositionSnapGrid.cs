@@ -2,17 +2,15 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using osu.Framework.Bindables;
-using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Layout;
 using osuTK;
-using osuTK.Graphics;
 
 namespace osu.Game.Screens.Edit.Compose.Components
 {
-    public abstract partial class PositionSnapGrid : BufferedContainer
+    public abstract partial class PositionSnapGrid : CompositeDrawable
     {
         /// <summary>
         /// The position of the origin of this <see cref="PositionSnapGrid"/> in local coordinates.
@@ -22,10 +20,7 @@ namespace osu.Game.Screens.Edit.Compose.Components
         protected readonly LayoutValue GridCache = new LayoutValue(Invalidation.RequiredParentSizeToFit);
 
         protected PositionSnapGrid()
-            : base(cachedFrameBuffer: true)
         {
-            BackgroundColour = Color4.White.Opacity(0);
-
             StartPosition.BindValueChanged(_ => GridCache.Invalidate());
 
             AddLayout(GridCache);
@@ -35,8 +30,7 @@ namespace osu.Game.Screens.Edit.Compose.Components
         {
             base.Update();
 
-            if (GridCache.IsValid)
-                return;
+            if (GridCache.IsValid) return;
 
             ClearInternal();
 
@@ -44,7 +38,6 @@ namespace osu.Game.Screens.Edit.Compose.Components
                 CreateContent();
 
             GridCache.Validate();
-            ForceRedraw();
         }
 
         protected abstract void CreateContent();
@@ -60,6 +53,7 @@ namespace osu.Game.Screens.Edit.Compose.Components
                 {
                     Colour = Colour4.White,
                     Alpha = 0.3f,
+                    Origin = Anchor.CentreLeft,
                     RelativeSizeAxes = Axes.X,
                     Height = lineWidth,
                     Y = 0,
@@ -68,26 +62,28 @@ namespace osu.Game.Screens.Edit.Compose.Components
                 {
                     Colour = Colour4.White,
                     Alpha = 0.3f,
-                    Origin = Anchor.BottomLeft,
-                    Anchor = Anchor.BottomLeft,
+                    Origin = Anchor.CentreLeft,
                     RelativeSizeAxes = Axes.X,
-                    Height = lineWidth
+                    Height = lineWidth,
+                    Y = drawSize.Y,
                 },
                 new Box
                 {
                     Colour = Colour4.White,
                     Alpha = 0.3f,
+                    Origin = Anchor.TopCentre,
                     RelativeSizeAxes = Axes.Y,
-                    Width = lineWidth
+                    Width = lineWidth,
+                    X = 0,
                 },
                 new Box
                 {
                     Colour = Colour4.White,
                     Alpha = 0.3f,
-                    Origin = Anchor.TopRight,
-                    Anchor = Anchor.TopRight,
+                    Origin = Anchor.TopCentre,
                     RelativeSizeAxes = Axes.Y,
-                    Width = lineWidth
+                    Width = lineWidth,
+                    X = drawSize.X,
                 },
             });
         }

@@ -43,14 +43,6 @@ namespace osu.Game.Rulesets.Osu.Tests.Mods
                 SpeedChange = { Value = 0.88 }
             });
 
-        [Test]
-        public void TestSpmUnaffectedByTimeRamp()
-            => runSpmTest(new ModWindUp
-            {
-                InitialRate = { Value = 0.7 },
-                FinalRate = { Value = 1.3 }
-            });
-
         [TestCase(6.25f)]
         [TestCase(20)]
         public void TestPerfectScoreOnShortSliderWithRepeat(float pathLength)
@@ -60,7 +52,7 @@ namespace osu.Game.Rulesets.Osu.Tests.Mods
             CreateModTest(new ModTestData
             {
                 Autoplay = true,
-                CreateBeatmap = () => new Beatmap
+                Beatmap = new Beatmap
                 {
                     HitObjects = new List<HitObject>
                     {
@@ -90,7 +82,7 @@ namespace osu.Game.Rulesets.Osu.Tests.Mods
             {
                 Autoplay = true,
                 Mod = mod,
-                CreateBeatmap = () => new Beatmap
+                Beatmap = new Beatmap
                 {
                     HitObjects =
                     {

@@ -306,9 +306,7 @@ namespace osu.Game.Tests.Visual
                         StarRating = original.StarRating,
                         DifficultyName = original.DifficultyName,
                     }
-                },
-                HasFavourited = false,
-                FavouriteCount = 0,
+                }
             };
 
             foreach (var beatmap in result.Beatmaps)

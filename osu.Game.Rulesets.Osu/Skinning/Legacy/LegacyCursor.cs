@@ -11,8 +11,6 @@ namespace osu.Game.Rulesets.Osu.Skinning.Legacy
 {
     public partial class LegacyCursor : SkinnableCursor
     {
-        public static readonly int REVOLUTION_DURATION = 10000;
-
         private const float pressed_scale = 1.3f;
         private const float released_scale = 1f;
 
@@ -54,7 +52,7 @@ namespace osu.Game.Rulesets.Osu.Skinning.Legacy
         protected override void LoadComplete()
         {
             if (spin)
-                ExpandTarget.Spin(REVOLUTION_DURATION, RotationDirection.Clockwise);
+                ExpandTarget.Spin(10000, RotationDirection.Clockwise);
         }
 
         public override void Expand()

@@ -86,10 +86,6 @@ namespace osu.Game.Skinning
                         parseArrayValue(pair.Value, currentConfig.ColumnWidth);
                         break;
 
-                    case "BarlineHeight":
-                        currentConfig.BarLineHeight = float.Parse(pair.Value, CultureInfo.InvariantCulture);
-                        break;
-
                     case "HitPosition":
                         currentConfig.HitPosition = (480 - Math.Clamp(float.Parse(pair.Value, CultureInfo.InvariantCulture), 240, 480)) * LegacyManiaSkinConfiguration.POSITION_SCALE_FACTOR;
                         break;

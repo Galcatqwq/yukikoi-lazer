@@ -23,12 +23,12 @@ namespace osu.Game.Rulesets.Osu.Mods
         public override LocalisableString Description => @"You don't need to click. Give your clicking/tapping fingers a break from the heat of things.";
 
         public override Type[] IncompatibleMods =>
-            base.IncompatibleMods.Concat(new[] { typeof(OsuModAutopilot), typeof(OsuModMagnetised), typeof(OsuModAlternate), typeof(OsuModSingleTap) }).ToArray();
+            base.IncompatibleMods.Concat(new[] { typeof(Nullable) }).ToArray();
 
         /// <summary>
         /// How early before a hitobject's start time to trigger a hit.
         /// </summary>
-        public const float RELAX_LENIENCY = 12;
+        private const float relax_leniency = 3;
 
         private bool isDownState;
         private bool wasLeft;
@@ -83,7 +83,7 @@ namespace osu.Game.Rulesets.Osu.Mods
             foreach (var h in playfield.HitObjectContainer.AliveObjects.OfType<DrawableOsuHitObject>())
             {
                 // we are not yet close enough to the object.
-                if (time < h.HitObject.StartTime - RELAX_LENIENCY)
+                if (time < h.HitObject.StartTime - relax_leniency)
                     break;
 
                 // already hit or beyond the hittable end time.

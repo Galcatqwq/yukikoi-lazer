@@ -13,21 +13,21 @@ namespace osu.Game.Rulesets.Mods
 {
     public abstract class ModAutoplay : Mod, ICreateReplayData
     {
-        public override string Name => "Autoplay";
+        public override string Name => "奥托普雷";
         public override string Acronym => "AT";
         public override IconUsage? Icon => OsuIcon.ModAuto;
         public override ModType Type => ModType.Automation;
-        public override LocalisableString Description => "Watch a perfect automated play through the song.";
+        public override LocalisableString Description => "有请2B图薄纱奥托普雷(((";
         public override double ScoreMultiplier => 1;
 
         public sealed override bool UserPlayable => false;
         public sealed override bool ValidForMultiplayer => false;
         public sealed override bool ValidForMultiplayerAsFreeMod => false;
 
-        public override Type[] IncompatibleMods => new[] { typeof(ModCinema), typeof(ModRelax), typeof(ModAdaptiveSpeed), typeof(ModTouchDevice) };
+        public override Type[] IncompatibleMods => new[] { typeof(ModCinema), typeof(ModRelax), typeof(ModTouchDevice) };
 
         public override bool HasImplementation => GetType().GenericTypeArguments.Length == 0;
 
-        public virtual ModReplayData CreateReplayData(IBeatmap beatmap, IReadOnlyList<Mod> mods) => new ModReplayData(new Replay(), new ModCreatedUser { Username = @"autoplay" });
+        public virtual ModReplayData CreateReplayData(IBeatmap beatmap, IReadOnlyList<Mod> mods) => new ModReplayData(new Replay(), new ModCreatedUser { Username = "lbw" });
     }
 }

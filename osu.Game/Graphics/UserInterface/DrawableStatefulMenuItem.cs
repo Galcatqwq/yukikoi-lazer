@@ -46,11 +46,12 @@ namespace osu.Game.Graphics.UserInterface
 
                 state = menuItem.State.GetBoundCopy();
 
-                CheckboxContainer.Add(stateIcon = new SpriteIcon
+                Add(stateIcon = new SpriteIcon
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
+                    Anchor = Anchor.CentreLeft,
+                    Origin = Anchor.CentreLeft,
                     Size = new Vector2(10),
+                    Margin = new MarginPadding { Horizontal = MARGIN_HORIZONTAL },
                     AlwaysPresent = true,
                 });
             }
@@ -59,6 +60,14 @@ namespace osu.Game.Graphics.UserInterface
             {
                 base.LoadComplete();
                 state.BindValueChanged(updateState, true);
+            }
+
+            protected override void Update()
+            {
+                base.Update();
+
+                // Todo: This is bad. This can maybe be done better with a refactor of DrawableOsuMenuItem.
+                stateIcon.X = BoldText.DrawWidth + 10;
             }
 
             private void updateState(ValueChangedEvent<object> state)

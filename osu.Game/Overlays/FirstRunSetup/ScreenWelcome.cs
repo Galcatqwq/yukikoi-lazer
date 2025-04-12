@@ -23,7 +23,7 @@ using osuTK;
 namespace osu.Game.Overlays.FirstRunSetup
 {
     [LocalisableDescription(typeof(FirstRunSetupOverlayStrings), nameof(FirstRunSetupOverlayStrings.WelcomeTitle))]
-    public partial class ScreenWelcome : WizardScreen
+    public partial class ScreenWelcome : FirstRunSetupScreen
     {
         [BackgroundDependencyLoader]
         private void load(FrameworkConfigManager frameworkConfig)
@@ -64,8 +64,6 @@ namespace osu.Game.Overlays.FirstRunSetup
                 }
             };
         }
-
-        public override LocalisableString? NextStepText => FirstRunSetupOverlayStrings.GetStarted;
 
         private partial class LanguageSelectionFlow : FillFlowContainer
         {

@@ -19,7 +19,6 @@ namespace osu.Game.Tournament.Models
     {
         public int ID;
 
-        [JsonIgnore]
         public List<string> Acronyms
         {
             get

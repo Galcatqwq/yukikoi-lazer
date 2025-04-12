@@ -131,6 +131,21 @@ namespace osu.Game.Tests.Visual.Background
             assertNoBackgrounds();
         }
 
+        [Test]
+        public void TestDelayedConnectivity()
+        {
+            registerBackgroundsResponse(DateTimeOffset.Now.AddDays(30));
+            setSeasonalBackgroundMode(SeasonalBackgroundMode.Always);
+            AddStep("go offline", () => dummyAPI.SetState(APIState.Offline));
+
+            createLoader();
+            assertNoBackgrounds();
+
+            AddStep("go online", () => dummyAPI.SetState(APIState.Online));
+
+            assertAnyBackground();
+        }
+
         private void registerBackgroundsResponse(DateTimeOffset endDate)
             => AddStep("setup request handler", () =>
             {
@@ -170,8 +185,7 @@ namespace osu.Game.Tests.Visual.Background
             {
                 previousBackground = (SeasonalBackground)backgroundContainer.SingleOrDefault();
                 background = backgroundLoader.LoadNextBackground();
-                if (background != null)
-                    LoadComponentAsync(background, bg => backgroundContainer.Child = bg);
+                LoadComponentAsync(background, bg => backgroundContainer.Child = bg);
             });
 
             AddUntilStep("background loaded", () => background.IsLoaded);

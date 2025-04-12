@@ -1,6 +1,8 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
+#nullable disable
+
 using osu.Framework.Allocation;
 using osu.Framework.Audio;
 using osu.Framework.Audio.Sample;
@@ -24,7 +26,7 @@ namespace osu.Game.Screens.OnlinePlay.Match.Components
 
         protected override TabItem<MatchType> CreateTabItem(MatchType value) => new GameTypePickerItem(value);
 
-        protected override Dropdown<MatchType>? CreateDropdown() => null;
+        protected override Dropdown<MatchType> CreateDropdown() => null;
 
         public MatchTypePicker()
         {
@@ -39,8 +41,7 @@ namespace osu.Game.Screens.OnlinePlay.Match.Components
         {
             private const float transition_duration = 200;
 
-            private readonly CircularContainer hover;
-            private readonly CircularContainer selection;
+            private readonly CircularContainer hover, selection;
 
             public GameTypePickerItem(MatchType value)
                 : base(value)
@@ -83,7 +84,7 @@ namespace osu.Game.Screens.OnlinePlay.Match.Components
                 };
             }
 
-            private Sample selectSample = null!;
+            private Sample selectSample;
 
             [BackgroundDependencyLoader]
             private void load(OsuColour colours, AudioManager audio)

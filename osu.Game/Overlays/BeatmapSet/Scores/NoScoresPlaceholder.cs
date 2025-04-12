@@ -41,10 +41,6 @@ namespace osu.Game.Overlays.BeatmapSet.Scores
                 case BeatmapLeaderboardScope.Country:
                     text.Text = BeatmapsetsStrings.ShowScoreboardNoScoresCountry;
                     break;
-
-                case BeatmapLeaderboardScope.Team:
-                    text.Text = BeatmapsetsStrings.ShowScoreboardNoScoresTeam;
-                    break;
             }
         }
     }

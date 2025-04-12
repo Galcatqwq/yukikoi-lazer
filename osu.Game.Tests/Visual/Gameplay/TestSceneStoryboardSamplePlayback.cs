@@ -91,10 +91,6 @@ namespace osu.Game.Tests.Visual.Gameplay
                 sound.ChildrenOfType<DrawableSample>().First().AggregateFrequency.Value == expectedRate));
         }
 
-        [TestCase(typeof(ModWindUp), 0.5, 2)]
-        [TestCase(typeof(ModWindUp), 1.51, 2)]
-        [TestCase(typeof(ModWindDown), 2, 0.5)]
-        [TestCase(typeof(ModWindDown), 0.99, 0.5)]
         public void TestStoryboardSamplesPlaybackWithTimeRampMods(Type expectedMod, double initialRate, double finalRate)
         {
             AddStep("setup mod", () =>

@@ -14,6 +14,7 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Localisation;
 using osu.Game.Configuration;
 using osu.Game.Extensions;
+using osu.Game.Rulesets.UI;
 using osu.Game.Utils;
 
 namespace osu.Game.Rulesets.Mods
@@ -42,16 +43,36 @@ namespace osu.Game.Rulesets.Mods
         public abstract LocalisableString Description { get; }
 
         /// <summary>
-        /// The description of editable settings of a mod.
+        /// The tooltip to display for this mod when used in a <see cref="ModIcon"/>.
+        /// </summary>
+        /// <remarks>
+        /// Differs from <see cref="Name"/>, as the value of attributes (AR, CS, etc) changeable via the mod
+        /// are displayed in the tooltip.
+        /// </remarks>
+        [JsonIgnore]
+        public string IconTooltip
+        {
+            get
+            {
+                string description = SettingDescription;
+
+                return string.IsNullOrEmpty(description) ? Name : $"{Name} ({description})";
+            }
+        }
+
+        /// <summary>
+        /// The description of editable settings of a mod to use in the <see cref="IconTooltip"/>.
         /// </summary>
         /// <remarks>
         /// Parentheses are added to the tooltip, surrounding the value of this property. If this property is <c>string.Empty</c>,
         /// the tooltip will not have parentheses.
         /// </remarks>
-        public virtual IEnumerable<(LocalisableString setting, LocalisableString value)> SettingDescription
+        public virtual string SettingDescription
         {
             get
             {
+                var tooltipTexts = new List<string>();
+
                 foreach ((SettingSourceAttribute attr, PropertyInfo property) in this.GetOrderedSettingsSourceProperties())
                 {
                     var bindable = (IBindable)property.GetValue(this)!;
@@ -61,7 +82,7 @@ namespace osu.Game.Rulesets.Mods
                     switch (bindable)
                     {
                         case Bindable<bool> b:
-                            valueText = b.Value ? "On" : "Off";
+                            valueText = b.Value ? "on" : "off";
                             break;
 
                         default:
@@ -70,8 +91,10 @@ namespace osu.Game.Rulesets.Mods
                     }
 
                     if (!bindable.IsDefault)
-                        yield return (attr.Label, valueText);
+                        tooltipTexts.Add($"{attr.Label}: {valueText}");
                 }
+
+                return string.Join(", ", tooltipTexts.Where(s => !string.IsNullOrEmpty(s)));
             }
         }
 
@@ -243,7 +266,8 @@ namespace osu.Game.Rulesets.Mods
 
                 // TODO: special case for handling number types
 
-                BindableValueAccessor.SetValue(targetSetting, BindableValueAccessor.GetValue(sourceSetting));
+                PropertyInfo property = targetSetting.GetType().GetProperty(nameof(Bindable<bool>.Value))!;
+                property.SetValue(targetSetting, property.GetValue(sourceSetting));
             }
         }
 

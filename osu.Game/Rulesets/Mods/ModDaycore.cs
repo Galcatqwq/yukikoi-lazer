@@ -12,11 +12,11 @@ namespace osu.Game.Rulesets.Mods
 {
     public abstract class ModDaycore : ModRateAdjust
     {
-        public override string Name => "Daycore";
+        public override string Name => "日核(?)";
         public override string Acronym => "DC";
         public override IconUsage? Icon => null;
         public override ModType Type => ModType.DifficultyReduction;
-        public override LocalisableString Description => "Whoaaaaa...";
+        public override LocalisableString Description => "哇哦~~~~";
         public override bool Ranked => UsesDefaultConfiguration;
 
         [SettingSource("Speed decrease", "The actual decrease to apply", SettingControlType = typeof(MultiplierSettingsSlider))]

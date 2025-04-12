@@ -4,8 +4,8 @@
 using System;
 using System.Linq;
 using osu.Framework.Allocation;
+using osu.Framework.Audio.Track;
 using osu.Framework.Bindables;
-using osu.Framework.Extensions.ObjectExtensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Audio;
 using osu.Framework.Graphics.Containers;
@@ -305,8 +305,7 @@ namespace osu.Game.Screens.Edit.Timing
             [Resolved]
             private IBindable<WorkingBeatmap> beatmap { get; set; } = null!;
 
-            [Resolved]
-            private EditorClock editorClock { get; set; } = null!;
+            private readonly IBindable<Track> track = new Bindable<Track>();
 
             public WaveformRow(bool isMainRow)
             {
@@ -314,7 +313,7 @@ namespace osu.Game.Screens.Edit.Timing
             }
 
             [BackgroundDependencyLoader]
-            private void load()
+            private void load(EditorClock clock)
             {
                 InternalChildren = new Drawable[]
                 {
@@ -344,16 +343,13 @@ namespace osu.Game.Screens.Edit.Timing
                         Colour = colourProvider.Content2
                     }
                 };
+
+                track.BindTo(clock.Track);
             }
 
             protected override void LoadComplete()
             {
-                editorClock.TrackChanged += updateWaveform;
-            }
-
-            private void updateWaveform()
-            {
-                waveformGraph.Waveform = beatmap.Value.Waveform;
+                track.ValueChanged += _ => waveformGraph.Waveform = beatmap.Value.Waveform;
             }
 
             public int BeatIndex { set => beatIndexText.Text = value.ToString(); }
@@ -366,14 +362,6 @@ namespace osu.Game.Screens.Edit.Timing
             {
                 get => waveformGraph.X;
                 set => waveformGraph.X = value;
-            }
-
-            protected override void Dispose(bool isDisposing)
-            {
-                base.Dispose(isDisposing);
-
-                if (editorClock.IsNotNull())
-                    editorClock.TrackChanged -= updateWaveform;
             }
         }
     }

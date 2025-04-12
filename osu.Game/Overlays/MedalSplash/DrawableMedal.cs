@@ -107,7 +107,12 @@ namespace osu.Game.Overlays.MedalSplash
                 },
             };
 
-            description.AddText(medal.Description, s => s.Font = s.Font.With(size: 16));
+            description.AddText(medal.Description, s =>
+            {
+                s.Anchor = Anchor.TopCentre;
+                s.Origin = Anchor.TopCentre;
+                s.Font = s.Font.With(size: 16);
+            });
 
             medalContainer.OnLoadComplete += _ =>
             {

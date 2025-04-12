@@ -82,6 +82,7 @@ namespace osu.Game.Overlays.Changelog
                     },
                     title = new LinkFlowContainer
                     {
+                        Direction = FillDirection.Full,
                         RelativeSizeAxes = Axes.X,
                         AutoSizeAxes = Axes.Y,
                         TextAnchor = Anchor.BottomLeft,

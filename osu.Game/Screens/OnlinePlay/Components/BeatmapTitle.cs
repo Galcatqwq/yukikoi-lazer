@@ -1,40 +1,32 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using System.ComponentModel;
 using System.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
-using osu.Framework.Graphics.Containers;
 using osu.Framework.Localisation;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Containers;
 using osu.Game.Online.Chat;
-using osu.Game.Online.Rooms;
 
 namespace osu.Game.Screens.OnlinePlay.Components
 {
-    public partial class BeatmapTitle : CompositeDrawable
+    public partial class BeatmapTitle : OnlinePlayComposite
     {
-        private readonly Room room;
         private readonly LinkFlowContainer textFlow;
 
-        [Resolved]
-        private OsuColour colours { get; set; } = null!;
-
-        public BeatmapTitle(Room room)
+        public BeatmapTitle()
         {
-            this.room = room;
-
             AutoSizeAxes = Axes.Both;
+
             InternalChild = textFlow = new LinkFlowContainer { AutoSizeAxes = Axes.Both };
         }
 
-        protected override void LoadComplete()
+        [BackgroundDependencyLoader]
+        private void load()
         {
-            base.LoadComplete();
+            Playlist.CollectionChanged += (_, _) => updateText();
 
-            room.PropertyChanged += onRoomPropertyChanged;
             updateText();
         }
 
@@ -54,11 +46,8 @@ namespace osu.Game.Screens.OnlinePlay.Components
             }
         }
 
-        private void onRoomPropertyChanged(object? sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(Room.Playlist))
-                updateText();
-        }
+        [Resolved]
+        private OsuColour colours { get; set; } = null!;
 
         private void updateText()
         {
@@ -67,7 +56,7 @@ namespace osu.Game.Screens.OnlinePlay.Components
 
             textFlow.Clear();
 
-            var beatmap = room.Playlist.FirstOrDefault()?.Beatmap;
+            var beatmap = Playlist.FirstOrDefault()?.Beatmap;
 
             if (beatmap == null)
             {
@@ -88,12 +77,6 @@ namespace osu.Game.Screens.OnlinePlay.Components
 
                 textFlow.AddLink(title, LinkAction.OpenBeatmap, beatmap.OnlineID.ToString(), "Open beatmap");
             }
-        }
-
-        protected override void Dispose(bool isDisposing)
-        {
-            base.Dispose(isDisposing);
-            room.PropertyChanged -= onRoomPropertyChanged;
         }
     }
 }

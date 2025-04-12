@@ -37,13 +37,10 @@ namespace osu.Game.Screens.Select
         public OptionalRange<int> BeatDivisor;
         public OptionalSet<BeatmapOnlineStatus> OnlineStatus = new OptionalSet<BeatmapOnlineStatus>();
         public OptionalRange<DateTimeOffset> LastPlayed;
-        public OptionalRange<DateTimeOffset> DateRanked;
-        public OptionalRange<DateTimeOffset> DateSubmitted;
         public OptionalTextFilter Creator;
         public OptionalTextFilter Artist;
         public OptionalTextFilter Title;
         public OptionalTextFilter DifficultyName;
-        public OptionalTextFilter Source;
 
         public OptionalRange<double> UserStarDifficulty = new OptionalRange<double>
         {
@@ -56,9 +53,6 @@ namespace osu.Game.Screens.Select
         public RulesetInfo? Ruleset;
         public IReadOnlyList<Mod>? Mods;
         public bool AllowConvertedBeatmaps;
-        public int? BeatmapSetId;
-
-        public bool? HasOnlineID;
 
         private string searchText = string.Empty;
 

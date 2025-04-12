@@ -36,7 +36,7 @@ namespace osu.Game.Rulesets.Osu.Tests
             {
                 Autoplay = false,
                 Mod = new TestAutoMod(),
-                CreateBeatmap = () => new Beatmap
+                Beatmap = new Beatmap
                 {
                     HitObjects = { new HitCircle { Position = new Vector2(256, 192) } }
                 },
@@ -47,16 +47,18 @@ namespace osu.Game.Rulesets.Osu.Tests
         [Test]
         public void TestMissViaNotHitting()
         {
+            var beatmap = new Beatmap
+            {
+                HitObjects = { new HitCircle { Position = new Vector2(256, 192) } }
+            };
+
             var hitWindows = new OsuHitWindows();
-            hitWindows.SetDifficulty(IBeatmapDifficultyInfo.DEFAULT_DIFFICULTY);
+            hitWindows.SetDifficulty(beatmap.Difficulty.OverallDifficulty);
 
             CreateModTest(new ModTestData
             {
                 Autoplay = false,
-                CreateBeatmap = () => new Beatmap
-                {
-                    HitObjects = { new HitCircle { Position = new Vector2(256, 192) } }
-                },
+                Beatmap = beatmap,
                 PassCondition = () => Player.Results.Count > 0 && Player.Results[0].TimeOffset >= hitWindows.WindowFor(HitResult.Meh) && !Player.Results[0].IsHit
             });
         }

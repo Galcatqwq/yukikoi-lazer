@@ -1,6 +1,8 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
+#nullable disable
+
 using osu.Framework.Graphics;
 using osu.Framework.Input.Events;
 using osu.Framework.Graphics.UserInterface;
@@ -20,9 +22,7 @@ namespace osu.Game.Overlays
 {
     public abstract partial class OverlayStreamItem<T> : TabItem<T>
     {
-        public const float PADDING = 5;
-
-        public readonly Bindable<T?> SelectedItem = new Bindable<T?>();
+        public readonly Bindable<T> SelectedItem = new Bindable<T>();
 
         private bool userHoveringArea;
 
@@ -38,12 +38,10 @@ namespace osu.Game.Overlays
             }
         }
 
-        private FillFlowContainer<SpriteText> text = null!;
-        private ExpandingBar expandingBar = null!;
-        private Sample selectSample = null!;
-        private OsuSpriteText? mainTextPiece;
-        private OsuSpriteText? additionalTextPiece;
-        private OsuSpriteText? infoTextPiece;
+        private FillFlowContainer<SpriteText> text;
+        private ExpandingBar expandingBar;
+
+        public const float PADDING = 5;
 
         protected OverlayStreamItem(T value)
             : base(value)
@@ -52,6 +50,8 @@ namespace osu.Game.Overlays
             Width = 90;
             Margin = new MarginPadding(PADDING);
         }
+
+        private Sample selectSample;
 
         [BackgroundDependencyLoader]
         private void load(OverlayColourProvider colourProvider, OsuColour colours, AudioManager audio)
@@ -65,17 +65,17 @@ namespace osu.Game.Overlays
                     Margin = new MarginPadding { Top = 6 },
                     Children = new[]
                     {
-                        mainTextPiece = new OsuSpriteText
+                        new OsuSpriteText
                         {
                             Text = MainText,
                             Font = OsuFont.GetFont(size: 12, weight: FontWeight.Bold),
                         },
-                        additionalTextPiece = new OsuSpriteText
+                        new OsuSpriteText
                         {
                             Text = AdditionalText,
                             Font = OsuFont.GetFont(size: 16, weight: FontWeight.Regular),
                         },
-                        infoTextPiece = new OsuSpriteText
+                        new OsuSpriteText
                         {
                             Text = InfoText,
                             Font = OsuFont.GetFont(size: 10),
@@ -99,47 +99,11 @@ namespace osu.Game.Overlays
             SelectedItem.BindValueChanged(_ => updateState(), true);
         }
 
-        private LocalisableString mainText;
+        protected abstract LocalisableString MainText { get; }
 
-        protected LocalisableString MainText
-        {
-            get => mainText;
-            set
-            {
-                mainText = value;
+        protected abstract LocalisableString AdditionalText { get; }
 
-                if (mainTextPiece != null)
-                    mainTextPiece.Text = value;
-            }
-        }
-
-        private LocalisableString additionalText;
-
-        protected LocalisableString AdditionalText
-        {
-            get => additionalText;
-            set
-            {
-                additionalText = value;
-
-                if (additionalTextPiece != null)
-                    additionalTextPiece.Text = value;
-            }
-        }
-
-        private LocalisableString infoText;
-
-        protected LocalisableString InfoText
-        {
-            get => infoText;
-            set
-            {
-                infoText = value;
-
-                if (infoTextPiece != null)
-                    infoTextPiece.Text = value;
-            }
-        }
+        protected virtual LocalisableString InfoText => string.Empty;
 
         protected abstract Color4 GetBarColour(OsuColour colours);
 

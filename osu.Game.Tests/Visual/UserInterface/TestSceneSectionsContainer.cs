@@ -138,7 +138,7 @@ namespace osu.Game.Tests.Visual.UserInterface
                 AddUntilStep("section top is visible", () =>
                 {
                     var scrollContainer = container.ChildrenOfType<UserTrackingScrollContainer>().Single();
-                    double sectionPosition = scrollContainer.GetChildPosInContent(container.Children[scrollIndex]);
+                    float sectionPosition = scrollContainer.GetChildPosInContent(container.Children[scrollIndex]);
                     return scrollContainer.Current < sectionPosition;
                 });
             }

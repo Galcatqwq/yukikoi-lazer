@@ -1,6 +1,8 @@
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
+#nullable disable
+
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
@@ -19,7 +21,7 @@ namespace osu.Game.Rulesets.Catch.Tests.Editor
 {
     public partial class TestSceneJuiceStreamSelectionBlueprint : CatchSelectionBlueprintTestScene
     {
-        private JuiceStream hitObject = null!;
+        private JuiceStream hitObject;
 
         private readonly ManualClock manualClock = new ManualClock();
 
@@ -189,17 +191,6 @@ namespace osu.Game.Rulesets.Catch.Tests.Editor
 
             addDeleteVertexSteps(times[2], positions[2]);
             addVertexCheckStep(1, 0, times[0], positions[0]);
-        }
-
-        [Test]
-        public void TestDeletingSecondVertexDeletesEntireJuiceStream()
-        {
-            double[] times = { 100, 400 };
-            float[] positions = { 100, 150 };
-            addBlueprintStep(times, positions);
-
-            addDeleteVertexSteps(times[1], positions[1]);
-            AddAssert("juice stream deleted", () => EditorBeatmap.HitObjects, () => Is.Empty);
         }
 
         [Test]

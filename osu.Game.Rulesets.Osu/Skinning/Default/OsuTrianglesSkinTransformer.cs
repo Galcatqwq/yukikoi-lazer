@@ -18,7 +18,7 @@ namespace osu.Game.Rulesets.Osu.Skinning.Default
         {
             switch (lookup)
             {
-                case SkinComponentLookup<HitResult> resultComponent:
+                case GameplaySkinComponentLookup<HitResult> resultComponent:
                     HitResult result = resultComponent.Component;
 
                     switch (result)

@@ -64,7 +64,7 @@ namespace osu.Game.Screens.Menu
 
         protected Vector2 BaseSize { get; init; } = new Vector2(ButtonSystem.BUTTON_WIDTH, ButtonArea.BUTTON_AREA_HEIGHT);
 
-        private readonly Action<MainMenuButton, UIEvent>? clickAction;
+        private readonly Action<MainMenuButton>? clickAction;
 
         private readonly Container background;
         private readonly Drawable backgroundContent;
@@ -84,7 +84,7 @@ namespace osu.Game.Screens.Menu
 
         public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => background.ReceivePositionalInputAt(screenSpacePos);
 
-        public MainMenuButton(LocalisableString text, string sampleName, IconUsage symbol, Color4 colour, Action<MainMenuButton, UIEvent>? clickAction = null, params Key[] triggerKeys)
+        public MainMenuButton(LocalisableString text, string sampleName, IconUsage symbol, Color4 colour, Action<MainMenuButton>? clickAction = null, params Key[] triggerKeys)
         {
             this.sampleName = sampleName;
             this.clickAction = clickAction;
@@ -263,7 +263,7 @@ namespace osu.Game.Screens.Menu
 
         protected override bool OnClick(ClickEvent e)
         {
-            trigger(e);
+            trigger();
             return true;
         }
 
@@ -274,19 +274,19 @@ namespace osu.Game.Screens.Menu
 
             if (TriggerKeys.Contains(e.Key))
             {
-                trigger(e);
+                trigger();
                 return true;
             }
 
             return false;
         }
 
-        private void trigger(UIEvent e)
+        private void trigger()
         {
             sampleChannel = sampleClick?.GetChannel();
             sampleChannel?.Play();
 
-            clickAction?.Invoke(this, e);
+            clickAction?.Invoke(this);
 
             boxHoverLayer.ClearTransforms();
             boxHoverLayer.Alpha = 0.9f;

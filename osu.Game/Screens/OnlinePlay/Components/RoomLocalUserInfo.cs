@@ -1,28 +1,26 @@
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using System.ComponentModel;
+#nullable disable
+
 using System.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Sprites;
-using osu.Game.Online.Rooms;
 
 namespace osu.Game.Screens.OnlinePlay.Components
 {
-    public partial class RoomLocalUserInfo : CompositeDrawable
+    public partial class RoomLocalUserInfo : OnlinePlayComposite
     {
-        private readonly Room room;
-        private OsuSpriteText attemptDisplay = null!;
+        private OsuSpriteText attemptDisplay;
 
         [Resolved]
-        private OsuColour colours { get; set; } = null!;
+        private OsuColour colours { get; set; }
 
-        public RoomLocalUserInfo(Room room)
+        public RoomLocalUserInfo()
         {
-            this.room = room;
             AutoSizeAxes = Axes.Both;
         }
 
@@ -47,30 +45,19 @@ namespace osu.Game.Screens.OnlinePlay.Components
         {
             base.LoadComplete();
 
-            room.PropertyChanged += onRoomPropertyChanged;
-            updateAttempts();
-        }
-
-        private void onRoomPropertyChanged(object? sender, PropertyChangedEventArgs e)
-        {
-            switch (e.PropertyName)
-            {
-                case nameof(Room.UserScore):
-                case nameof(Room.MaxAttempts):
-                    updateAttempts();
-                    break;
-            }
+            MaxAttempts.BindValueChanged(_ => updateAttempts());
+            UserScore.BindValueChanged(_ => updateAttempts(), true);
         }
 
         private void updateAttempts()
         {
-            if (room.MaxAttempts != null)
+            if (MaxAttempts.Value != null)
             {
-                attemptDisplay.Text = $"Maximum attempts: {room.MaxAttempts:N0}";
+                attemptDisplay.Text = $"Maximum attempts: {MaxAttempts.Value:N0}";
 
-                if (room.UserScore != null)
+                if (UserScore.Value != null)
                 {
-                    int remaining = room.MaxAttempts.Value - room.UserScore.PlaylistItemAttempts.Sum(a => a.Attempts);
+                    int remaining = MaxAttempts.Value.Value - UserScore.Value.PlaylistItemAttempts.Sum(a => a.Attempts);
                     attemptDisplay.Text += $" ({remaining} remaining)";
 
                     if (remaining == 0)
@@ -81,12 +68,6 @@ namespace osu.Game.Screens.OnlinePlay.Components
             {
                 attemptDisplay.Text = string.Empty;
             }
-        }
-
-        protected override void Dispose(bool isDisposing)
-        {
-            base.Dispose(isDisposing);
-            room.PropertyChanged -= onRoomPropertyChanged;
         }
     }
 }

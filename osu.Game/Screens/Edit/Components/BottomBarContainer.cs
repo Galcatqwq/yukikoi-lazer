@@ -2,6 +2,7 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using osu.Framework.Allocation;
+using osu.Framework.Audio.Track;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -16,6 +17,8 @@ namespace osu.Game.Screens.Edit.Components
         private const float contents_padding = 15;
 
         protected readonly IBindable<WorkingBeatmap> Beatmap = new Bindable<WorkingBeatmap>();
+
+        protected readonly IBindable<Track> Track = new Bindable<Track>();
 
         public readonly Drawable Background;
         private readonly Container content;
@@ -42,9 +45,10 @@ namespace osu.Game.Screens.Edit.Components
         }
 
         [BackgroundDependencyLoader]
-        private void load(IBindable<WorkingBeatmap> beatmap)
+        private void load(IBindable<WorkingBeatmap> beatmap, EditorClock clock)
         {
             Beatmap.BindTo(beatmap);
+            Track.BindTo(clock.Track);
         }
     }
 }

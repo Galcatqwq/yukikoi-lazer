@@ -68,12 +68,6 @@ namespace osu.Game.Online.Rooms
         }
 
         /// <summary>
-        /// Indicates whether participants in the room are able to pick their own choice of beatmap difficulty and ruleset.
-        /// </summary>
-        [JsonProperty("freestyle")]
-        public bool Freestyle { get; set; }
-
-        /// <summary>
         /// A beatmap representing this playlist item.
         /// In many cases, this will *not* contain any usable information apart from OnlineID.
         /// </summary>
@@ -96,14 +90,8 @@ namespace osu.Game.Online.Rooms
             Beatmap = beatmap;
         }
 
-        /// <summary>
-        /// Creates a new <see cref="PlaylistItem"/> from a <see cref="MultiplayerPlaylistItem"/>.
-        /// </summary>
-        /// <remarks>
-        /// This will create unique instances of the <see cref="RequiredMods"/> and <see cref="AllowedMods"/> arrays but NOT unique instances of the contained <see cref="APIMod"/>s.
-        /// </remarks>
         public PlaylistItem(MultiplayerPlaylistItem item)
-            : this(new APIBeatmap { OnlineID = item.BeatmapID, StarRating = item.StarRating, Checksum = item.BeatmapChecksum })
+            : this(new APIBeatmap { OnlineID = item.BeatmapID, StarRating = item.StarRating })
         {
             ID = item.ID;
             OwnerID = item.OwnerID;
@@ -113,7 +101,6 @@ namespace osu.Game.Online.Rooms
             PlayedAt = item.PlayedAt;
             RequiredMods = item.RequiredMods.ToArray();
             AllowedMods = item.AllowedMods.ToArray();
-            Freestyle = item.Freestyle;
         }
 
         public void MarkInvalid() => valid.Value = false;
@@ -133,22 +120,18 @@ namespace osu.Game.Online.Rooms
 
         #endregion
 
-        public PlaylistItem With(Optional<long> id = default, Optional<IBeatmapInfo> beatmap = default, Optional<ushort?> playlistOrder = default, Optional<int> ruleset = default)
+        public PlaylistItem With(Optional<IBeatmapInfo> beatmap = default, Optional<ushort?> playlistOrder = default) => new PlaylistItem(beatmap.GetOr(Beatmap))
         {
-            return new PlaylistItem(beatmap.GetOr(Beatmap))
-            {
-                ID = id.GetOr(ID),
-                OwnerID = OwnerID,
-                RulesetID = ruleset.GetOr(RulesetID),
-                Expired = Expired,
-                PlaylistOrder = playlistOrder.GetOr(PlaylistOrder),
-                PlayedAt = PlayedAt,
-                AllowedMods = AllowedMods,
-                RequiredMods = RequiredMods,
-                Freestyle = Freestyle,
-                valid = { Value = Valid.Value },
-            };
-        }
+            ID = ID,
+            OwnerID = OwnerID,
+            RulesetID = RulesetID,
+            Expired = Expired,
+            PlaylistOrder = playlistOrder.GetOr(PlaylistOrder),
+            PlayedAt = PlayedAt,
+            AllowedMods = AllowedMods,
+            RequiredMods = RequiredMods,
+            valid = { Value = Valid.Value },
+        };
 
         public bool Equals(PlaylistItem? other)
             => ID == other?.ID
@@ -157,7 +140,6 @@ namespace osu.Game.Online.Rooms
                && Expired == other.Expired
                && PlaylistOrder == other.PlaylistOrder
                && AllowedMods.SequenceEqual(other.AllowedMods)
-               && RequiredMods.SequenceEqual(other.RequiredMods)
-               && Freestyle == other.Freestyle;
+               && RequiredMods.SequenceEqual(other.RequiredMods);
     }
 }

@@ -8,6 +8,7 @@ using osu.Game.Localisation;
 using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Online.Chat;
 using osu.Game.Online.Notifications.WebSocket;
+using osu.Game.Users;
 
 namespace osu.Game.Online.API
 {
@@ -21,7 +22,17 @@ namespace osu.Game.Online.API
         /// <summary>
         /// The user's friends.
         /// </summary>
-        IBindableList<APIRelation> Friends { get; }
+        IBindableList<APIUser> Friends { get; }
+
+        /// <summary>
+        /// The current user's activity.
+        /// </summary>
+        IBindable<UserActivity> Activity { get; }
+
+        /// <summary>
+        /// The current user's online statistics.
+        /// </summary>
+        IBindable<UserStatistics?> Statistics { get; }
 
         /// <summary>
         /// The language supplied by this provider to API requests.
@@ -51,9 +62,14 @@ namespace osu.Game.Online.API
         string ProvidedUsername { get; }
 
         /// <summary>
-        /// Holds configuration for online endpoints.
+        /// The URL endpoint for this API. Does not include a trailing slash.
         /// </summary>
-        EndpointConfiguration Endpoints { get; }
+        string APIEndpointUrl { get; }
+
+        /// <summary>
+        /// The root URL of the website, excluding the trailing slash.
+        /// </summary>
+        string WebsiteRootUrl { get; }
 
         /// <summary>
         /// The version of the API.
@@ -114,14 +130,9 @@ namespace osu.Game.Online.API
         void Logout();
 
         /// <summary>
-        /// Update the friends status of the current user.
+        /// Sets Statistics bindable.
         /// </summary>
-        void UpdateLocalFriends();
-
-        /// <summary>
-        /// Schedule a callback to run on the update thread.
-        /// </summary>
-        internal void Schedule(Action action);
+        void UpdateStatistics(UserStatistics newStatistics);
 
         /// <summary>
         /// Constructs a new <see cref="IHubClientConnector"/>. May be null if not supported.

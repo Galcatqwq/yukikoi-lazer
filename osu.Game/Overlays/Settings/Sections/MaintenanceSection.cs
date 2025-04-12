@@ -23,7 +23,6 @@ namespace osu.Game.Overlays.Settings.Sections
         {
             Children = new Drawable[]
             {
-                new GeneralSettings(),
                 new BeatmapSettings(),
                 new SkinSettings(),
                 new CollectionsSettings(),

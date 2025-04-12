@@ -3,10 +3,8 @@
 
 using osu.Framework.Allocation;
 using osu.Framework.Screens;
-using osu.Game.Database;
 using osu.Game.Overlays;
 using osu.Game.Overlays.FirstRunSetup;
-using osu.Game.Tests.Beatmaps;
 
 namespace osu.Game.Tests.Visual.UserInterface
 {
@@ -14,9 +12,6 @@ namespace osu.Game.Tests.Visual.UserInterface
     {
         [Cached]
         private OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Purple);
-
-        [Cached(typeof(BeatmapStore))]
-        private BeatmapStore beatmapStore = new TestBeatmapStore();
 
         public TestSceneFirstRunScreenUIScale()
         {

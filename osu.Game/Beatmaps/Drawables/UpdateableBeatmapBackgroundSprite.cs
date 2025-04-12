@@ -14,17 +14,9 @@ namespace osu.Game.Beatmaps.Drawables
     /// </summary>
     public partial class UpdateableBeatmapBackgroundSprite : ModelBackedDrawable<IBeatmapInfo>
     {
-        public readonly Bindable<IBeatmapInfo?> Beatmap = new Bindable<IBeatmapInfo?>();
+        public readonly Bindable<IBeatmapInfo> Beatmap = new Bindable<IBeatmapInfo>();
 
-        /// <summary>
-        /// Delay before the background is loaded while on-screen.
-        /// </summary>
-        public double BackgroundLoadDelay { get; set; } = 500;
-
-        /// <summary>
-        /// Delay before the background is unloaded while off-screen.
-        /// </summary>
-        public double BackgroundUnloadDelay { get; set; } = 10000;
+        protected override double LoadDelay => 500;
 
         [Resolved]
         private BeatmapManager beatmaps { get; set; } = null!;
@@ -37,9 +29,10 @@ namespace osu.Game.Beatmaps.Drawables
             this.beatmapSetCoverType = beatmapSetCoverType;
         }
 
-        protected override double LoadDelay => BackgroundLoadDelay;
-
-        protected virtual double UnloadDelay => BackgroundUnloadDelay;
+        /// <summary>
+        /// Delay before the background is unloaded while off-screen.
+        /// </summary>
+        protected virtual double UnloadDelay => 10000;
 
         protected override DelayedLoadWrapper CreateDelayedLoadWrapper(Func<Drawable> createContentFunc, double timeBeforeLoad) =>
             new DelayedLoadUnloadWrapper(createContentFunc, timeBeforeLoad, UnloadDelay) { RelativeSizeAxes = Axes.Both };

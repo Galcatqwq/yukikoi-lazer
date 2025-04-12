@@ -27,10 +27,7 @@ namespace osu.Game.Rulesets.UI
 
         private InputManager inputManager;
 
-        /// <summary>
-        /// The frame rate to record replays at.
-        /// </summary>
-        public int RecordFrameRate { get; set; } = 60;
+        public int RecordFrameRate = 400;
 
         [Resolved]
         private SpectatorClient spectatorClient { get; set; }
@@ -79,7 +76,7 @@ namespace osu.Game.Rulesets.UI
         {
             var last = target.Replay.Frames.LastOrDefault();
 
-            if (!important && last != null && Time.Current - last.Time < (1000d / RecordFrameRate) * Clock.Rate)
+            if (!important && last != null && Time.Current - last.Time < (1000d / RecordFrameRate))
                 return;
 
             var position = ScreenSpaceToGamefield?.Invoke(inputManager.CurrentState.Mouse.Position) ?? inputManager.CurrentState.Mouse.Position;

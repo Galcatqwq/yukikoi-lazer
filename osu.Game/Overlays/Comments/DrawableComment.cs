@@ -47,7 +47,7 @@ namespace osu.Game.Overlays.Comments
 
         public readonly BindableList<DrawableComment> Replies = new BindableList<DrawableComment>();
 
-        private readonly BindableBool childrenExpanded;
+        private readonly BindableBool childrenExpanded = new BindableBool(true);
 
         private int currentPage;
 
@@ -92,8 +92,6 @@ namespace osu.Game.Overlays.Comments
         {
             Comment = comment;
             Meta = meta;
-
-            childrenExpanded = new BindableBool(!comment.Pinned);
         }
 
         [BackgroundDependencyLoader]
@@ -419,8 +417,8 @@ namespace osu.Game.Overlays.Comments
 
         private void copyUrl()
         {
-            clipboard.SetText($@"{api.Endpoints.APIUrl}/comments/{Comment.Id}");
-            onScreenDisplay?.Display(new CopiedToClipboardToast());
+            clipboard.SetText($@"{api.APIEndpointUrl}/comments/{Comment.Id}");
+            onScreenDisplay?.Display(new CopyUrlToast());
         }
 
         private void toggleReply()
@@ -428,7 +426,7 @@ namespace osu.Game.Overlays.Comments
             if (replyEditorContainer.Count == 0)
             {
                 replyEditorContainer.Show();
-                replyEditorContainer.Add(new ReplyCommentEditor(Comment, Meta)
+                replyEditorContainer.Add(new ReplyCommentEditor(Comment)
                 {
                     OnPost = comments =>
                     {

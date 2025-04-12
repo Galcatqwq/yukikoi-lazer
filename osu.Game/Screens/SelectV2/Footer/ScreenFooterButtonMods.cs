@@ -244,18 +244,18 @@ namespace osu.Game.Screens.SelectV2.Footer
                 Mods.BindValueChanged(v => Text = ModSelectOverlayStrings.Mods(v.NewValue.Count).ToUpper(), true);
             }
 
-            public ITooltip<IReadOnlyList<Mod>> GetCustomTooltip() => new ModOverflowTooltip(colourProvider);
+            public ITooltip<IReadOnlyList<Mod>> GetCustomTooltip() => new ModTooltip(colourProvider);
 
             public IReadOnlyList<Mod>? TooltipContent => Mods.Value;
 
-            public partial class ModOverflowTooltip : VisibilityContainer, ITooltip<IReadOnlyList<Mod>>
+            public partial class ModTooltip : VisibilityContainer, ITooltip<IReadOnlyList<Mod>>
             {
                 private ModDisplay extendedModDisplay = null!;
 
                 [Cached]
                 private OverlayColourProvider colourProvider;
 
-                public ModOverflowTooltip(OverlayColourProvider colourProvider)
+                public ModTooltip(OverlayColourProvider colourProvider)
                 {
                     this.colourProvider = colourProvider;
                 }

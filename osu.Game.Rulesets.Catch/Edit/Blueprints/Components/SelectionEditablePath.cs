@@ -138,13 +138,5 @@ namespace osu.Game.Rulesets.Catch.Edit.Blueprints.Components
 
             EditorBeatmap?.EndChange();
         }
-
-        public override void UpdateHitObjectFromPath(JuiceStream hitObject)
-        {
-            base.UpdateHitObjectFromPath(hitObject);
-
-            if (hitObject.Path.ControlPoints.Count <= 1 || !hitObject.Path.HasValidLengthForPlacement)
-                EditorBeatmap?.Remove(hitObject);
-        }
     }
 }

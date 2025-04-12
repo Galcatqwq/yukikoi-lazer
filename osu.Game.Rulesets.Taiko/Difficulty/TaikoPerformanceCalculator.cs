@@ -4,14 +4,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using osu.Framework.Audio.Track;
-using osu.Framework.Extensions.IEnumerableExtensions;
 using osu.Game.Rulesets.Difficulty;
-using osu.Game.Rulesets.Difficulty.Utils;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Taiko.Objects;
-using osu.Game.Rulesets.Taiko.Scoring;
 using osu.Game.Scoring;
 
 namespace osu.Game.Rulesets.Taiko.Difficulty
@@ -22,10 +18,7 @@ namespace osu.Game.Rulesets.Taiko.Difficulty
         private int countOk;
         private int countMeh;
         private int countMiss;
-        private double? estimatedUnstableRate;
-
-        private double clockRate;
-        private double greatHitWindow;
+        private double accuracy;
 
         private double effectiveMissCount;
 
@@ -42,38 +35,24 @@ namespace osu.Game.Rulesets.Taiko.Difficulty
             countOk = score.Statistics.GetValueOrDefault(HitResult.Ok);
             countMeh = score.Statistics.GetValueOrDefault(HitResult.Meh);
             countMiss = score.Statistics.GetValueOrDefault(HitResult.Miss);
-
-            var track = new TrackVirtual(10000);
-            score.Mods.OfType<IApplicableToTrack>().ForEach(m => m.ApplyToTrack(track));
-            clockRate = track.Rate;
-
-            var difficulty = score.BeatmapInfo!.Difficulty.Clone();
-
-            score.Mods.OfType<IApplicableToDifficulty>().ForEach(m => m.ApplyToDifficulty(difficulty));
-
-            HitWindows hitWindows = new TaikoHitWindows();
-            hitWindows.SetDifficulty(difficulty.OverallDifficulty);
-
-            greatHitWindow = hitWindows.WindowFor(HitResult.Great) / clockRate;
-
-            estimatedUnstableRate = computeDeviationUpperBound() * 10;
+            accuracy = customAccuracy;
 
             // The effectiveMissCount is calculated by gaining a ratio for totalSuccessfulHits and increasing the miss penalty for shorter object counts lower than 1000.
             if (totalSuccessfulHits > 0)
                 effectiveMissCount = Math.Max(1.0, 1000.0 / totalSuccessfulHits) * countMiss;
 
-            // Converts are detected and omitted from mod-specific bonuses due to the scope of current difficulty calculation.
+            // TODO: The detection of rulesets is temporary until the leftover old skills have been reworked.
             bool isConvert = score.BeatmapInfo!.Ruleset.OnlineID != 1;
 
             double multiplier = 1.13;
 
-            if (score.Mods.Any(m => m is ModHidden) && !isConvert)
+            if (score.Mods.Any(m => m is ModHidden))
                 multiplier *= 1.075;
 
             if (score.Mods.Any(m => m is ModEasy))
-                multiplier *= 0.950;
+                multiplier *= 0.975;
 
-            double difficultyValue = computeDifficultyValue(score, taikoAttributes);
+            double difficultyValue = computeDifficultyValue(score, taikoAttributes, isConvert);
             double accuracyValue = computeAccuracyValue(score, taikoAttributes, isConvert);
             double totalValue =
                 Math.Pow(
@@ -86,17 +65,13 @@ namespace osu.Game.Rulesets.Taiko.Difficulty
                 Difficulty = difficultyValue,
                 Accuracy = accuracyValue,
                 EffectiveMissCount = effectiveMissCount,
-                EstimatedUnstableRate = estimatedUnstableRate,
                 Total = totalValue
             };
         }
 
-        private double computeDifficultyValue(ScoreInfo score, TaikoDifficultyAttributes attributes)
+        private double computeDifficultyValue(ScoreInfo score, TaikoDifficultyAttributes attributes, bool isConvert)
         {
-            double baseDifficulty = 5 * Math.Max(1.0, attributes.StarRating / 0.110) - 4.0;
-            double difficultyValue = Math.Min(Math.Pow(baseDifficulty, 3) / 69052.51, Math.Pow(baseDifficulty, 2.25) / 1250.0);
-
-            difficultyValue *= 1 + 0.10 * Math.Max(0, attributes.StarRating - 10);
+            double difficultyValue = Math.Pow(5 * Math.Max(1.0, attributes.StarRating / 0.115) - 4.0, 2.25) / 1150.0;
 
             double lengthBonus = 1 + 0.1 * Math.Min(1.0, totalHits / 1500.0);
             difficultyValue *= lengthBonus;
@@ -104,66 +79,41 @@ namespace osu.Game.Rulesets.Taiko.Difficulty
             difficultyValue *= Math.Pow(0.986, effectiveMissCount);
 
             if (score.Mods.Any(m => m is ModEasy))
-                difficultyValue *= 0.90;
+                difficultyValue *= 0.985;
 
-            if (score.Mods.Any(m => m is ModHidden))
+            if (score.Mods.Any(m => m is ModHidden) && !isConvert)
                 difficultyValue *= 1.025;
 
+            if (score.Mods.Any(m => m is ModHardRock))
+                difficultyValue *= 1.050;
+
             if (score.Mods.Any(m => m is ModFlashlight<TaikoHitObject>))
-                difficultyValue *= Math.Max(1, 1.050 - Math.Min(attributes.MonoStaminaFactor / 50, 1) * lengthBonus);
+                difficultyValue *= 1.050 * lengthBonus;
 
-            if (estimatedUnstableRate == null)
-                return 0;
-
-            // Scale accuracy more harshly on nearly-completely mono (single coloured) speed maps.
-            double accScalingExponent = 2 + attributes.MonoStaminaFactor;
-            double accScalingShift = 500 - 100 * (attributes.MonoStaminaFactor * 3);
-
-            return difficultyValue * Math.Pow(DifficultyCalculationUtils.Erf(accScalingShift / (Math.Sqrt(2) * estimatedUnstableRate.Value)), accScalingExponent);
+            return difficultyValue * Math.Pow(accuracy, 2.0);
         }
 
         private double computeAccuracyValue(ScoreInfo score, TaikoDifficultyAttributes attributes, bool isConvert)
         {
-            if (greatHitWindow <= 0 || estimatedUnstableRate == null)
+            if (attributes.GreatHitWindow <= 0)
                 return 0;
 
-            double accuracyValue = Math.Pow(70 / estimatedUnstableRate.Value, 1.1) * Math.Pow(attributes.StarRating, 0.4) * 100.0;
+            double accuracyValue = Math.Pow(60.0 / attributes.GreatHitWindow, 1.1) * Math.Pow(accuracy, 8.0) * Math.Pow(attributes.StarRating, 0.4) * 27.0;
 
             double lengthBonus = Math.Min(1.15, Math.Pow(totalHits / 1500.0, 0.3));
+            accuracyValue *= lengthBonus;
 
             // Slight HDFL Bonus for accuracy. A clamp is used to prevent against negative values.
             if (score.Mods.Any(m => m is ModFlashlight<TaikoHitObject>) && score.Mods.Any(m => m is ModHidden) && !isConvert)
-                accuracyValue *= Math.Max(1.0, 1.05 * lengthBonus);
+                accuracyValue *= Math.Max(1.0, 1.1 * lengthBonus);
 
             return accuracyValue;
-        }
-
-        /// <summary>
-        /// Computes an upper bound on the player's tap deviation based on the OD, number of circles and sliders,
-        /// and the hit judgements, assuming the player's mean hit error is 0. The estimation is consistent in that
-        /// two SS scores on the same map with the same settings will always return the same deviation.
-        /// </summary>
-        private double? computeDeviationUpperBound()
-        {
-            if (countGreat == 0 || greatHitWindow <= 0)
-                return null;
-
-            const double z = 2.32634787404; // 99% critical value for the normal distribution (one-tailed).
-
-            double n = totalHits;
-
-            // Proportion of greats hit.
-            double p = countGreat / n;
-
-            // We can be 99% confident that p is at least this value.
-            double pLowerBound = (n * p + z * z / 2) / (n + z * z) - z / (n + z * z) * Math.Sqrt(n * p * (1 - p) + z * z / 4);
-
-            // We can be 99% confident that the deviation is not higher than:
-            return greatHitWindow / (Math.Sqrt(2) * DifficultyCalculationUtils.ErfInv(pLowerBound));
         }
 
         private int totalHits => countGreat + countOk + countMeh + countMiss;
 
         private int totalSuccessfulHits => countGreat + countOk + countMeh;
+
+        private double customAccuracy => totalHits > 0 ? (countGreat * 300 + countOk * 150) / (totalHits * 300.0) : 0;
     }
 }

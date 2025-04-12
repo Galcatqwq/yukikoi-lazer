@@ -9,9 +9,7 @@ using osu.Framework.Testing;
 using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Mania.Beatmaps;
 using osu.Game.Rulesets.Scoring;
-using osu.Game.Screens.Play.HUD;
 using osu.Game.Skinning;
-using osuTK;
 using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Mania.Skinning.Argon
@@ -30,18 +28,21 @@ namespace osu.Game.Rulesets.Mania.Skinning.Argon
         {
             switch (lookup)
             {
-                case GlobalSkinnableContainerLookup containerLookup:
+                case SkinComponentsContainerLookup containerLookup:
                     // Only handle per ruleset defaults here.
                     if (containerLookup.Ruleset == null)
                         return base.GetDrawableComponent(lookup);
 
-                    switch (containerLookup.Lookup)
+                    // Skin has configuration.
+                    if (base.GetDrawableComponent(lookup) is UserConfiguredLayoutContainer d)
+                        return d;
+
+                    switch (containerLookup.Target)
                     {
-                        case GlobalSkinnableContainers.MainHUDComponents:
+                        case SkinComponentsContainerLookup.TargetArea.MainHUDComponents:
                             return new DefaultSkinComponentsContainer(container =>
                             {
                                 var combo = container.ChildrenOfType<ArgonManiaComboCounter>().FirstOrDefault();
-                                var spectatorList = container.OfType<SpectatorList>().FirstOrDefault();
 
                                 if (combo != null)
                                 {
@@ -50,23 +51,15 @@ namespace osu.Game.Rulesets.Mania.Skinning.Argon
                                     combo.Origin = Anchor.Centre;
                                     combo.Y = 200;
                                 }
-
-                                if (spectatorList != null)
-                                    spectatorList.Position = new Vector2(36, -66);
                             })
                             {
                                 new ArgonManiaComboCounter(),
-                                new SpectatorList
-                                {
-                                    Anchor = Anchor.BottomLeft,
-                                    Origin = Anchor.BottomLeft,
-                                }
                             };
                     }
 
                     return null;
 
-                case SkinComponentLookup<HitResult> resultComponent:
+                case GameplaySkinComponentLookup<HitResult> resultComponent:
                     // This should eventually be moved to a skin setting, when supported.
                     if (Skin is ArgonProSkin && resultComponent.Component >= HitResult.Great)
                         return Drawable.Empty();
@@ -175,7 +168,7 @@ namespace osu.Game.Rulesets.Mania.Skinning.Argon
 
                         case 1: return colour_cyan;
 
-                        default: throw new ArgumentOutOfRangeException(nameof(columnIndex));
+                        default: throw new ArgumentOutOfRangeException();
                     }
 
                 case 3:
@@ -187,7 +180,7 @@ namespace osu.Game.Rulesets.Mania.Skinning.Argon
 
                         case 2: return colour_cyan;
 
-                        default: throw new ArgumentOutOfRangeException(nameof(columnIndex));
+                        default: throw new ArgumentOutOfRangeException();
                     }
 
                 case 4:
@@ -201,7 +194,7 @@ namespace osu.Game.Rulesets.Mania.Skinning.Argon
 
                         case 3: return colour_purple;
 
-                        default: throw new ArgumentOutOfRangeException(nameof(columnIndex));
+                        default: throw new ArgumentOutOfRangeException();
                     }
 
                 case 5:
@@ -217,7 +210,7 @@ namespace osu.Game.Rulesets.Mania.Skinning.Argon
 
                         case 4: return colour_cyan;
 
-                        default: throw new ArgumentOutOfRangeException(nameof(columnIndex));
+                        default: throw new ArgumentOutOfRangeException();
                     }
 
                 case 6:
@@ -235,7 +228,7 @@ namespace osu.Game.Rulesets.Mania.Skinning.Argon
 
                         case 5: return colour_pink;
 
-                        default: throw new ArgumentOutOfRangeException(nameof(columnIndex));
+                        default: throw new ArgumentOutOfRangeException();
                     }
 
                 case 7:
@@ -255,7 +248,7 @@ namespace osu.Game.Rulesets.Mania.Skinning.Argon
 
                         case 6: return colour_pink;
 
-                        default: throw new ArgumentOutOfRangeException(nameof(columnIndex));
+                        default: throw new ArgumentOutOfRangeException();
                     }
 
                 case 8:
@@ -277,7 +270,7 @@ namespace osu.Game.Rulesets.Mania.Skinning.Argon
 
                         case 7: return colour_purple;
 
-                        default: throw new ArgumentOutOfRangeException(nameof(columnIndex));
+                        default: throw new ArgumentOutOfRangeException();
                     }
 
                 case 9:
@@ -301,7 +294,7 @@ namespace osu.Game.Rulesets.Mania.Skinning.Argon
 
                         case 8: return colour_purple;
 
-                        default: throw new ArgumentOutOfRangeException(nameof(columnIndex));
+                        default: throw new ArgumentOutOfRangeException();
                     }
 
                 case 10:
@@ -327,7 +320,7 @@ namespace osu.Game.Rulesets.Mania.Skinning.Argon
 
                         case 9: return colour_purple;
 
-                        default: throw new ArgumentOutOfRangeException(nameof(columnIndex));
+                        default: throw new ArgumentOutOfRangeException();
                     }
             }
 
@@ -350,7 +343,7 @@ namespace osu.Game.Rulesets.Mania.Skinning.Argon
 
                 case 5: return colour_green;
 
-                default: throw new ArgumentOutOfRangeException(nameof(columnIndex));
+                default: throw new ArgumentOutOfRangeException();
             }
         }
     }

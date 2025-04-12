@@ -8,7 +8,7 @@ using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Testing;
 using osu.Game.Beatmaps;
-using osu.Game.Configuration;
+using osu.Game.Online.API;
 using osu.Game.Online.Chat;
 using osu.Game.Online.Rooms;
 using osu.Game.Rulesets.Mods;
@@ -23,23 +23,17 @@ namespace osu.Game.Tests.Visual.Online
         [Cached(typeof(IChannelPostTarget))]
         private PostTarget postTarget { get; set; }
 
-        private SessionStatics session = null!;
+        private DummyAPIAccess api => (DummyAPIAccess)API;
 
         public TestSceneNowPlayingCommand()
         {
             Add(postTarget = new PostTarget());
         }
 
-        [BackgroundDependencyLoader]
-        private void load()
-        {
-            Dependencies.Cache(session = new SessionStatics());
-        }
-
         [Test]
         public void TestGenericActivity()
         {
-            AddStep("Set activity", () => session.SetValue<UserActivity>(Static.UserOnlineActivity, new UserActivity.InLobby(new Room())));
+            AddStep("Set activity", () => api.Activity.Value = new UserActivity.InLobby(new Room()));
 
             AddStep("Run command", () => Add(new NowPlayingCommand(new Channel())));
 
@@ -49,7 +43,7 @@ namespace osu.Game.Tests.Visual.Online
         [Test]
         public void TestEditActivity()
         {
-            AddStep("Set activity", () => session.SetValue<UserActivity>(Static.UserOnlineActivity, new UserActivity.EditingBeatmap(new BeatmapInfo())));
+            AddStep("Set activity", () => api.Activity.Value = new UserActivity.EditingBeatmap(new BeatmapInfo()));
 
             AddStep("Run command", () => Add(new NowPlayingCommand(new Channel())));
 
@@ -59,7 +53,7 @@ namespace osu.Game.Tests.Visual.Online
         [Test]
         public void TestPlayActivity()
         {
-            AddStep("Set activity", () => session.SetValue<UserActivity>(Static.UserOnlineActivity, new UserActivity.InSoloGame(new BeatmapInfo(), new OsuRuleset().RulesetInfo)));
+            AddStep("Set activity", () => api.Activity.Value = new UserActivity.InSoloGame(new BeatmapInfo(), new OsuRuleset().RulesetInfo));
 
             AddStep("Run command", () => Add(new NowPlayingCommand(new Channel())));
 
@@ -70,7 +64,7 @@ namespace osu.Game.Tests.Visual.Online
         [TestCase(false)]
         public void TestLinkPresence(bool hasOnlineId)
         {
-            AddStep("Set activity", () => session.SetValue<UserActivity>(Static.UserOnlineActivity, new UserActivity.InLobby(new Room())));
+            AddStep("Set activity", () => api.Activity.Value = new UserActivity.InLobby(new Room()));
 
             AddStep("Set beatmap", () => Beatmap.Value = new DummyWorkingBeatmap(Audio, null)
             {
@@ -88,7 +82,7 @@ namespace osu.Game.Tests.Visual.Online
         [Test]
         public void TestModPresence()
         {
-            AddStep("Set activity", () => session.SetValue<UserActivity>(Static.UserOnlineActivity, new UserActivity.InSoloGame(new BeatmapInfo(), new OsuRuleset().RulesetInfo)));
+            AddStep("Set activity", () => api.Activity.Value = new UserActivity.InSoloGame(new BeatmapInfo(), new OsuRuleset().RulesetInfo));
 
             AddStep("Add Hidden mod", () => SelectedMods.Value = new[] { Ruleset.Value.CreateInstance().CreateMod<ModHidden>() });
 

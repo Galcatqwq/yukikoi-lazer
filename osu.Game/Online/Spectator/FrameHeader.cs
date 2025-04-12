@@ -3,10 +3,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using MessagePack;
 using Newtonsoft.Json;
-using osu.Game.Online.API;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Scoring;
 
@@ -59,17 +57,6 @@ namespace osu.Game.Online.Spectator
         public DateTimeOffset ReceivedTime { get; set; }
 
         /// <summary>
-        /// The set of mods currently active.
-        /// </summary>
-        /// <remarks>
-        /// Nullable for backwards compatibility with older clients
-        /// (these structures are also used server-side, and <see langword="null"/> will be used as marker that the data isn't there).
-        /// can be made non-nullable 20250407
-        /// </remarks>
-        [Key(7)]
-        public APIMod[]? Mods { get; set; }
-
-        /// <summary>
         /// Construct header summary information from a point-in-time reference to a score which is actively being played.
         /// </summary>
         /// <param name="score">The score for reference.</param>
@@ -82,7 +69,6 @@ namespace osu.Game.Online.Spectator
             MaxCombo = score.MaxCombo;
             // copy for safety
             Statistics = new Dictionary<HitResult, int>(score.Statistics);
-            Mods = score.APIMods.ToArray();
 
             ScoreProcessorStatistics = statistics;
         }

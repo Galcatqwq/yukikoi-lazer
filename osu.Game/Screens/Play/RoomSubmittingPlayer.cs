@@ -1,6 +1,8 @@
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
+#nullable disable
+
 using System.Diagnostics;
 using osu.Game.Extensions;
 using osu.Game.Online.API;
@@ -17,16 +19,16 @@ namespace osu.Game.Screens.Play
         protected readonly PlaylistItem PlaylistItem;
         protected readonly Room Room;
 
-        protected RoomSubmittingPlayer(Room room, PlaylistItem playlistItem, PlayerConfiguration? configuration = null)
+        protected RoomSubmittingPlayer(Room room, PlaylistItem playlistItem, PlayerConfiguration configuration = null)
             : base(configuration)
         {
             Room = room;
             PlaylistItem = playlistItem;
         }
 
-        protected override APIRequest<APIScoreToken>? CreateTokenRequest()
+        protected override APIRequest<APIScoreToken> CreateTokenRequest()
         {
-            if (Room.RoomID is not long roomId)
+            if (!(Room.RoomID.Value is long roomId))
                 return null;
 
             int beatmapId = Beatmap.Value.BeatmapInfo.OnlineID;
@@ -43,8 +45,8 @@ namespace osu.Game.Screens.Play
 
         protected override APIRequest<MultiplayerScore> CreateSubmissionRequest(Score score, long token)
         {
-            Debug.Assert(Room.RoomID != null);
-            return new SubmitRoomScoreRequest(score.ScoreInfo, token, Room.RoomID.Value, PlaylistItem.ID);
+            Debug.Assert(Room.RoomID.Value != null);
+            return new SubmitRoomScoreRequest(score.ScoreInfo, token, Room.RoomID.Value.Value, PlaylistItem.ID);
         }
     }
 }

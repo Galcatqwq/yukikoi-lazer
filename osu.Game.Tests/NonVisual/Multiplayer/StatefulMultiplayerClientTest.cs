@@ -6,9 +6,9 @@ using Humanizer;
 using NUnit.Framework;
 using osu.Framework.Extensions.ObjectExtensions;
 using osu.Framework.Testing;
-using osu.Game.Extensions;
 using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Online.Multiplayer;
+using osu.Game.Online.Rooms;
 using osu.Game.Tests.Visual.Multiplayer;
 
 namespace osu.Game.Tests.NonVisual.Multiplayer
@@ -16,13 +16,6 @@ namespace osu.Game.Tests.NonVisual.Multiplayer
     [HeadlessTest]
     public partial class StatefulMultiplayerClientTest : MultiplayerTestScene
     {
-        public override void SetUpSteps()
-        {
-            base.SetUpSteps();
-            AddStep("join room", () => JoinRoom(CreateDefaultRoom()));
-            WaitForJoined();
-        }
-
         [Test]
         public void TestUserAddedOnJoin()
         {
@@ -79,6 +72,10 @@ namespace osu.Game.Tests.NonVisual.Multiplayer
 
             AddStep("create room initially in gameplay", () =>
             {
+                var newRoom = new Room();
+                newRoom.CopyFrom(SelectedRoom.Value);
+
+                newRoom.RoomID.Value = null;
                 MultiplayerClient.RoomSetupAction = room =>
                 {
                     room.State = MultiplayerRoomState.Playing;
@@ -89,30 +86,11 @@ namespace osu.Game.Tests.NonVisual.Multiplayer
                     });
                 };
 
-                MultiplayerClient.JoinRoom(MultiplayerClient.ServerSideRooms.Single()).ConfigureAwait(false);
+                RoomManager.CreateRoom(newRoom);
             });
 
             AddUntilStep("wait for room join", () => RoomJoined);
             checkPlayingUserCount(1);
-        }
-
-        [Test]
-        public void TestJoinRoomWithManyUsers()
-        {
-            AddStep("leave room", () => MultiplayerClient.LeaveRoom());
-            AddUntilStep("wait for room part", () => !RoomJoined);
-
-            AddStep("create room with many users", () =>
-            {
-                MultiplayerClient.RoomSetupAction = room =>
-                {
-                    room.Users.AddRange(Enumerable.Range(PLAYER_1_ID, 100).Select(id => new MultiplayerRoomUser(id)));
-                };
-
-                MultiplayerClient.JoinRoom(MultiplayerClient.ServerSideRooms.Single()).ConfigureAwait(false);
-            });
-
-            AddUntilStep("wait for room join", () => RoomJoined);
         }
 
         private void checkPlayingUserCount(int expectedCount)
