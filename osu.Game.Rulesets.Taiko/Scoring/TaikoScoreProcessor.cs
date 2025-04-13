@@ -21,8 +21,7 @@ namespace osu.Game.Rulesets.Taiko.Scoring
 
         protected override double ComputeTotalScore(double comboProgress, double accuracyProgress, double bonusPortion)
         {
-            return 250000 * comboProgress
-                   + 750000 * Math.Pow(Accuracy.Value, 3.6) * accuracyProgress
+            return 10000000 * Math.Pow(Accuracy.Value, 3.6) * accuracyProgress
                    + bonusPortion;
         }
 
