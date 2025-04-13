@@ -18,11 +18,11 @@ namespace osu.Game.Rulesets.Osu.Mods
 {
     public class OsuModAutopilot : Mod, IUpdatableByPlayfield, IApplicableToDrawableRuleset<OsuHitObject>
     {
-        public override string Name => "Autopilot";
+        public override string Name => "自动移动";
         public override string Acronym => "AP";
         public override IconUsage? Icon => OsuIcon.ModAutopilot;
         public override ModType Type => ModType.Automation;
-        public override LocalisableString Description => @"Automatic cursor movement - just follow the rhythm.";
+        public override LocalisableString Description => @"跟着节奏点就好，光标会自动移动.";
         public override double ScoreMultiplier => 0;
 
         public override Type[] IncompatibleMods => new[]

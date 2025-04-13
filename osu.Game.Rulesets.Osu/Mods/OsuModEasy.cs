@@ -8,6 +8,6 @@ namespace osu.Game.Rulesets.Osu.Mods
 {
     public class OsuModEasy : ModEasyWithExtraLives
     {
-        public override LocalisableString Description => @"Larger circles, more forgiving HP drain, less accuracy required, and three lives!";
+        public override LocalisableString Description => @"更大的圆圈,更少的扣血,更低的准确率要求,并且拥有额外生命!";
     }
 }

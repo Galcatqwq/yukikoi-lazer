@@ -24,7 +24,7 @@ namespace osu.Game.Rulesets.Osu.Mods
 
         private const double default_follow_delay = 120;
 
-        [SettingSource("Follow delay", "Milliseconds until the flashlight reaches the cursor")]
+        [SettingSource("跟踪延迟", "从光标移动到电筒光抵达要花费多少毫秒")]
         public BindableNumber<double> FollowDelay { get; } = new BindableDouble(default_follow_delay)
         {
             MinValue = default_follow_delay,

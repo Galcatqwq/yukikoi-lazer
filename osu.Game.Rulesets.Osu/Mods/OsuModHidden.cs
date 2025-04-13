@@ -20,7 +20,7 @@ namespace osu.Game.Rulesets.Osu.Mods
 {
     public class OsuModHidden : ModHidden, IHidesApproachCircles
     {
-        [SettingSource("Only fade approach circles", "The main object body will not fade when enabled.")]
+        [SettingSource("只消隐缩圈", "启用后, 物件本体不会随时间消隐.")]
         public Bindable<bool> OnlyFadeApproachCircles { get; } = new BindableBool();
 
         public override LocalisableString Description => @"Play with no approach circles and fading circles/sliders.";

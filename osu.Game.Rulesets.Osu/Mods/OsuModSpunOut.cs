@@ -15,11 +15,11 @@ namespace osu.Game.Rulesets.Osu.Mods
 {
     public class OsuModSpunOut : Mod, IApplicableToDrawableHitObject
     {
-        public override string Name => "Spun Out";
+        public override string Name => "大陀螺";
         public override string Acronym => "SO";
         public override IconUsage? Icon => OsuIcon.ModSpunOut;
         public override ModType Type => ModType.Automation;
-        public override LocalisableString Description => @"Spinners will be automatically completed.";
+        public override LocalisableString Description => @"开转了是吧.";
 
         public override double ScoreMultiplier => 0.9;
 
