@@ -26,8 +26,6 @@ namespace osu.Game.Online.Metadata
         public override IBindableDictionary<int, UserPresence> UserStates => userStates;
         private readonly BindableDictionary<int, UserPresence> userStates = new BindableDictionary<int, UserPresence>();
 
-        public override IBindable<DailyChallengeInfo?> DailyChallengeInfo => dailyChallengeInfo;
-        private readonly Bindable<DailyChallengeInfo?> dailyChallengeInfo = new Bindable<DailyChallengeInfo?>();
 
         private readonly string endpoint;
 
@@ -61,7 +59,6 @@ namespace osu.Game.Online.Metadata
                     // https://github.com/dotnet/aspnetcore/issues/15198
                     connection.On<BeatmapUpdates>(nameof(IMetadataClient.BeatmapSetsUpdated), ((IMetadataClient)this).BeatmapSetsUpdated);
                     connection.On<int, UserPresence?>(nameof(IMetadataClient.UserPresenceUpdated), ((IMetadataClient)this).UserPresenceUpdated);
-                    connection.On<DailyChallengeInfo?>(nameof(IMetadataClient.DailyChallengeUpdated), ((IMetadataClient)this).DailyChallengeUpdated);
                     connection.On<MultiplayerRoomScoreSetEvent>(nameof(IMetadataClient.MultiplayerRoomScoreSet), ((IMetadataClient)this).MultiplayerRoomScoreSet);
                     connection.On(nameof(IStatefulUserHubClient.DisconnectRequested), ((IMetadataClient)this).DisconnectRequested);
                 };
@@ -106,7 +103,6 @@ namespace osu.Game.Online.Metadata
                 {
                     isWatchingUserPresence.Value = false;
                     userStates.Clear();
-                    dailyChallengeInfo.Value = null;
                 });
                 return;
             }
@@ -235,12 +231,6 @@ namespace osu.Game.Online.Metadata
             {
                 Schedule(() => isWatchingUserPresence.Value = false);
             }
-        }
-
-        public override Task DailyChallengeUpdated(DailyChallengeInfo? info)
-        {
-            Schedule(() => dailyChallengeInfo.Value = info);
-            return Task.CompletedTask;
         }
 
         public override async Task<MultiplayerPlaylistItemStats[]> BeginWatchingMultiplayerRoom(long id)

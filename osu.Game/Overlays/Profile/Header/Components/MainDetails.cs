@@ -72,12 +72,6 @@ namespace osu.Game.Overlays.Profile.Header.Components
                                 {
                                     Title = UsersStrings.ShowRankCountrySimple,
                                 },
-                                new DailyChallengeStatsDisplay
-                                {
-                                    Anchor = Anchor.TopRight,
-                                    Origin = Anchor.TopRight,
-                                    User = { BindTarget = User },
-                                }
                             }
                         }
                     },

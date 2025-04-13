@@ -8,7 +8,6 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Testing;
 using osu.Game.Online.API;
 using osu.Game.Online.API.Requests.Responses;
-using osu.Game.Online.Metadata;
 using osu.Game.Online.Rooms;
 using osu.Game.Overlays;
 using osu.Game.Screens.Menu;
@@ -57,11 +56,6 @@ namespace osu.Game.Tests.Visual.Menus
                         return false;
                 }
             });
-
-            AddStep("beatmap of the day active", () => Game.ChildrenOfType<IMetadataClient>().Single().DailyChallengeUpdated(new DailyChallengeInfo
-            {
-                RoomID = 1234,
-            }));
 
             AddStep("enter menu", () => InputManager.Key(Key.P));
             AddStep("enter submenu", () => InputManager.Key(Key.P));

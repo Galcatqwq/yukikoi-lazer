@@ -61,11 +61,6 @@ namespace osu.Game.Online.Metadata
 
         #region Daily Challenge
 
-        public abstract IBindable<DailyChallengeInfo?> DailyChallengeInfo { get; }
-
-        /// <inheritdoc/>
-        public abstract Task DailyChallengeUpdated(DailyChallengeInfo? info);
-
         #endregion
 
         #region Multiplayer room watching

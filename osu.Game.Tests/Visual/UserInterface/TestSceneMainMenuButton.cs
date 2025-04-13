@@ -71,10 +71,6 @@ namespace osu.Game.Tests.Visual.UserInterface
             NotificationOverlay notificationOverlay = null!;
             DependencyProvidingContainer buttonContainer = null!;
 
-            AddStep("beatmap of the day active", () => metadataClient.DailyChallengeUpdated(new DailyChallengeInfo
-            {
-                RoomID = 1234,
-            }));
             AddStep("add content", () =>
             {
                 notificationOverlay = new NotificationOverlay();
@@ -87,12 +83,6 @@ namespace osu.Game.Tests.Visual.UserInterface
                         Origin = Anchor.Centre,
                         AutoSizeAxes = Axes.Both,
                         CachedDependencies = [(typeof(INotificationOverlay), notificationOverlay)],
-                        Child = new DailyChallengeButton(@"button-default-select", new Color4(102, 68, 204, 255), _ => { }, 0, Key.D)
-                        {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            ButtonSystemState = ButtonSystemState.TopLevel,
-                        },
                     },
                 };
             });
@@ -103,14 +93,9 @@ namespace osu.Game.Tests.Visual.UserInterface
                 foreach (var notification in notificationOverlay.AllNotifications)
                     notification.Close(runFlingAnimation: false);
             });
-            AddStep("beatmap of the day not active", () => metadataClient.DailyChallengeUpdated(null));
             AddAssert("no notification posted", () => notificationOverlay.AllNotifications.Count(), () => Is.Zero);
 
             AddStep("hide button's parent", () => buttonContainer.Hide());
-            AddStep("beatmap of the day active", () => metadataClient.DailyChallengeUpdated(new DailyChallengeInfo
-            {
-                RoomID = 1234,
-            }));
             AddAssert("no notification posted", () => notificationOverlay.AllNotifications.Count(), () => Is.Zero);
         }
     }
