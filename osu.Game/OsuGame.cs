@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -63,7 +64,6 @@ using osu.Game.Screens;
 using osu.Game.Screens.Edit;
 using osu.Game.Screens.Footer;
 using osu.Game.Screens.Menu;
-using osu.Game.Screens.OnlinePlay.DailyChallenge;
 using osu.Game.Screens.OnlinePlay.Multiplayer;
 using osu.Game.Screens.Play;
 using osu.Game.Screens.Ranking;
@@ -762,7 +762,7 @@ namespace osu.Game
             // which may not match the score, and thus crash.
             IEnumerable<Type> validScreens =
                 Beatmap.Value.BeatmapInfo.Equals(databasedBeatmap) && Ruleset.Value.Equals(databasedScore.ScoreInfo.Ruleset)
-                    ? new[] { typeof(SongSelect), typeof(DailyChallenge) }
+                    ? new[] { typeof(SongSelect), typeof(INullable) }
                     : Array.Empty<Type>();
 
             PerformFromScreen(screen =>

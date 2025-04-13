@@ -21,7 +21,6 @@ using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Online.Metadata;
 using osu.Game.Online.Rooms;
 using osu.Game.Overlays;
-using osu.Game.Screens.OnlinePlay.DailyChallenge;
 using osuTK;
 using osuTK.Graphics;
 using osuTK.Input;
@@ -157,7 +156,6 @@ namespace osu.Game.Screens.Menu
                         && room.RoomID.Value != lastNotifiedDailyChallengeRoomId)
                     {
                         lastNotifiedDailyChallengeRoomId = room.RoomID.Value;
-                        notificationOverlay?.Post(new NewDailyChallengeNotification(room));
                     }
 
                     updateCountdown();

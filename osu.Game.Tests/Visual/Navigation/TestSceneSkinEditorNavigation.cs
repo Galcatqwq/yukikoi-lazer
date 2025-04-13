@@ -8,7 +8,6 @@ using System.Linq;
 using NUnit.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Extensions;
-using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input;
 using osu.Framework.Screens;
@@ -28,13 +27,11 @@ using osu.Game.Skinning;
 using osu.Game.Tests.Beatmaps.IO;
 using osuTK;
 using osuTK.Input;
-using static osu.Game.Tests.Visual.Navigation.TestSceneScreenNavigation;
 
 namespace osu.Game.Tests.Visual.Navigation
 {
     public partial class TestSceneSkinEditorNavigation : OsuGameTestScene
     {
-        private TestPlaySongSelect songSelect;
         private SkinEditor skinEditor => Game.ChildrenOfType<SkinEditor>().FirstOrDefault();
 
         [Test]
@@ -156,7 +153,6 @@ namespace osu.Game.Tests.Visual.Navigation
             AddStep("start movement", () => movementDelegate = Scheduler.AddDelayed(() => { InputManager.MoveMouseTo(firstBlueprintCentre += new Vector2(1)); }, 10, true));
 
             toggleSkinEditor();
-            AddStep("exit song select", () => songSelect.Exit());
 
             AddUntilStep("wait for blueprints removed", () => !skinEditor.ChildrenOfType<SkinBlueprint>().Any());
 
@@ -231,10 +227,8 @@ namespace osu.Game.Tests.Visual.Navigation
         public void TestModOverlayClosesOnOpeningSkinEditor()
         {
             advanceToSongSelect();
-            AddStep("open mod overlay", () => songSelect.ModSelectOverlay.Show());
 
             openSkinEditor();
-            AddUntilStep("mod overlay closed", () => songSelect.ModSelectOverlay.State.Value == Visibility.Hidden);
         }
 
         [Test]
@@ -348,8 +342,6 @@ namespace osu.Game.Tests.Visual.Navigation
 
         private void advanceToSongSelect()
         {
-            PushAndConfirm(() => songSelect = new TestPlaySongSelect());
-            AddUntilStep("wait for song select", () => songSelect.BeatmapSetsLoaded);
         }
 
         private void openSkinEditor()

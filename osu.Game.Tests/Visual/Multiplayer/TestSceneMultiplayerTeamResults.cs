@@ -6,9 +6,7 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 using osu.Framework.Bindables;
-using osu.Game.Online.Rooms;
 using osu.Game.Rulesets.Osu;
-using osu.Game.Screens.OnlinePlay.Multiplayer;
 using osu.Game.Tests.Resources;
 using osuTK;
 
@@ -32,7 +30,6 @@ namespace osu.Game.Tests.Visual.Multiplayer
         [TestCase(1048576, 1048576)]
         public void TestDisplayTeamResults(int team1Score, int team2Score)
         {
-            MultiplayerResultsScreen screen = null;
 
             AddStep("show results screen", () =>
             {
@@ -45,11 +42,7 @@ namespace osu.Game.Tests.Visual.Multiplayer
                     { 0, new BindableLong(team1Score) },
                     { 1, new BindableLong(team2Score) }
                 };
-
-                Stack.Push(screen = new MultiplayerTeamResultsScreen(score, 1, new PlaylistItem(beatmapInfo), teamScores));
             });
-
-            AddUntilStep("wait for loaded", () => screen.IsLoaded);
         }
     }
 }

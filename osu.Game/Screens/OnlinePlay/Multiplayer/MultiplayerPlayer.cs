@@ -17,7 +17,6 @@ using osu.Game.Online.Rooms;
 using osu.Game.Scoring;
 using osu.Game.Screens.Play;
 using osu.Game.Screens.Play.HUD;
-using osu.Game.Screens.Ranking;
 using osu.Game.Users;
 
 namespace osu.Game.Screens.OnlinePlay.Multiplayer
@@ -194,20 +193,7 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer
             await Task.WhenAny(resultsReady.Task, Task.Delay(TimeSpan.FromSeconds(60))).ConfigureAwait(false);
         }
 
-        protected override ResultsScreen CreateResults(ScoreInfo score)
-        {
-            Debug.Assert(Room.RoomID.Value != null);
 
-            return multiplayerLeaderboard.TeamScores.Count == 2
-                ? new MultiplayerTeamResultsScreen(score, Room.RoomID.Value.Value, PlaylistItem, multiplayerLeaderboard.TeamScores)
-                {
-                    ShowUserStatistics = true,
-                }
-                : new MultiplayerResultsScreen(score, Room.RoomID.Value.Value, PlaylistItem)
-                {
-                    ShowUserStatistics = true
-                };
-        }
 
         protected override void Dispose(bool isDisposing)
         {

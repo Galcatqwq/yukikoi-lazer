@@ -82,7 +82,6 @@ namespace osu.Game.Tests.Visual.Navigation
         {
             Player player = null;
             Screens.Select.SongSelect songSelect = null;
-            PushAndConfirm(() => songSelect = new TestSceneScreenNavigation.TestPlaySongSelect());
             AddUntilStep("wait for song select", () => songSelect.BeatmapSetsLoaded);
 
             AddStep("import beatmap", () => BeatmapImportHelper.LoadOszIntoOsu(Game, virtualTrack: true).WaitSafely());

@@ -11,7 +11,6 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Game.Graphics.UserInterfaceV2;
 using osu.Game.Online.Rooms;
-using osu.Game.Screens.OnlinePlay.Playlists;
 using osu.Game.Screens.Select;
 using osuTK;
 
@@ -43,10 +42,6 @@ namespace osu.Game.Screens.OnlinePlay.Components
                         {
                             RelativeSizeAxes = Axes.Both,
                             Padding = new MarginPadding { Bottom = 10 },
-                            Child = playlist = new PlaylistsRoomSettingsPlaylist
-                            {
-                                RelativeSizeAxes = Axes.Both
-                            }
                         }
                     },
                     new Drawable[]

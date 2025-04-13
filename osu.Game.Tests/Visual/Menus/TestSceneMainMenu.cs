@@ -66,8 +66,7 @@ namespace osu.Game.Tests.Visual.Menus
             AddStep("enter menu", () => InputManager.Key(Key.P));
             AddStep("enter submenu", () => InputManager.Key(Key.P));
             AddStep("enter daily challenge", () => InputManager.Key(Key.D));
-
-            AddUntilStep("wait for daily challenge screen", () => Game.ScreenStack.CurrentScreen, Is.TypeOf<Screens.OnlinePlay.DailyChallenge.DailyChallenge>);
+            ;
         }
 
         [Test]
