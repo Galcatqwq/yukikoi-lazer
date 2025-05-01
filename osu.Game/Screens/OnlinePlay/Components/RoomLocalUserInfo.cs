@@ -46,7 +46,6 @@ namespace osu.Game.Screens.OnlinePlay.Components
             base.LoadComplete();
 
             MaxAttempts.BindValueChanged(_ => updateAttempts());
-            UserScore.BindValueChanged(_ => updateAttempts(), true);
         }
 
         private void updateAttempts()
@@ -54,15 +53,6 @@ namespace osu.Game.Screens.OnlinePlay.Components
             if (MaxAttempts.Value != null)
             {
                 attemptDisplay.Text = $"Maximum attempts: {MaxAttempts.Value:N0}";
-
-                if (UserScore.Value != null)
-                {
-                    int remaining = MaxAttempts.Value.Value - UserScore.Value.PlaylistItemAttempts.Sum(a => a.Attempts);
-                    attemptDisplay.Text += $" ({remaining} remaining)";
-
-                    if (remaining == 0)
-                        attemptDisplay.Colour = colours.RedLight;
-                }
             }
             else
             {

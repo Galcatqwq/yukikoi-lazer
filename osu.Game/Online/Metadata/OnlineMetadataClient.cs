@@ -233,17 +233,6 @@ namespace osu.Game.Online.Metadata
             }
         }
 
-        public override async Task<MultiplayerPlaylistItemStats[]> BeginWatchingMultiplayerRoom(long id)
-        {
-            if (connector?.IsConnected.Value != true)
-                throw new OperationCanceledException();
-
-            Debug.Assert(connection != null);
-            var result = await connection.InvokeAsync<MultiplayerPlaylistItemStats[]>(nameof(IMetadataServer.BeginWatchingMultiplayerRoom), id).ConfigureAwait(false);
-            Logger.Log($@"{nameof(OnlineMetadataClient)} began watching multiplayer room with ID {id}", LoggingTarget.Network);
-            return result;
-        }
-
         public override async Task EndWatchingMultiplayerRoom(long id)
         {
             if (connector?.IsConnected.Value != true)

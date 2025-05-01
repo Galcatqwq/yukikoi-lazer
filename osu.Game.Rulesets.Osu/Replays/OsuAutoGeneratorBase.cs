@@ -42,7 +42,7 @@ namespace osu.Game.Rulesets.Osu.Replays
         /// <summary>
         /// The frame rate that replay be.
         /// </summary>
-        protected virtual int FrameRate => 400;
+        protected virtual int FrameRate => 1000;
 
         protected OsuAutoGeneratorBase(IBeatmap beatmap, IReadOnlyList<Mod> mods)
             : base(beatmap)

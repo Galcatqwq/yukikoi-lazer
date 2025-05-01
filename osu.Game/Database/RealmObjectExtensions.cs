@@ -230,12 +230,6 @@ namespace osu.Game.Database
         private static void copyChangesToRealm<T>(T source, T destination) where T : RealmObjectBase
             => write_mapper.Map(source, destination);
 
-        public static List<Live<T>> ToLiveUnmanaged<T>(this IEnumerable<T> realmList)
-            where T : RealmObject, IHasGuidPrimaryKey
-        {
-            return realmList.Select(l => new RealmLiveUnmanaged<T>(l)).Cast<Live<T>>().ToList();
-        }
-
         public static Live<T> ToLiveUnmanaged<T>(this T realmObject)
             where T : RealmObject, IHasGuidPrimaryKey
         {

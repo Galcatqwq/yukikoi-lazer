@@ -40,7 +40,7 @@ namespace osu.Game.Tests.Visual.Gameplay
 
         private bool showResults = true;
 
-        private event Func<HealthProcessor, JudgementResult, bool> currentFailConditions;
+        private event Func<HealthProcessor, JudgementResult, bool> CurrentFailConditions;
 
         [SetUpSteps]
         public override void SetUpSteps()
@@ -48,7 +48,7 @@ namespace osu.Game.Tests.Visual.Gameplay
             base.SetUpSteps();
             AddStep("enable storyboard", () => LocalConfig.SetValue(OsuSetting.ShowStoryboard, true));
             AddStep("set dim level to 0", () => LocalConfig.SetValue<double>(OsuSetting.DimLevel, 0));
-            AddStep("reset fail conditions", () => currentFailConditions = (_, _) => false);
+            AddStep("reset fail conditions", () => CurrentFailConditions = (_, _) => false);
             AddStep("set beatmap duration to 0s", () => currentBeatmapDuration = 0);
             AddStep("set storyboard duration to 8s", () => currentStoryboardDuration = 8000);
             AddStep("set ShowResults = true", () => showResults = true);
@@ -97,7 +97,7 @@ namespace osu.Game.Tests.Visual.Gameplay
         {
             CreateTest(() =>
             {
-                AddStep("fail on first judgement", () => currentFailConditions = (_, _) => true);
+                AddStep("fail on first judgement", () => CurrentFailConditions = (_, _) => true);
 
                 // Fail occurs at 164ms with the provided beatmap.
                 // Fail animation runs for 2.5s realtime but the gameplay time change is *variable* due to the frequency transform being applied, so we need a bit of lenience.
@@ -114,7 +114,7 @@ namespace osu.Game.Tests.Visual.Gameplay
         {
             CreateTest(() =>
             {
-                AddStep("fail on first judgement", () => currentFailConditions = (_, _) => true);
+                AddStep("fail on first judgement", () => CurrentFailConditions = (_, _) => true);
                 AddStep("set storyboard duration to 0s", () => currentStoryboardDuration = 0);
             });
             AddUntilStep("storyboard ends", () => Player.GameplayClockContainer.CurrentTime >= currentStoryboardDuration);
@@ -198,7 +198,7 @@ namespace osu.Game.Tests.Visual.Gameplay
 
         protected override Ruleset CreatePlayerRuleset() => new OsuRuleset();
 
-        protected override TestPlayer CreatePlayer(Ruleset ruleset) => new OutroPlayer(currentFailConditions, showResults);
+        protected override TestPlayer CreatePlayer(Ruleset ruleset) => new OutroPlayer(CurrentFailConditions, showResults);
 
         protected override IBeatmap CreateBeatmap(RulesetInfo ruleset)
         {
@@ -229,18 +229,18 @@ namespace osu.Game.Tests.Visual.Gameplay
 
             public bool IsScoreShown => !this.IsCurrentScreen() && this.GetChildScreen() is ResultsScreen;
 
-            private event Func<HealthProcessor, JudgementResult, bool> failConditions;
+            private event Func<HealthProcessor, JudgementResult, bool> FailConditions;
 
             public OutroPlayer(Func<HealthProcessor, JudgementResult, bool> failConditions, bool showResults = true)
                 : base(showResults: showResults)
             {
-                this.failConditions = failConditions;
+                this.FailConditions = failConditions;
             }
 
             protected override void LoadComplete()
             {
                 base.LoadComplete();
-                HealthProcessor.FailConditions += failConditions;
+                HealthProcessor.FailConditions += FailConditions;
             }
 
             protected override Task ImportScore(Score score)

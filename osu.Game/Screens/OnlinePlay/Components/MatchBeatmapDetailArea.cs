@@ -26,7 +26,6 @@ namespace osu.Game.Screens.OnlinePlay.Components
         protected BindableList<PlaylistItem> Playlist { get; private set; }
 
         private readonly GridContainer playlistArea;
-        private readonly DrawableRoomPlaylist playlist;
 
         public MatchBeatmapDetailArea()
         {
@@ -61,14 +60,6 @@ namespace osu.Game.Screens.OnlinePlay.Components
                     new Dimension(GridSizeMode.Absolute, 50),
                 }
             });
-        }
-
-        protected override void LoadComplete()
-        {
-            base.LoadComplete();
-
-            playlist.Items.BindTo(Playlist);
-            playlist.SelectedItem.BindTo(SelectedItem);
         }
 
         protected override void OnTabChanged(BeatmapDetailAreaTabItem tab, bool selectedMods)

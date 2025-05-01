@@ -108,10 +108,6 @@ namespace osu.Game.Online.Rooms
         public readonly Bindable<int?> MaxParticipants = new Bindable<int?>();
 
         [Cached]
-        [JsonProperty("current_user_score")]
-        public readonly Bindable<PlaylistAggregateScore> UserScore = new Bindable<PlaylistAggregateScore>();
-
-        [JsonProperty("has_password")]
         public readonly Bindable<bool> HasPassword = new Bindable<bool>();
 
         [Cached]
@@ -198,7 +194,6 @@ namespace osu.Game.Online.Rooms
             MaxParticipants.Value = other.MaxParticipants.Value;
             ParticipantCount.Value = other.ParticipantCount.Value;
             EndDate.Value = other.EndDate.Value;
-            UserScore.Value = other.UserScore.Value;
             QueueMode.Value = other.QueueMode.Value;
             AutoStartDuration.Value = other.AutoStartDuration.Value;
             DifficultyRange.Value = other.DifficultyRange.Value;

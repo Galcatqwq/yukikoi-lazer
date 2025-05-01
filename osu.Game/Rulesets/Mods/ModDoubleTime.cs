@@ -13,7 +13,7 @@ namespace osu.Game.Rulesets.Mods
 {
     public abstract class ModDoubleTime : ModRateAdjust
     {
-        public override string Name => "Double Time";
+        public override string Name => "超级加倍";
         public override string Acronym => "DT";
         public override IconUsage? Icon => OsuIcon.ModDoubleTime;
         public override ModType Type => ModType.DifficultyIncrease;
@@ -24,7 +24,7 @@ namespace osu.Game.Rulesets.Mods
         public override BindableNumber<double> SpeedChange { get; } = new BindableDouble(1.5)
         {
             MinValue = 1.01,
-            MaxValue = 2,
+            MaxValue = 4,
             Precision = 0.01,
         };
 

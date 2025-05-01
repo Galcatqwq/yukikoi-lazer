@@ -78,16 +78,6 @@ namespace osu.Game.Tests.Visual.Metadata
 
         public override Task BeatmapSetsUpdated(BeatmapUpdates updates) => Task.CompletedTask;
 
-        public override Task<MultiplayerPlaylistItemStats[]> BeginWatchingMultiplayerRoom(long id)
-        {
-            var stats = new MultiplayerPlaylistItemStats[MultiplayerPlaylistItemStats.TOTAL_SCORE_DISTRIBUTION_BINS];
-
-            for (int i = 0; i < stats.Length; i++)
-                stats[i] = new MultiplayerPlaylistItemStats { PlaylistItemID = i };
-
-            return Task.FromResult(stats);
-        }
-
         public override Task EndWatchingMultiplayerRoom(long id) => Task.CompletedTask;
     }
 }
