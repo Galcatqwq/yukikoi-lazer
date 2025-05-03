@@ -2,15 +2,15 @@
 [![GitHub Official Release](https://img.shields.io/github/release/ppy/osu.svg)](https://github.com/ppy/osu/releases/latest)
 [![Crowdin](https://d322cqt584bo4o.cloudfront.net/osu-web/localized.svg)](https://crowdin.com/project/osu-web)
 
+节奏只需*点击一下*即可！
 
+点击[此处](https://osu.ppy.sh)访问官方网站owo
 
 <p align="center">
 <img width="500" alt="osu! logo" src="assets/lazer.png">
 </p>
 
-节奏只需*点击一下*即可！
-
-点击[此处](https://osu.ppy.sh)访问官方网站owo: 
+好大一个osu(
 
 ### 下载源码
 
