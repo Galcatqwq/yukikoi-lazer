@@ -35,7 +35,7 @@ dotnet run --project osu.Desktop
 
 ### 利用 osu-resource 和 osu-framework 进行测试
 
-如果你打算将本存储库与 [osu-resources](https://github.com/ppy/osu-resources) or [osu-framework](https://github.com/ppy/osu-framework) 进行交叉测试,可以用下列命令:
+如果你打算将本存储库与 [osu-resources](https://github.com/ppy/osu-resources) or [osu-framework](https://github.com/ppy/osu-framework) 进行交叉测试,可以使用下面的脚本:
 
 Windows:
 
@@ -51,7 +51,7 @@ UseLocalFramework.sh
 UseLocalResources.sh
 ```
 
-注意,执行前先看看你本地有相关目录没:P :
+顺带一提,执行前先检查本地有 osu-resource 和 osu-framework 的目录没:P :
 
 ```
 |- osu            // 此存储库
