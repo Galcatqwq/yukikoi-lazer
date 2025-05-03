@@ -43,7 +43,7 @@ namespace osu.Game.Rulesets.Catch.Scoring
         {
             const int max_tiny_droplets_portion = 400000;
 
-            double comboPortion = 1000000 - max_tiny_droplets_portion + max_tiny_droplets_portion * (1 - fruitTinyScale);
+            double comboPortion = 10000000 - max_tiny_droplets_portion + max_tiny_droplets_portion * (1 - fruitTinyScale);
             double dropletsPortion = max_tiny_droplets_portion * fruitTinyScale;
             double dropletsHit = MaximumResultCounts.GetValueOrDefault(HitResult.SmallTickHit) == 0
                 ? 0

@@ -25,7 +25,6 @@ namespace osu.Game.Online.Metadata
         /// Delivers an update of the current "daily challenge" status.
         /// Null value means there is no "daily challenge" currently active.
         /// </summary>
-
         /// <summary>
         /// Delivers information that a multiplayer score was set in a watched room.
         /// To receive these, the client must call <see cref="IMetadataServer.BeginWatchingMultiplayerRoom"/> for a given room first.

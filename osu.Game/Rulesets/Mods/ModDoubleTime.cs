@@ -24,7 +24,7 @@ namespace osu.Game.Rulesets.Mods
         public override BindableNumber<double> SpeedChange { get; } = new BindableDouble(1.5)
         {
             MinValue = 1.01,
-            MaxValue = 4,
+            MaxValue = 40,
             Precision = 0.01,
         };
 

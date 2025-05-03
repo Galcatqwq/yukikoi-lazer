@@ -21,12 +21,12 @@ namespace osu.Game.Beatmaps
     public abstract class BeatmapConverter<T> : IBeatmapConverter
         where T : HitObject
     {
-        private event Action<HitObject, IEnumerable<HitObject>> objectConverted;
+        private event Action<HitObject, IEnumerable<HitObject>> ObjectConverted;
 
         event Action<HitObject, IEnumerable<HitObject>> IBeatmapConverter.ObjectConverted
         {
-            add => objectConverted += value;
-            remove => objectConverted -= value;
+            add => ObjectConverted += value;
+            remove => ObjectConverted -= value;
         }
 
         public IBeatmap Beatmap { get; }
@@ -91,10 +91,10 @@ namespace osu.Game.Beatmaps
 
                 var converted = ConvertHitObject(obj, beatmap, cancellationToken);
 
-                if (objectConverted != null)
+                if (ObjectConverted != null)
                 {
                     converted = converted.ToList();
-                    objectConverted.Invoke(obj, converted);
+                    ObjectConverted.Invoke(obj, converted);
                 }
 
                 foreach (var c in converted)
