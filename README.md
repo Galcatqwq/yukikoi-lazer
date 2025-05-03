@@ -17,7 +17,7 @@
 克隆存储库:
 
 ```shell
-git clone https://github.com/ppy/osu
+git clone https://github.com/Galcatqwq/osu-lazer
 cd osu
 ```
 
