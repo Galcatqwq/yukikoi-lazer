@@ -195,13 +195,7 @@ namespace osu.Game.Rulesets.Osu
                         new OsuModFlower()
                     };
 
-                case ModType.Fun:
-                    return new Mod[]
-                    {
-                        new OsuModNoScope(),
-                        new MultiMod(new OsuModMagnetised()),
-                        new OsuModDepth()
-                    };
+
 
                 case ModType.System:
                     return new Mod[]

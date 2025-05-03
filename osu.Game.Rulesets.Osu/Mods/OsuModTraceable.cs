@@ -23,7 +23,7 @@ namespace osu.Game.Rulesets.Osu.Mods
         public override double ScoreMultiplier => 1;
         public override bool Ranked => true;
 
-        public override Type[] IncompatibleMods => new[] { typeof(IHidesApproachCircles), typeof(OsuModDepth) };
+        public override Type[] IncompatibleMods => new[] { typeof(IHidesApproachCircles) };
 
         protected override bool IsFirstAdjustableObject(HitObject hitObject) => !(hitObject is Spinner || hitObject is SpinnerTick);
 
@@ -37,8 +37,6 @@ namespace osu.Game.Rulesets.Osu.Mods
         {
             if (!(drawable is DrawableOsuHitObject))
                 return;
-
-            //todo: expose and hide spinner background somehow
 
             switch (drawable)
             {

@@ -22,8 +22,6 @@ namespace osu.Game.Localisation
         /// <summary>
         /// "playlists"
         /// </summary>
-        public static LocalisableString Playlists => new TranslatableString(getKey(@"playlists"), @"playlists");
-
         /// <summary>
         /// "play"
         /// </summary>

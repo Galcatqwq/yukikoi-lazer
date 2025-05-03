@@ -140,13 +140,6 @@ namespace osu.Game.Rulesets.Catch
                         new CatchModRelax(),
                     };
 
-                case ModType.Fun:
-                    return new Mod[]
-                    {
-                        new CatchModFloatingFruits(),
-                        new CatchModNoScope(),
-                    };
-
                 case ModType.System:
                     return new Mod[]
                     {
