@@ -3,6 +3,7 @@
 
 #nullable disable
 
+using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 using osu.Framework.Graphics.Containers;
@@ -43,16 +44,16 @@ namespace osu.Game.Tests.Visual.Gameplay
         private class TestRuleset : Ruleset
         {
             public override IEnumerable<Mod> GetModsFor(ModType type) =>
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
 
             public override DrawableRuleset CreateDrawableRulesetWith(IBeatmap beatmap, IReadOnlyList<Mod> mods = null) =>
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
 
             public override IBeatmapConverter CreateBeatmapConverter(IBeatmap beatmap) =>
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
 
             public override DifficultyCalculator CreateDifficultyCalculator(IWorkingBeatmap beatmap) =>
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
 
             public override IEnumerable<KeyBinding> GetDefaultKeyBindings(int variant = 0)
             {

@@ -109,10 +109,7 @@ namespace osu.Game.Tests.Visual.Online
                 var btn = ourComment.ChildrenOfType<OsuSpriteText>().Single(x => x.Text == "delete");
                 InputManager.MoveMouseTo(btn);
             });
-            AddStep("Click delete button", () =>
-            {
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep("Click delete button", () => { InputManager.Click(MouseButton.Left); });
             AddStep("Setup request handling", () =>
             {
                 requestLock.Reset();
@@ -182,10 +179,7 @@ namespace osu.Game.Tests.Visual.Online
                 var btn = ourComment.ChildrenOfType<OsuSpriteText>().Single(x => x.Text == "delete");
                 InputManager.MoveMouseTo(btn);
             });
-            AddStep("Click delete button", () =>
-            {
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep("Click delete button", () => { InputManager.Click(MouseButton.Left); });
             AddStep("Setup request handling", () =>
             {
                 dummyAPI.HandleRequest = request =>
@@ -200,18 +194,9 @@ namespace osu.Game.Tests.Visual.Online
             });
             AddStep("Confirm dialog", () => InputManager.Key(Key.Number1));
             AddUntilStep("Deletion requested", () => delete);
-            AddUntilStep("Comment is available", () =>
-            {
-                return !this.ChildrenOfType<DrawableComment>().Single(x => x.Comment.Id == 1).WasDeleted;
-            });
-            AddAssert("Loading spinner hidden", () =>
-            {
-                return ourComment.ChildrenOfType<LoadingSpinner>().All(d => !d.IsPresent);
-            });
-            AddAssert("Actions available", () =>
-            {
-                return ourComment.ChildrenOfType<LinkFlowContainer>().Single(x => x.Name == @"Actions buttons").IsPresent;
-            });
+            AddUntilStep("Comment is available", () => { return !this.ChildrenOfType<DrawableComment>().Single(x => x.Comment.Id == 1).WasDeleted; });
+            AddAssert("Loading spinner hidden", () => { return ourComment.ChildrenOfType<LoadingSpinner>().All(d => !d.IsPresent); });
+            AddAssert("Actions available", () => { return ourComment.ChildrenOfType<LinkFlowContainer>().Single(x => x.Name == @"Actions buttons").IsPresent; });
         }
 
         [Test]
@@ -348,14 +333,8 @@ namespace osu.Game.Tests.Visual.Online
                 InputManager.MoveMouseTo(targetComment.ChildrenOfType<TextBox>().First());
                 InputManager.Click(MouseButton.Left);
             });
-            AddStep("Enter text", () =>
-            {
-                targetComment.ChildrenOfType<TextBox>().First().Current.Value = "random reply";
-            });
-            AddStep("Submit", () =>
-            {
-                InputManager.Key(Key.Enter);
-            });
+            AddStep("Enter text", () => { targetComment.ChildrenOfType<TextBox>().First().Current.Value = "random reply"; });
+            AddStep("Submit", () => { InputManager.Key(Key.Enter); });
             AddStep("Complete request", () => requestLock.Set());
             AddUntilStep("There is 1 reply", () =>
             {

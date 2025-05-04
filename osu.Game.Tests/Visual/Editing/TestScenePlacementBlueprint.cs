@@ -65,10 +65,7 @@ namespace osu.Game.Tests.Visual.Editing
             AddStep("place circle", () => InputManager.Click(MouseButton.Left));
 
             AddAssert("one circle added", () => EditorBeatmap.HitObjects, () => Has.One.Items);
-            AddStep("delete with right mouse", () =>
-            {
-                InputManager.Click(MouseButton.Right);
-            });
+            AddStep("delete with right mouse", () => { InputManager.Click(MouseButton.Right); });
             AddAssert("circle not removed", () => EditorBeatmap.HitObjects, () => Has.One.Items);
             AddAssert("circle selected", () => EditorBeatmap.SelectedHitObjects, () => Has.One.Items);
         }

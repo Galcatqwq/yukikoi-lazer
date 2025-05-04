@@ -84,13 +84,13 @@ namespace osu.Game.Screens.Utility
         {
             const float columns = 4;
 
-            float adjustedXPos = ((1f + nextLocation++ % columns) - columns / 2) / columns;
+            float adjustedXPos = (1f + nextLocation++ % columns - columns / 2) / columns;
 
             circles.Add(new SampleNote(time)
             {
                 RelativePositionAxes = Axes.Both,
                 X = 0.5f + SampleVisualSpacing.Value * (adjustedXPos * 0.5f),
-                Scale = new Vector2(0.4f + (0.8f * SampleVisualSpacing.Value), 1),
+                Scale = new Vector2(0.4f + 0.8f * SampleVisualSpacing.Value, 1),
                 Hit = hit,
             });
         }

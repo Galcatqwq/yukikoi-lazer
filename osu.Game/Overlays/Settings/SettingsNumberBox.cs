@@ -57,10 +57,7 @@ namespace osu.Game.Overlays.Settings
                     Current.TriggerChange();
                 });
 
-                Current.BindValueChanged(e =>
-                {
-                    numberBox.Current.Value = e.NewValue?.ToString();
-                });
+                Current.BindValueChanged(e => { numberBox.Current.Value = e.NewValue?.ToString(); });
             }
         }
 

@@ -4,12 +4,12 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
-using osu.Framework.Graphics;
+using osu.Game.Graphics;
 using osu.Game.Graphics.Containers;
 using osu.Game.Graphics.Sprites;
-using osu.Game.Graphics;
 
 namespace osu.Game.Tests.Visual.UserInterface
 {
@@ -67,7 +67,7 @@ namespace osu.Game.Tests.Visual.UserInterface
                     },
                     Child = new OsuSpriteText
                     {
-                        Text = (i == 0) ? "OsuSpriteText" : "SizePreservingSpriteText",
+                        Text = i == 0 ? "OsuSpriteText" : "SizePreservingSpriteText",
                         Font = OsuFont.GetFont(Typeface.Inter, weight: FontWeight.Bold, size: 40),
                         Origin = Anchor.TopCentre,
                         Anchor = Anchor.TopCentre,

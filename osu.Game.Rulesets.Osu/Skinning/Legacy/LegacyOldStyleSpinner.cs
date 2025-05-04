@@ -124,7 +124,7 @@ namespace osu.Game.Rulesets.Osu.Skinning.Legacy
 
             int barCount = (int)progress / 10;
 
-            if (spinnerBlink && RNG.NextBool(((int)progress % 10) / 10f))
+            if (spinnerBlink && RNG.NextBool((int)progress % 10 / 10f))
                 barCount++;
 
             return (float)barCount / total_bars * final_metre_height;

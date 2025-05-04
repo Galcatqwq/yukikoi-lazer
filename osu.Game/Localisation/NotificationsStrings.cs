@@ -56,12 +56,14 @@ Please try changing your audio device to a working setting.");
         /// <summary>
         /// "The score overlay is currently disabled. You can toggle this by pressing {0}."
         /// </summary>
-        public static LocalisableString ScoreOverlayDisabled(LocalisableString arg0) => new TranslatableString(getKey(@"score_overlay_disabled"), @"The score overlay is currently disabled. You can toggle this by pressing {0}.", arg0);
+        public static LocalisableString ScoreOverlayDisabled(LocalisableString arg0) =>
+            new TranslatableString(getKey(@"score_overlay_disabled"), @"The score overlay is currently disabled. You can toggle this by pressing {0}.", arg0);
 
         /// <summary>
         /// "The URL {0} has an unsupported or dangerous protocol and will not be opened."
         /// </summary>
-        public static LocalisableString UnsupportedOrDangerousUrlProtocol(string url) => new TranslatableString(getKey(@"unsupported_or_dangerous_url_protocol"), @"The URL {0} has an unsupported or dangerous protocol and will not be opened.", url);
+        public static LocalisableString UnsupportedOrDangerousUrlProtocol(string url) => new TranslatableString(getKey(@"unsupported_or_dangerous_url_protocol"),
+            @"The URL {0} has an unsupported or dangerous protocol and will not be opened.", url);
 
         /// <summary>
         /// "Subsequent messages have been logged. Click to view log files."
@@ -71,12 +73,14 @@ Please try changing your audio device to a working setting.");
         /// <summary>
         /// "Disabling tablet support due to error: &quot;{0}&quot;"
         /// </summary>
-        public static LocalisableString TabletSupportDisabledDueToError(string message) => new TranslatableString(getKey(@"tablet_support_disabled_due_to_error"), @"Disabling tablet support due to error: ""{0}""", message);
+        public static LocalisableString TabletSupportDisabledDueToError(string message) =>
+            new TranslatableString(getKey(@"tablet_support_disabled_due_to_error"), @"Disabling tablet support due to error: ""{0}""", message);
 
         /// <summary>
         /// "Encountered tablet warning, your tablet may not function correctly. Click here for a list of all tablets supported."
         /// </summary>
-        public static LocalisableString EncounteredTabletWarning => new TranslatableString(getKey(@"encountered_tablet_warning"), @"Encountered tablet warning, your tablet may not function correctly. Click here for a list of all tablets supported.");
+        public static LocalisableString EncounteredTabletWarning => new TranslatableString(getKey(@"encountered_tablet_warning"),
+            @"Encountered tablet warning, your tablet may not function correctly. Click here for a list of all tablets supported.");
 
         /// <summary>
         /// "This link type is not yet supported!"
@@ -86,17 +90,20 @@ Please try changing your audio device to a working setting.");
         /// <summary>
         /// "You received a private message from '{0}'. Click to read it!"
         /// </summary>
-        public static LocalisableString PrivateMessageReceived(string username) => new TranslatableString(getKey(@"private_message_received"), @"You received a private message from '{0}'. Click to read it!", username);
+        public static LocalisableString PrivateMessageReceived(string username) =>
+            new TranslatableString(getKey(@"private_message_received"), @"You received a private message from '{0}'. Click to read it!", username);
 
         /// <summary>
         /// "Your name was mentioned in chat by '{0}'. Click to find out why!"
         /// </summary>
-        public static LocalisableString YourNameWasMentioned(string username) => new TranslatableString(getKey(@"your_name_was_mentioned"), @"Your name was mentioned in chat by '{0}'. Click to find out why!", username);
+        public static LocalisableString YourNameWasMentioned(string username) =>
+            new TranslatableString(getKey(@"your_name_was_mentioned"), @"Your name was mentioned in chat by '{0}'. Click to find out why!", username);
 
         /// <summary>
         /// "{0} invited you to the multiplayer match &quot;{1}&quot;! Click to join."
         /// </summary>
-        public static LocalisableString InvitedYouToTheMultiplayer(string username, string roomName) => new TranslatableString(getKey(@"invited_you_to_the_multiplayer"), @"{0} invited you to the multiplayer match ""{1}""! Click to join.", username, roomName);
+        public static LocalisableString InvitedYouToTheMultiplayer(string username, string roomName) => new TranslatableString(getKey(@"invited_you_to_the_multiplayer"),
+            @"{0} invited you to the multiplayer match ""{1}""! Click to join.", username, roomName);
 
         /// <summary>
         /// "You do not have the beatmap for this replay."
@@ -111,7 +118,8 @@ Please try changing your audio device to a working setting.");
         /// <summary>
         /// "Your local copy of the beatmap for this replay appears to be different than expected. You may need to update or re-download it."
         /// </summary>
-        public static LocalisableString MismatchingBeatmapForReplay => new TranslatableString(getKey(@"mismatching_beatmap_for_replay"), @"Your local copy of the beatmap for this replay appears to be different than expected. You may need to update or re-download it.");
+        public static LocalisableString MismatchingBeatmapForReplay => new TranslatableString(getKey(@"mismatching_beatmap_for_replay"),
+            @"Your local copy of the beatmap for this replay appears to be different than expected. You may need to update or re-download it.");
 
         /// <summary>
         /// "You are now running osu! {0}.
@@ -128,7 +136,8 @@ Click to see what's new!", version);
         /// <summary>
         /// "This is not an official build of the game. Scores will not be submitted and other online systems may not work as intended."
         /// </summary>
-        public static LocalisableString NotOfficialBuild => new TranslatableString(getKey(@"not_official_build"), @"This is not an official build of the game. Scores will not be submitted and other online systems may not work as intended.");
+        public static LocalisableString NotOfficialBuild => new TranslatableString(getKey(@"not_official_build"),
+            @"This is not an official build of the game. Scores will not be submitted and other online systems may not work as intended.");
 
         /// <summary>
         /// "Downloading update..."

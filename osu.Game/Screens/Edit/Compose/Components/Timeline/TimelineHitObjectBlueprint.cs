@@ -149,10 +149,7 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
 
                 case IHasComboInformation comboInfo:
                     indexInCurrentComboBindable = comboInfo.IndexInCurrentComboBindable.GetBoundCopy();
-                    indexInCurrentComboBindable.BindValueChanged(_ =>
-                    {
-                        comboIndexText.Text = (indexInCurrentComboBindable.Value + 1).ToString();
-                    }, true);
+                    indexInCurrentComboBindable.BindValueChanged(_ => { comboIndexText.Text = (indexInCurrentComboBindable.Value + 1).ToString(); }, true);
 
                     comboIndexBindable = comboInfo.ComboIndexBindable.GetBoundCopy();
                     comboIndexWithOffsetsBindable = comboInfo.ComboIndexWithOffsetsBindable.GetBoundCopy();

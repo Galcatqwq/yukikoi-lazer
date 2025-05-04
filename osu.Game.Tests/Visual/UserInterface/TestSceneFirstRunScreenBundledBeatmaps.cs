@@ -15,10 +15,7 @@ namespace osu.Game.Tests.Visual.UserInterface
 
         public TestSceneFirstRunScreenBundledBeatmaps()
         {
-            AddStep("load screen", () =>
-            {
-                Child = new ScreenStack(new ScreenBeatmaps());
-            });
+            AddStep("load screen", () => { Child = new ScreenStack(new ScreenBeatmaps()); });
         }
     }
 }

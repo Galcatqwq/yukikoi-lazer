@@ -75,10 +75,7 @@ namespace osu.Game.Screens.Utility
                 },
             };
 
-            IsActiveArea.BindValueChanged(active =>
-            {
-                background.FadeColour(active.NewValue ? overlayColourProvider.Background4 : overlayColourProvider.Background6, 200, Easing.OutQuint);
-            }, true);
+            IsActiveArea.BindValueChanged(active => { background.FadeColour(active.NewValue ? overlayColourProvider.Background4 : overlayColourProvider.Background6, 200, Easing.OutQuint); }, true);
 
             VisualMode.BindValueChanged(mode =>
             {

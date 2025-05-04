@@ -70,10 +70,7 @@ namespace osu.Game.Rulesets.Edit
         {
             base.LoadComplete();
 
-            expandingContainer?.Expanded.BindValueChanged(containerExpanded =>
-            {
-                Expanded.Value = containerExpanded.NewValue;
-            }, true);
+            expandingContainer?.Expanded.BindValueChanged(containerExpanded => { Expanded.Value = containerExpanded.NewValue; }, true);
 
             Expanded.BindValueChanged(expanded =>
             {

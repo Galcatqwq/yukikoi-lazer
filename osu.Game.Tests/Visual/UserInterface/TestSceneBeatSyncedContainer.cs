@@ -34,10 +34,7 @@ namespace osu.Game.Tests.Visual.UserInterface
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("Set beatmap", () =>
-            {
-                Beatmap.Value = CreateWorkingBeatmap(new OsuRuleset().RulesetInfo);
-            });
+            AddStep("Set beatmap", () => { Beatmap.Value = CreateWorkingBeatmap(new OsuRuleset().RulesetInfo); });
 
             AddStep("Create beat sync container", () =>
             {
@@ -123,10 +120,7 @@ namespace osu.Game.Tests.Visual.UserInterface
         {
             double? lastBpm = null;
 
-            AddStep("bind event", () =>
-            {
-                beatContainer.NewBeat = (_, timingControlPoint, _, _) => lastBpm = timingControlPoint.BPM;
-            });
+            AddStep("bind event", () => { beatContainer.NewBeat = (_, timingControlPoint, _, _) => lastBpm = timingControlPoint.BPM; });
 
             AddUntilStep("wait for trigger", () => lastBpm != null);
             AddAssert("bpm is from beatmap", () => lastBpm != null && Precision.AlmostEquals(lastBpm.Value, 128));

@@ -106,10 +106,7 @@ namespace osu.Game.Rulesets.Osu.Skinning.Argon
             });
 
             spinsPerMinute = drawableSpinner.SpinsPerMinute.GetBoundCopy();
-            spinsPerMinute.BindValueChanged(spm =>
-            {
-                spmCounter.Text = Math.Truncate(spm.NewValue).ToString(@"#0");
-            }, true);
+            spinsPerMinute.BindValueChanged(spm => { spmCounter.Text = Math.Truncate(spm.NewValue).ToString(@"#0"); }, true);
         }
 
         protected override void Update()

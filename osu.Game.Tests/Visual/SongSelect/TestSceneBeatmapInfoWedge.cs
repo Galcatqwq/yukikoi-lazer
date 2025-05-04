@@ -221,7 +221,8 @@ namespace osu.Game.Tests.Visual.SongSelect
 
             AddUntilStep($"check map drain ({displayedLength})", () =>
             {
-                var label = infoWedge.DisplayedContent.ChildrenOfType<BeatmapInfoWedge.WedgeInfoText.InfoLabel>().Single(l => l.Statistic.Name == BeatmapsetsStrings.ShowStatsTotalLength(displayedLength));
+                var label = infoWedge.DisplayedContent.ChildrenOfType<BeatmapInfoWedge.WedgeInfoText.InfoLabel>()
+                                     .Single(l => l.Statistic.Name == BeatmapsetsStrings.ShowStatsTotalLength(displayedLength));
                 return label.Statistic.Content == displayedLength.ToString();
             });
         }

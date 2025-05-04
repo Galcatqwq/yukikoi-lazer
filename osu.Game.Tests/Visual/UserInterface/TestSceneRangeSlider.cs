@@ -67,10 +67,7 @@ namespace osu.Game.Tests.Visual.UserInterface
             AddAssert("Adjusted lower bound is correct", () => rangeSlider.LowerBound.Value, () => Is.EqualTo(50).Within(0.1f));
             AddAssert("Adjusted upper bound is correct", () => rangeSlider.UpperBound.Value, () => Is.EqualTo(75).Within(0.1f));
 
-            AddStep("Test nub pushing", () =>
-            {
-                customStart.Value = 90;
-            });
+            AddStep("Test nub pushing", () => { customStart.Value = 90; });
 
             AddAssert("Pushed lower bound is correct", () => rangeSlider.LowerBound.Value, () => Is.EqualTo(90).Within(0.1f));
             AddAssert("Pushed upper bound is correct", () => rangeSlider.UpperBound.Value, () => Is.EqualTo(100).Within(0.1f));

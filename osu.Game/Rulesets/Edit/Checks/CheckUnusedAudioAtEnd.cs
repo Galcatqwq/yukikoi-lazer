@@ -70,7 +70,8 @@ namespace osu.Game.Rulesets.Edit.Checks
         public class IssueTemplateUnusedAudioAtEndStoryboardOrVideo : IssueTemplate
         {
             public IssueTemplateUnusedAudioAtEndStoryboardOrVideo(ICheck check)
-                : base(check, IssueType.Warning, "Currently there is {0}% unused audio at the end. Ensure the outro significantly contributes to the song, or is being occupied by the video or storyboard, otherwise cut the outro.")
+                : base(check, IssueType.Warning,
+                    "Currently there is {0}% unused audio at the end. Ensure the outro significantly contributes to the song, or is being occupied by the video or storyboard, otherwise cut the outro.")
             {
             }
 

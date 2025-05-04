@@ -491,10 +491,7 @@ namespace osu.Game.Online.Chat
                         Logger.Log($"Attempting to join PM channel {channel}");
 
                         var createRequest = new CreateChannelRequest(channel);
-                        createRequest.Failure += e =>
-                        {
-                            Logger.Log($"Failed to join PM channel {channel} ({e.Message})");
-                        };
+                        createRequest.Failure += e => { Logger.Log($"Failed to join PM channel {channel} ({e.Message})"); };
                         createRequest.Success += resChannel =>
                         {
                             Logger.Log($"Joined PM channel {channel} ({resChannel.ChannelID})");

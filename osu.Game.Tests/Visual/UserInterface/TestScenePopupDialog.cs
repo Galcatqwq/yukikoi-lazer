@@ -2,6 +2,7 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using NUnit.Framework;
+using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Testing;
 using osu.Game.Overlays.Dialog;
@@ -21,7 +22,7 @@ namespace osu.Game.Tests.Visual.UserInterface
             {
                 Child = dialog = new TestPopupDialog
                 {
-                    State = { Value = Framework.Graphics.Containers.Visibility.Visible },
+                    State = { Value = Visibility.Visible },
                 };
             });
         }

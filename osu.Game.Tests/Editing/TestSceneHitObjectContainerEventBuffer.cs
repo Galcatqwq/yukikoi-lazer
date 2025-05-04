@@ -137,7 +137,7 @@ namespace osu.Game.Tests.Editing
 
         private void addCheckStep(bool began = false, bool finished = false, bool transferred = false)
             => AddAssert($"began = {began}, finished = {finished}, transferred = {transferred}",
-                () => (beganUsage == testObj) == began && (finishedUsage == testObj) == finished && (transferredUsage == testObj) == transferred);
+                () => beganUsage == testObj == began && finishedUsage == testObj == finished && transferredUsage == testObj == transferred);
 
         private partial class TestPlayfield : Playfield
         {

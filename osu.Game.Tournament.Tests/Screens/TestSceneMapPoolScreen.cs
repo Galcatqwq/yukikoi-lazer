@@ -40,9 +40,7 @@ namespace osu.Game.Tournament.Tests.Screens
         }
 
         [SetUp]
-        public void SetUp() => Schedule(() =>
-        {
-        });
+        public void SetUp() => Schedule(() => { });
 
         [Test]
         public void TestFewMaps()
@@ -55,10 +53,7 @@ namespace osu.Game.Tournament.Tests.Screens
                     addBeatmap();
             });
 
-            AddStep("reset match", () =>
-            {
-                Ladder.CurrentMatch.Value = new TournamentMatch();
-            });
+            AddStep("reset match", () => { Ladder.CurrentMatch.Value = new TournamentMatch(); });
 
             assertTwoWide();
         }

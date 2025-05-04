@@ -3,10 +3,11 @@
 
 using System;
 using System.IO;
+using File = TagLib.File;
 
 namespace osu.Game.IO.FileAbstraction
 {
-    public class StreamFileAbstraction : TagLib.File.IFileAbstraction
+    public class StreamFileAbstraction : File.IFileAbstraction
     {
         public StreamFileAbstraction(string filename, Stream fileStream)
         {

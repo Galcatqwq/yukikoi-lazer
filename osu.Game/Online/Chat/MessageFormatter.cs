@@ -16,13 +16,17 @@ namespace osu.Game.Online.Chat
         private static readonly Regex wiki_regex = new Regex(@"\[\[(?<text>[^\]]+)\]\]");
 
         // (test)[https://osu.ppy.sh/b/1234] -> test (https://osu.ppy.sh/b/1234)
-        private static readonly Regex old_link_regex = new Regex(@"\((?<text>(((?<=\\)[\(\)])|[^\(\)])*(((?<open>\()(((?<=\\)[\(\)])|[^\(\)])*)+((?<close-open>\))(((?<=\\)[\(\)])|[^\(\)])*)+)*(?(open)(?!)))\)\[(?<url>[a-z]+://[^ ]+)\]");
+        private static readonly Regex old_link_regex =
+            new Regex(@"\((?<text>(((?<=\\)[\(\)])|[^\(\)])*(((?<open>\()(((?<=\\)[\(\)])|[^\(\)])*)+((?<close-open>\))(((?<=\\)[\(\)])|[^\(\)])*)+)*(?(open)(?!)))\)\[(?<url>[a-z]+://[^ ]+)\]");
 
         // [https://osu.ppy.sh/b/1234 Beatmap [Hard] (poop)] -> Beatmap [hard] (poop) (https://osu.ppy.sh/b/1234)
-        private static readonly Regex new_link_regex = new Regex(@"\[(?<url>[a-z]+://[^ ]+) (?<text>(((?<=\\)[\[\]])|[^\[\]])*(((?<open>\[)(((?<=\\)[\[\]])|[^\[\]])*)+((?<close-open>\])(((?<=\\)[\[\]])|[^\[\]])*)+)*(?(open)(?!)))\]");
+        private static readonly Regex new_link_regex =
+            new Regex(@"\[(?<url>[a-z]+://[^ ]+) (?<text>(((?<=\\)[\[\]])|[^\[\]])*(((?<open>\[)(((?<=\\)[\[\]])|[^\[\]])*)+((?<close-open>\])(((?<=\\)[\[\]])|[^\[\]])*)+)*(?(open)(?!)))\]");
 
         // [test](https://osu.ppy.sh/b/1234) -> test (https://osu.ppy.sh/b/1234) aka correct markdown format
-        private static readonly Regex markdown_link_regex = new Regex(@"\[(?<text>(((?<=\\)[\[\]])|[^\[\]])*(((?<open>\[)(((?<=\\)[\[\]])|[^\[\]])*)+((?<close-open>\])(((?<=\\)[\[\]])|[^\[\]])*)+)*(?(open)(?!)))\]\((?<url>[a-z]+://[^ ]+)(\s+(?<title>""([^""]|(?<=\\)"")*""))?\)");
+        private static readonly Regex markdown_link_regex =
+            new Regex(
+                @"\[(?<text>(((?<=\\)[\[\]])|[^\[\]])*(((?<open>\[)(((?<=\\)[\[\]])|[^\[\]])*)+((?<close-open>\])(((?<=\\)[\[\]])|[^\[\]])*)+)*(?(open)(?!)))\]\((?<url>[a-z]+://[^ ]+)(\s+(?<title>""([^""]|(?<=\\)"")*""))?\)");
 
         // advanced, RFC-compatible regular expression that matches any possible URL, *but* allows certain invalid characters that are widely used
         // This is in the format (<required>, [optional]):
@@ -61,7 +65,8 @@ namespace osu.Game.Online.Chat
 
         private static string websiteRootUrl = "osu.ppy.sh";
 
-        private static void handleMatches(Regex regex, string display, string link, MessageFormatterResult result, int startIndex = 0, LinkAction? linkActionOverride = null, char[]? escapeChars = null)
+        private static void handleMatches(Regex regex, string display, string link, MessageFormatterResult result, int startIndex = 0, LinkAction? linkActionOverride = null,
+                                          char[]? escapeChars = null)
         {
             int captureOffset = 0;
 

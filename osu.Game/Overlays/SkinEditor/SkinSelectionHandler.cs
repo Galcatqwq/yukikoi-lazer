@@ -141,7 +141,7 @@ namespace osu.Game.Overlays.SkinEditor
             {
                 foreach (var blueprint in SelectedBlueprints)
                 {
-                    var blueprintItem = ((Drawable)blueprint.Item);
+                    var blueprintItem = (Drawable)blueprint.Item;
                     blueprintItem.Scale = Vector2.One;
 
                     if (blueprintItem.RelativeSizeAxes.HasFlag(Axes.X))

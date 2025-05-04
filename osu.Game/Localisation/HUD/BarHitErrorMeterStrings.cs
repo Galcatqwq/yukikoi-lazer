@@ -32,7 +32,8 @@ namespace osu.Game.Localisation.HUD
         /// <summary>
         /// "Whether an arrow should move beneath the bar showing the average error."
         /// </summary>
-        public static LocalisableString ShowMovingAverageDescription => new TranslatableString(getKey(@"show_moving_average_description"), "Whether an arrow should move beneath the bar showing the average error.");
+        public static LocalisableString ShowMovingAverageDescription =>
+            new TranslatableString(getKey(@"show_moving_average_description"), "Whether an arrow should move beneath the bar showing the average error.");
 
         /// <summary>
         /// "Centre marker style"

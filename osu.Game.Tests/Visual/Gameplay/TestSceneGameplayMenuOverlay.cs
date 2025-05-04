@@ -196,10 +196,7 @@ namespace osu.Game.Tests.Visual.Gameplay
         [Test]
         public void TestKeySelectionAfterMouseSelection()
         {
-            AddStep("Show overlay", () =>
-            {
-                pauseOverlay.Show();
-            });
+            AddStep("Show overlay", () => { pauseOverlay.Show(); });
 
             AddStep("Hover second button", () => InputManager.MoveMouseTo(getButton(1)));
             AddStep("Up arrow", () => InputManager.Key(Key.Up));

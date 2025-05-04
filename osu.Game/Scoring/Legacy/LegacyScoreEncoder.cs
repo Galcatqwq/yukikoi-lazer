@@ -81,7 +81,7 @@ namespace osu.Game.Scoring.Legacy
         {
             using (SerializationWriter sw = new SerializationWriter(stream, leaveOpen))
             {
-                sw.Write((byte)(score.ScoreInfo.Ruleset.OnlineID));
+                sw.Write((byte)score.ScoreInfo.Ruleset.OnlineID);
                 sw.Write(LATEST_VERSION);
                 sw.Write(score.ScoreInfo.BeatmapInfo!.MD5Hash);
                 sw.Write(score.ScoreInfo.User.Username);
@@ -92,7 +92,7 @@ namespace osu.Game.Scoring.Legacy
                 sw.Write((ushort)(score.ScoreInfo.GetCountGeki() ?? 0));
                 sw.Write((ushort)(score.ScoreInfo.GetCountKatu() ?? 0));
                 sw.Write((ushort)(score.ScoreInfo.GetCountMiss() ?? 0));
-                sw.Write((int)(score.ScoreInfo.TotalScore));
+                sw.Write((int)score.ScoreInfo.TotalScore);
                 sw.Write((ushort)score.ScoreInfo.MaxCombo);
                 sw.Write(score.ScoreInfo.MaxCombo == score.ScoreInfo.GetMaximumAchievableCombo());
                 sw.Write((int)score.ScoreInfo.Ruleset.CreateInstance().ConvertToLegacyMods(score.ScoreInfo.Mods));

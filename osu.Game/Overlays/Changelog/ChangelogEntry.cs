@@ -100,10 +100,7 @@ namespace osu.Game.Overlays.Changelog
             }
             else
             {
-                title.AddLink(entry.Title, () => linkHandler?.HandleLink(entry.Url), entry.Url, t =>
-                {
-                    t.Font = fontLarge;
-                });
+                title.AddLink(entry.Title, () => linkHandler?.HandleLink(entry.Url), entry.Url, t => { t.Font = fontLarge; });
             }
 
             if (!string.IsNullOrEmpty(entry.Repository) && !string.IsNullOrEmpty(entry.GithubUrl))

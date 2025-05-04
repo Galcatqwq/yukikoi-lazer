@@ -80,10 +80,7 @@ namespace osu.Game.Tests.Visual.Online
                     },
                 };
 
-                channelList.OnRequestSelect += channel =>
-                {
-                    selected.Value = channel;
-                };
+                channelList.OnRequestSelect += channel => { selected.Value = channel; };
 
                 channelList.OnRequestLeave += channel =>
                 {
@@ -93,10 +90,7 @@ namespace osu.Game.Tests.Visual.Online
                     channelList.RemoveChannel(channel);
                 };
 
-                selected.BindValueChanged(change =>
-                {
-                    selectedText.Text = $"Selected Channel: {change.NewValue?.Name ?? "[null]"}";
-                }, true);
+                selected.BindValueChanged(change => { selectedText.Text = $"Selected Channel: {change.NewValue?.Name ?? "[null]"}"; }, true);
             });
         }
 

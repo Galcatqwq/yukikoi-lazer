@@ -185,7 +185,7 @@ namespace osu.Game.Screens.Ranking.Expanded.Accuracy
                         new RankBadge(accuracyB, Interpolation.Lerp(accuracyB, accuracyA, 0.5), getRank(ScoreRank.B)),
                         // The S and A badges are moved down slightly to prevent collision with the SS badge.
                         new RankBadge(accuracyA, Interpolation.Lerp(accuracyA, accuracyS, 0.25), getRank(ScoreRank.A)),
-                        new RankBadge(accuracyS, Interpolation.Lerp(accuracyS, (accuracyX - VIRTUAL_SS_PERCENTAGE), 0.25), getRank(ScoreRank.S)),
+                        new RankBadge(accuracyS, Interpolation.Lerp(accuracyS, accuracyX - VIRTUAL_SS_PERCENTAGE, 0.25), getRank(ScoreRank.S)),
                         new RankBadge(accuracyX, accuracyX, getRank(ScoreRank.X)),
                     }
                 },

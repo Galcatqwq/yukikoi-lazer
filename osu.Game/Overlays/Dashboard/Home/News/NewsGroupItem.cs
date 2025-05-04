@@ -85,10 +85,7 @@ namespace osu.Game.Overlays.Dashboard.Home.News
                 AutoSizeAxes = Axes.Both;
                 Anchor = Anchor.TopRight;
                 Origin = Anchor.TopRight;
-                InternalChild = textFlow = new TextFlowContainer(t =>
-                {
-                    t.Colour = colourProvider.Light1;
-                })
+                InternalChild = textFlow = new TextFlowContainer(t => { t.Colour = colourProvider.Light1; })
                 {
                     Anchor = Anchor.TopRight,
                     Origin = Anchor.TopRight,
@@ -97,15 +94,9 @@ namespace osu.Game.Overlays.Dashboard.Home.News
                     Margin = new MarginPadding { Vertical = 5 }
                 };
 
-                textFlow.AddText(date.ToLocalisableString(@"dd"), t =>
-                {
-                    t.Font = OsuFont.GetFont(size: 14, weight: FontWeight.Bold);
-                });
+                textFlow.AddText(date.ToLocalisableString(@"dd"), t => { t.Font = OsuFont.GetFont(size: 14, weight: FontWeight.Bold); });
 
-                textFlow.AddText(date.ToLocalisableString(@" MMM"), t =>
-                {
-                    t.Font = OsuFont.GetFont(size: 14, weight: FontWeight.Regular);
-                });
+                textFlow.AddText(date.ToLocalisableString(@" MMM"), t => { t.Font = OsuFont.GetFont(size: 14, weight: FontWeight.Regular); });
             }
 
             ITooltip<DateTimeOffset> IHasCustomTooltip<DateTimeOffset>.GetCustomTooltip() => new DateTooltip();

@@ -66,10 +66,7 @@ namespace osu.Game.Rulesets.Osu.Skinning.Legacy
             onHitObjectApplied(drawableRepeat);
 
             accentColour = drawableRepeat.AccentColour.GetBoundCopy();
-            accentColour.BindValueChanged(c =>
-            {
-                arrow.Colour = textureIsDefaultSkin && c.NewValue.R + c.NewValue.G + c.NewValue.B > (600 / 255f) ? Color4.Black : Color4.White;
-            }, true);
+            accentColour.BindValueChanged(c => { arrow.Colour = textureIsDefaultSkin && c.NewValue.R + c.NewValue.G + c.NewValue.B > 600 / 255f ? Color4.Black : Color4.White; }, true);
         }
 
         private void onHitObjectApplied(DrawableHitObject drawableObject)

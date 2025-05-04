@@ -17,7 +17,8 @@ namespace osu.Game.Localisation
         /// <summary>
         /// "This will discard all local changes you have on that beatmap."
         /// </summary>
-        public static LocalisableString UpdateLocallyModifiedDescription => new TranslatableString(getKey(@"update_locally_modified_description"), @"This will discard all local changes you have on that beatmap.");
+        public static LocalisableString UpdateLocallyModifiedDescription =>
+            new TranslatableString(getKey(@"update_locally_modified_description"), @"This will discard all local changes you have on that beatmap.");
 
         private static string getKey(string key) => $@"{prefix}:{key}";
     }

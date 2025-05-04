@@ -25,7 +25,7 @@ namespace osu.Game.Rulesets.Osu.Tests
             for (int i = 0; i < 512; i++)
             {
                 if (i % 32 < 20)
-                    beatmap.HitObjects.Add(new Spinner { Position = new Vector2(256, 192), StartTime = i * 200, EndTime = (i * 200) + 100 });
+                    beatmap.HitObjects.Add(new Spinner { Position = new Vector2(256, 192), StartTime = i * 200, EndTime = i * 200 + 100 });
             }
 
             return beatmap;

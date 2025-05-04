@@ -33,7 +33,7 @@ namespace osu.Game.Rulesets.UI
 
         public static readonly Vector2 MOD_ICON_SIZE = new Vector2(80);
 
-        public virtual LocalisableString TooltipText => showTooltip ? ((mod as Mod)?.IconTooltip ?? mod.Name) : string.Empty;
+        public virtual LocalisableString TooltipText => showTooltip ? (mod as Mod)?.IconTooltip ?? mod.Name : string.Empty;
 
         private IMod mod;
 

@@ -238,7 +238,9 @@ namespace osu.Game.Screens.Spectate
         /// Fired when a user passes gameplay.
         /// </summary>
         /// <param name="userId">The user which passed.</param>
-        protected virtual void PassGameplay(int userId) { }
+        protected virtual void PassGameplay(int userId)
+        {
+        }
 
         /// <summary>
         /// Quits gameplay for a user.

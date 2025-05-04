@@ -45,10 +45,7 @@ namespace osu.Game.Overlays.Dashboard.Home.News
             IdleColour = colourProvider.Light1;
             HoverColour = Color4.White;
 
-            Action = () =>
-            {
-                overlay?.ShowFrontPage();
-            };
+            Action = () => { overlay?.ShowFrontPage(); };
         }
     }
 }

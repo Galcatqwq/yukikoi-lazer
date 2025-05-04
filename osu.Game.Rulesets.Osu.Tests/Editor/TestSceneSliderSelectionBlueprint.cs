@@ -165,10 +165,7 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
 
         private void moveHitObject()
         {
-            AddStep("move hitobject", () =>
-            {
-                slider.Position = new Vector2(300, 225);
-            });
+            AddStep("move hitobject", () => { slider.Position = new Vector2(300, 225); });
         }
 
         private void checkPositions()

@@ -135,10 +135,7 @@ namespace osu.Game.Rulesets.Catch.Tests
                 trails = catcherArea.ChildrenOfType<CatcherTrailDisplay>().Single();
             });
 
-            AddStep("start hyper-dash", () =>
-            {
-                catcher.SetHyperDashState(2);
-            });
+            AddStep("start hyper-dash", () => { catcher.SetHyperDashState(2); });
 
             AddUntilStep("catcher colour is correct", () => catcher.Colour == expectedCatcherColour);
 

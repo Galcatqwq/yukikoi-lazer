@@ -54,7 +54,8 @@ namespace osu.Game.Rulesets.Mania.Edit.Setup
                 {
                     Label = "Use special (N+1) style",
                     FixedLabelWidth = LABEL_WIDTH,
-                    Description = "Changes one column to act as a classic \"scratch\" or \"special\" column, which can be moved around by the user's skin (to the left/right/centre). Generally used in 6K (5+1) or 8K (7+1) configurations.",
+                    Description =
+                        "Changes one column to act as a classic \"scratch\" or \"special\" column, which can be moved around by the user's skin (to the left/right/centre). Generally used in 6K (5+1) or 8K (7+1) configurations.",
                     Current = { Value = Beatmap.BeatmapInfo.SpecialStyle }
                 },
                 healthDrainSlider = new LabelledSliderBar<float>

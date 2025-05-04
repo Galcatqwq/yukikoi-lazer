@@ -220,10 +220,7 @@ namespace osu.Game.Rulesets.Edit
 
             foreach (var item in toolboxCollection.Items)
             {
-                item.Selected.DisabledChanged += isDisabled =>
-                {
-                    item.TooltipText = isDisabled ? "Add at least one timing point first!" : ((HitObjectCompositionToolButton)item).TooltipText;
-                };
+                item.Selected.DisabledChanged += isDisabled => { item.TooltipText = isDisabled ? "Add at least one timing point first!" : ((HitObjectCompositionToolButton)item).TooltipText; };
             }
 
             TernaryStates = CreateTernaryButtons().ToArray();
@@ -583,7 +580,9 @@ namespace osu.Game.Rulesets.Edit
         /// </summary>
         /// <param name="timestamp">The time instant to seek to, in milliseconds.</param>
         /// <param name="objectDescription">The ruleset-specific description of objects to select at the given timestamp.</param>
-        public virtual void SelectFromTimestamp(double timestamp, string objectDescription) { }
+        public virtual void SelectFromTimestamp(double timestamp, string objectDescription)
+        {
+        }
 
         #region IPositionSnapProvider
 

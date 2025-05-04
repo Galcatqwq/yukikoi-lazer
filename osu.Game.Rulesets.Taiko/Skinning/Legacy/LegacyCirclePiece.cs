@@ -53,7 +53,7 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Legacy
                 const string normal_hit = "taikohit";
                 const string big_hit = "taikobig";
 
-                string prefix = ((drawableHitObject.HitObject as TaikoStrongableHitObject)?.IsStrong ?? false) ? big_hit : normal_hit;
+                string prefix = (drawableHitObject.HitObject as TaikoStrongableHitObject)?.IsStrong ?? false ? big_hit : normal_hit;
 
                 return skin.GetAnimation($"{prefix}{lookup}", animatable, false, maxSize: max_circle_sprite_size) ??
                        // fallback to regular size if "big" version doesn't exist.
@@ -82,10 +82,8 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Legacy
                 AddInternal(foregroundLayer);
             }
 
-            drawableHitObject.StartTimeBindable.BindValueChanged(startTime =>
-            {
-                timingPoint = beatSyncProvider?.ControlPoints?.TimingPointAt(startTime.NewValue) ?? TimingControlPoint.DEFAULT;
-            }, true);
+            drawableHitObject.StartTimeBindable.BindValueChanged(startTime => { timingPoint = beatSyncProvider?.ControlPoints?.TimingPointAt(startTime.NewValue) ?? TimingControlPoint.DEFAULT; },
+                true);
 
             if (gameplayState != null)
                 currentCombo.BindTo(gameplayState.ScoreProcessor.Combo);
@@ -128,7 +126,7 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Legacy
                 return;
             }
 
-            animationFrame = Math.Abs(Time.Current - timingPoint.Time) % ((timingPoint.BeatLength * 2) / multiplier) >= timingPoint.BeatLength / multiplier ? 0 : 1;
+            animationFrame = Math.Abs(Time.Current - timingPoint.Time) % (timingPoint.BeatLength * 2 / multiplier) >= timingPoint.BeatLength / multiplier ? 0 : 1;
             animation.GotoFrame(animationFrame);
         }
 

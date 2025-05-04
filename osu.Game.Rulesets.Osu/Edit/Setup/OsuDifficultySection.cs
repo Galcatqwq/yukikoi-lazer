@@ -113,7 +113,8 @@ namespace osu.Game.Rulesets.Osu.Edit.Setup
                 {
                     Label = "Stack Leniency",
                     FixedLabelWidth = LABEL_WIDTH,
-                    Description = "In play mode, osu! automatically stacks notes which occur at the same location. Increasing this value means it is more likely to snap notes of further time-distance.",
+                    Description =
+                        "In play mode, osu! automatically stacks notes which occur at the same location. Increasing this value means it is more likely to snap notes of further time-distance.",
                     Current = new BindableFloat(Beatmap.BeatmapInfo.StackLeniency)
                     {
                         Default = 0.7f,

@@ -80,10 +80,7 @@ namespace osu.Game.Online
 
             if (RuntimeFeature.IsDynamicCodeCompiled && preferMessagePack)
             {
-                builder.AddMessagePackProtocol(options =>
-                {
-                    options.SerializerOptions = SignalRUnionWorkaroundResolver.OPTIONS;
-                });
+                builder.AddMessagePackProtocol(options => { options.SerializerOptions = SignalRUnionWorkaroundResolver.OPTIONS; });
             }
             else
             {

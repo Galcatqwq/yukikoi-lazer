@@ -77,7 +77,7 @@ namespace osu.Game.Tests.Visual.Colours
                                     {
                                         Anchor = Anchor.TopCentre,
                                         Origin = Anchor.TopCentre,
-                                        Text = $"*{(1f * i + 0.1f * j):0.00}",
+                                        Text = $"*{1f * i + 0.1f * j:0.00}",
                                     }
                                 }
                             };

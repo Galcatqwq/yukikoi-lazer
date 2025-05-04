@@ -36,7 +36,7 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
             {
                 // Account for cases like dual-stage (assume that all stages have the same column count for now).
                 int columnInStage = Column.Index % stage.Columns;
-                int distanceToEdge = Math.Min(columnInStage, (stage.Columns - 1) - columnInStage);
+                int distanceToEdge = Math.Min(columnInStage, stage.Columns - 1 - columnInStage);
                 FallbackColumnIndex = distanceToEdge % 2 == 0 ? "1" : "2";
             }
         }

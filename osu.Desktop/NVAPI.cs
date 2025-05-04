@@ -90,7 +90,8 @@ namespace osu.Desktop
         private static readonly SetSettingDelegate SetSetting;
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate NvStatus EnumApplicationsDelegate(IntPtr sessionHandle, IntPtr profileHandle, uint startIndex, ref uint appCount, [In, Out, MarshalAs(UnmanagedType.LPArray)] NvApplication[] applications);
+        private delegate NvStatus EnumApplicationsDelegate(IntPtr sessionHandle, IntPtr profileHandle, uint startIndex, ref uint appCount,
+                                                           [In, Out, MarshalAs(UnmanagedType.LPArray)] NvApplication[] applications);
 
         private static readonly EnumApplicationsDelegate EnumApplications;
 
@@ -402,7 +403,9 @@ namespace osu.Desktop
                 if (createSession())
                     Available = true;
             }
-            catch { }
+            catch
+            {
+            }
         }
 
         private static void getDelegate<T>(uint id, out T newDelegate) where T : class
@@ -606,7 +609,9 @@ namespace osu.Desktop
         SYNC_NOT_ACTIVE = -194, // The requested action cannot be performed without Sync being enabled.
         SYNC_MASTER_NOT_FOUND = -195, // The requested action cannot be performed without Sync Master being enabled.
         INVALID_SYNC_TOPOLOGY = -196, // Invalid displays passed in the NV_GSYNC_DISPLAY pointer.
-        ECID_SIGN_ALGO_UNSUPPORTED = -197, // The specified signing algorithm is not supported. Either an incorrect value was entered or the current installed driver/hardware does not support the input value.
+
+        ECID_SIGN_ALGO_UNSUPPORTED =
+            -197, // The specified signing algorithm is not supported. Either an incorrect value was entered or the current installed driver/hardware does not support the input value.
         ECID_KEY_VERIFICATION_FAILED = -198, // The encrypted public key verification has failed.
         FIRMWARE_OUT_OF_DATE = -199, // The device's firmware is out of date.
         FIRMWARE_REVISION_NOT_SUPPORTED = -200, // The device's firmware is not supported.

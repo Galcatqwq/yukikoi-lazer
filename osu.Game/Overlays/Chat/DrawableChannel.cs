@@ -229,10 +229,7 @@ namespace osu.Game.Overlays.Chat
             d.Expire();
         }
 
-        private void messageRemoved(Message removed) => Schedule(() =>
-        {
-            chatLines.FirstOrDefault(c => c.Message == removed)?.FadeColour(Color4.Red, 400).FadeOut(600).Expire();
-        });
+        private void messageRemoved(Message removed) => Schedule(() => { chatLines.FirstOrDefault(c => c.Message == removed)?.FadeColour(Color4.Red, 400).FadeOut(600).Expire(); });
 
         private IEnumerable<ChatLine> chatLines => ChatLineFlow.Children.OfType<ChatLine>();
     }

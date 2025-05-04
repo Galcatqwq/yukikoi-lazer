@@ -73,10 +73,7 @@ namespace osu.Game.Tests.Visual
 
             if (AllowBackwardsSeeks)
             {
-                AddStep("allow backwards seeking", () =>
-                {
-                    Player.DrawableRuleset.AllowBackwardsSeeks = AllowBackwardsSeeks;
-                });
+                AddStep("allow backwards seeking", () => { Player.DrawableRuleset.AllowBackwardsSeeks = AllowBackwardsSeeks; });
             }
         }
 

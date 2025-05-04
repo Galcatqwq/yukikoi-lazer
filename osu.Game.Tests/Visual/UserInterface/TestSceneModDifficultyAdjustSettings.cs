@@ -293,7 +293,7 @@ namespace osu.Game.Tests.Visual.UserInterface
 
         private void checkBindableAtValue(string name, float? expectedValue)
         {
-            AddAssert($"Bindable {name} is {(expectedValue?.ToString() ?? "null")}", () =>
+            AddAssert($"Bindable {name} is {expectedValue?.ToString() ?? "null"}", () =>
                 this.ChildrenOfType<DifficultyAdjustSettingsControl>().First(c => c.LabelText == name)
                     .Current.Value == expectedValue);
         }

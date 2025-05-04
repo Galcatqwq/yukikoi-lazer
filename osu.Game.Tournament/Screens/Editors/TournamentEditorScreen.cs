@@ -10,9 +10,9 @@ using osu.Framework.Extensions.IEnumerableExtensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
-using osu.Game.Graphics.UserInterface;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Containers;
+using osu.Game.Graphics.UserInterface;
 using osu.Game.Overlays;
 using osu.Game.Tournament.Components;
 using osu.Game.Tournament.Screens.Editors.Components;
@@ -84,10 +84,7 @@ namespace osu.Game.Tournament.Screens.Editors
                             RelativeSizeAxes = Axes.X,
                             BackgroundColour = colours.DangerousButtonColour,
                             Text = "Clear all",
-                            Action = () =>
-                            {
-                                dialogOverlay?.Push(new TournamentClearAllDialog(() => Storage.Clear()));
-                            }
+                            Action = () => { dialogOverlay?.Push(new TournamentClearAllDialog(() => Storage.Clear())); }
                         },
                     }
                 }

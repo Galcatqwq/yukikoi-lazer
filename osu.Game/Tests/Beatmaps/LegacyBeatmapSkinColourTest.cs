@@ -37,14 +37,8 @@ namespace osu.Game.Tests.Beatmaps
 
         private void configureSettings(bool beatmapSkins, bool beatmapColours)
         {
-            AddStep($"{(beatmapSkins ? "enable" : "disable")} beatmap skins", () =>
-            {
-                BeatmapSkins.Value = beatmapSkins;
-            });
-            AddStep($"{(beatmapColours ? "enable" : "disable")} beatmap colours", () =>
-            {
-                BeatmapColours.Value = beatmapColours;
-            });
+            AddStep($"{(beatmapSkins ? "enable" : "disable")} beatmap skins", () => { BeatmapSkins.Value = beatmapSkins; });
+            AddStep($"{(beatmapColours ? "enable" : "disable")} beatmap colours", () => { BeatmapColours.Value = beatmapColours; });
         }
 
         protected virtual ExposedPlayer LoadBeatmap(bool userHasCustomColours)

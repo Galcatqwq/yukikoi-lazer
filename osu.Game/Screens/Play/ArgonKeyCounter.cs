@@ -102,7 +102,7 @@ namespace osu.Game.Screens.Play
 
             const float allowance = 6;
             float absRotation = Math.Abs(uprightContainer.Rotation) % 180;
-            bool isRotated = absRotation > allowance && absRotation < (180 - allowance);
+            bool isRotated = absRotation > allowance && absRotation < 180 - allowance;
 
             keyNameText.Anchor =
                 keyNameText.Origin = isRotated ? Anchor.TopCentre : Anchor.TopLeft;

@@ -49,10 +49,7 @@ namespace osu.Game.Tests.Visual.Online
         }
 
         [SetUp]
-        public void Setup() => Schedule(() =>
-        {
-            textContainer.Clear();
-        });
+        public void Setup() => Schedule(() => { textContainer.Clear(); });
 
         [TestCase("test!")]
         [TestCase("dev.ppy.sh!")]
@@ -74,7 +71,8 @@ namespace osu.Game.Tests.Visual.Online
         [TestCase("[https://dev.ppy.sh/home New link format with escaped [and \\[ paired] braces]", LinkAction.External)]
         [TestCase("[Markdown link format with escaped [and \\[ paired] braces](https://dev.ppy.sh/home)", LinkAction.External)]
         [TestCase("(Old link format with escaped (and \\( paired) parentheses)[https://dev.ppy.sh/home] and [[also a rogue wiki link]]", LinkAction.External, LinkAction.OpenWiki)]
-        [TestCase("#lobby or #osu would be blue (and work) in the ChatDisplay test (when a proper ChatOverlay is present).")] // note that there's 0 links here (they get removed if a channel is not found)
+        [TestCase(
+            "#lobby or #osu would be blue (and work) in the ChatDisplay test (when a proper ChatOverlay is present).")] // note that there's 0 links here (they get removed if a channel is not found)
         [TestCase("Join my multiplayer game osump://12346.", LinkAction.JoinMultiplayerMatch)]
         [TestCase("Join my multiplayer gameosump://12346.", LinkAction.JoinMultiplayerMatch)]
         [TestCase("Join my [multiplayer game](osump://12346).", LinkAction.JoinMultiplayerMatch)]

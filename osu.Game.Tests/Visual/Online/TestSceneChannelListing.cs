@@ -66,10 +66,7 @@ namespace osu.Game.Tests.Visual.Online
         [Test]
         public void TestAddRandomChannels()
         {
-            AddStep("Add Random Channels", () =>
-            {
-                listing.UpdateAvailableChannels(createRandomChannels(20));
-            });
+            AddStep("Add Random Channels", () => { listing.UpdateAvailableChannels(createRandomChannels(20)); });
         }
 
         private Channel createRandomChannel()

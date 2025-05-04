@@ -32,6 +32,7 @@ using osu.Game.Utils;
 using osuTK;
 using osuTK.Graphics;
 using osuTK.Input;
+using CommonStrings = osu.Game.Resources.Localisation.Web.CommonStrings;
 
 namespace osu.Game.Overlays.Mods
 {
@@ -262,7 +263,7 @@ namespace osu.Game.Overlays.Mods
             ActiveMods = { BindTarget = ActiveMods },
         };
 
-        private static readonly LocalisableString input_search_placeholder = Resources.Localisation.Web.CommonStrings.InputSearch;
+        private static readonly LocalisableString input_search_placeholder = CommonStrings.InputSearch;
         private static readonly LocalisableString tab_to_search_placeholder = ModSelectOverlayStrings.TabToSearch;
 
         protected override void Update()
@@ -495,7 +496,7 @@ namespace osu.Game.Overlays.Mods
                     // dip frequency and ramp volume of sample over the first 5 displayed columns
                     float progress = Math.Min(1, columnNumber / 5f);
 
-                    channel.Frequency.Value = 1.3 - (progress * 0.3) + RNG.NextDouble(0.1);
+                    channel.Frequency.Value = 1.3 - progress * 0.3 + RNG.NextDouble(0.1);
                     channel.Volume.Value = Math.Max(progress, 0.2);
                     channel.Balance.Value = -1 + balance * 2;
                     channel.Play();

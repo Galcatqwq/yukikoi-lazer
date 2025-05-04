@@ -144,7 +144,7 @@ namespace osu.Game.Tests.Visual.Multiplayer
             => AddUntilStep($"delete button {index} {(visible ? "is" : "is not")} visible", () =>
             {
                 var button = playlist.ChildrenOfType<DrawableRoomPlaylistItem.PlaylistRemoveButton>().ElementAtOrDefault(index);
-                return (button?.Alpha > 0) == visible;
+                return button?.Alpha > 0 == visible;
             });
     }
 }

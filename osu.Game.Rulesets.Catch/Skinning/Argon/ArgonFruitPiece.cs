@@ -110,11 +110,11 @@ namespace osu.Game.Rulesets.Catch.Skinning.Argon
             {
                 layers[i].Rotation +=
                     // Layers are ordered from largest to smallest. Smaller layers should rotate more.
-                    (i * 2)
-                    * (float)Clock.ElapsedFrameTime
-                    * 0.02f * rotationRandomness
-                    // Each layer should alternate rotation direction.
-                    * (i % 2 == 1 ? 1 : -1);
+                    i * 2
+                      * (float)Clock.ElapsedFrameTime
+                      * 0.02f * rotationRandomness
+                      // Each layer should alternate rotation direction.
+                      * (i % 2 == 1 ? 1 : -1);
             }
         }
     }

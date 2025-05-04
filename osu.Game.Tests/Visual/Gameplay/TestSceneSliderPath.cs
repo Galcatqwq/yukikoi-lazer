@@ -29,10 +29,7 @@ namespace osu.Game.Tests.Visual.Gameplay
         }
 
         [SetUp]
-        public void Setup() => Schedule(() =>
-        {
-            path = new SliderPath();
-        });
+        public void Setup() => Schedule(() => { path = new SliderPath(); });
 
         protected override void Update()
         {

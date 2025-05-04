@@ -35,7 +35,7 @@ namespace osu.Game.Graphics
         protected virtual bool CanSpawnParticles => true;
         protected virtual float ParticleGravity => 0;
 
-        private bool hasActiveParticles => Active.Value || (lastParticleAdded + maxDuration) > Time.Current;
+        private bool hasActiveParticles => Active.Value || lastParticleAdded + maxDuration > Time.Current;
 
         protected ParticleSpewer(Texture texture, int perSecond, double maxDuration)
         {

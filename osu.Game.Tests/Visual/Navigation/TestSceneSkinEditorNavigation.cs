@@ -13,8 +13,8 @@ using osu.Framework.Input;
 using osu.Framework.Screens;
 using osu.Framework.Testing;
 using osu.Framework.Threading;
-using osu.Game.Online.API;
 using osu.Game.Beatmaps;
+using osu.Game.Online.API;
 using osu.Game.Overlays.Settings;
 using osu.Game.Overlays.SkinEditor;
 using osu.Game.Rulesets.Mods;
@@ -135,10 +135,7 @@ namespace osu.Game.Tests.Visual.Navigation
 
             openSkinEditor();
 
-            AddStep("add skinnable component", () =>
-            {
-                skinEditor.ChildrenOfType<SkinComponentToolbox.ToolboxComponentButton>().First().TriggerClick();
-            });
+            AddStep("add skinnable component", () => { skinEditor.ChildrenOfType<SkinComponentToolbox.ToolboxComponentButton>().First().TriggerClick(); });
 
             AddUntilStep("newly added component selected", () => skinEditor.SelectedComponents.Count == 1);
 
@@ -240,10 +237,7 @@ namespace osu.Game.Tests.Visual.Navigation
             AddAssert("placeholder not present", () => skinEditor.ChildrenOfType<NonSkinnableScreenPlaceholder>().Count(), () => Is.Zero);
             AddAssert("editor sidebars not empty", () => skinEditor.ChildrenOfType<EditorSidebar>().SelectMany(sidebar => sidebar.Children).Count(), () => Is.GreaterThan(0));
 
-            AddStep("add skinnable component", () =>
-            {
-                skinEditor.ChildrenOfType<SkinComponentToolbox.ToolboxComponentButton>().First().TriggerClick();
-            });
+            AddStep("add skinnable component", () => { skinEditor.ChildrenOfType<SkinComponentToolbox.ToolboxComponentButton>().First().TriggerClick(); });
             AddUntilStep("newly added component selected", () => skinEditor.SelectedComponents, () => Has.Count.EqualTo(1));
 
             AddStep("exit to main menu", () => Game.ScreenStack.CurrentScreen.Exit());
@@ -324,10 +318,7 @@ namespace osu.Game.Tests.Visual.Navigation
 
             Guid editedSkinId = Guid.Empty;
             AddStep("save skin id", () => editedSkinId = Game.Dependencies.Get<SkinManager>().CurrentSkinInfo.Value.ID);
-            AddStep("add skinnable component", () =>
-            {
-                skinEditor.ChildrenOfType<SkinComponentToolbox.ToolboxComponentButton>().First().TriggerClick();
-            });
+            AddStep("add skinnable component", () => { skinEditor.ChildrenOfType<SkinComponentToolbox.ToolboxComponentButton>().First().TriggerClick(); });
 
             AddStep("change to triangles skin", () => Game.Dependencies.Get<SkinManager>().SetSkinFromConfiguration(SkinInfo.TRIANGLES_SKIN.ToString()));
             AddUntilStep("components loaded", () => Game.ChildrenOfType<SkinComponentsContainer>().All(c => c.ComponentsLoaded));

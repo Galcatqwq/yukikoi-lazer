@@ -39,7 +39,8 @@ namespace osu.Game.Input.Bindings
         /// <param name="variant">An optional variant for the specified <see cref="Ruleset"/>. Used when a ruleset has more than one possible keyboard layouts.</param>
         /// <param name="simultaneousMode">Specify how to deal with multiple matches of <see cref="KeyCombination"/>s and <typeparamref name="T"/>s.</param>
         /// <param name="matchingMode">Specify how to deal with exact <see cref="KeyCombination"/> matches.</param>
-        public DatabasedKeyBindingContainer(RulesetInfo ruleset = null, int? variant = null, SimultaneousBindingMode simultaneousMode = SimultaneousBindingMode.None, KeyCombinationMatchingMode matchingMode = KeyCombinationMatchingMode.Any)
+        public DatabasedKeyBindingContainer(RulesetInfo ruleset = null, int? variant = null, SimultaneousBindingMode simultaneousMode = SimultaneousBindingMode.None,
+                                            KeyCombinationMatchingMode matchingMode = KeyCombinationMatchingMode.Any)
             : base(simultaneousMode, matchingMode)
         {
             this.ruleset = ruleset;

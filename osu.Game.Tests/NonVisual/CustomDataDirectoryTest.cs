@@ -385,7 +385,9 @@ namespace osu.Game.Tests.NonVisual
                     // this handles cleanup of the initial location.
                     InitialStorage.DeleteDirectory(string.Empty);
                 }
-                catch { }
+                catch
+                {
+                }
             }
         }
     }

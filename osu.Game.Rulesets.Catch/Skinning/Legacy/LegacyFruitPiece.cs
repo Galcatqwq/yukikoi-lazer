@@ -15,10 +15,7 @@ namespace osu.Game.Rulesets.Catch.Skinning.Legacy
         {
             base.LoadComplete();
 
-            IndexInBeatmap.BindValueChanged(index =>
-            {
-                setTexture(Fruit.GetVisualRepresentation(index.NewValue));
-            }, true);
+            IndexInBeatmap.BindValueChanged(index => { setTexture(Fruit.GetVisualRepresentation(index.NewValue)); }, true);
         }
 
         private void setTexture(FruitVisualRepresentation visualRepresentation)

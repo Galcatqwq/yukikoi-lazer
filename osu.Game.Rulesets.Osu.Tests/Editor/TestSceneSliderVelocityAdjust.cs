@@ -33,7 +33,8 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
 
         private DifficultyPointPiece difficultyPointPiece => blueprint.ChildrenOfType<DifficultyPointPiece>().First();
 
-        private IndeterminateSliderWithTextBoxInput<double> velocityTextBox => Game.ChildrenOfType<DifficultyPointPiece.DifficultyEditPopover>().First().ChildrenOfType<IndeterminateSliderWithTextBoxInput<double>>().First();
+        private IndeterminateSliderWithTextBoxInput<double> velocityTextBox =>
+            Game.ChildrenOfType<DifficultyPointPiece.DifficultyEditPopover>().First().ChildrenOfType<IndeterminateSliderWithTextBoxInput<double>>().First();
 
         protected override IBeatmap CreateBeatmap(RulesetInfo ruleset) => new TestBeatmap(ruleset, false);
 

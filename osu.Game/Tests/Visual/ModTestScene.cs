@@ -22,10 +22,7 @@ namespace osu.Game.Tests.Visual
 
         protected ModTestData CurrentTestData { get; private set; }
 
-        protected void CreateModTest(ModTestData testData) => CreateTest(() =>
-        {
-            AddStep("set test data", () => CurrentTestData = testData);
-        });
+        protected void CreateModTest(ModTestData testData) => CreateTest(() => { AddStep("set test data", () => CurrentTestData = testData); });
 
         public override void TearDownSteps()
         {

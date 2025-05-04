@@ -72,7 +72,9 @@ namespace osu.Game.Users
             }
 
             [SerializationConstructor]
-            protected InGame() { }
+            protected InGame()
+            {
+            }
 
             public override string GetStatus(bool hideIdentifiableInformation = false) => RulesetPlayingVerb;
             public override string GetDetails(bool hideIdentifiableInformation = false) => BeatmapDisplayTitle;
@@ -87,7 +89,9 @@ namespace osu.Game.Users
             }
 
             [SerializationConstructor]
-            public InSoloGame() { }
+            public InSoloGame()
+            {
+            }
         }
 
         [MessagePackObject]
@@ -115,7 +119,9 @@ namespace osu.Game.Users
             }
 
             [SerializationConstructor]
-            public InPlaylistGame() { }
+            public InPlaylistGame()
+            {
+            }
         }
 
         [MessagePackObject]
@@ -127,7 +133,9 @@ namespace osu.Game.Users
             }
 
             [SerializationConstructor]
-            public TestingBeatmap() { }
+            public TestingBeatmap()
+            {
+            }
 
             public override string GetStatus(bool hideIdentifiableInformation = false) => "Testing a beatmap";
         }
@@ -148,7 +156,9 @@ namespace osu.Game.Users
             }
 
             [SerializationConstructor]
-            public EditingBeatmap() { }
+            public EditingBeatmap()
+            {
+            }
 
             public override string GetStatus(bool hideIdentifiableInformation = false) => @"Editing a beatmap";
 
@@ -167,7 +177,9 @@ namespace osu.Game.Users
             }
 
             [SerializationConstructor]
-            public ModdingBeatmap() { }
+            public ModdingBeatmap()
+            {
+            }
 
             public override string GetStatus(bool hideIdentifiableInformation = false) => "Modding a beatmap";
             public override Color4 GetAppropriateColour(OsuColour colours) => colours.PurpleDark;
@@ -197,7 +209,9 @@ namespace osu.Game.Users
             }
 
             [SerializationConstructor]
-            public WatchingReplay() { }
+            public WatchingReplay()
+            {
+            }
 
             public override string GetStatus(bool hideIdentifiableInformation = false) => hideIdentifiableInformation ? @"Watching a replay" : $@"Watching {PlayerName}'s replay";
             public override string? GetDetails(bool hideIdentifiableInformation = false) => BeatmapDisplayTitle;
@@ -212,7 +226,9 @@ namespace osu.Game.Users
             }
 
             [SerializationConstructor]
-            public SpectatingUser() { }
+            public SpectatingUser()
+            {
+            }
 
             public override string GetStatus(bool hideIdentifiableInformation = false) => hideIdentifiableInformation ? @"Spectating a user" : $@"Spectating {PlayerName}";
         }
@@ -226,7 +242,9 @@ namespace osu.Game.Users
             }
 
             [SerializationConstructor]
-            public SpectatingMultiplayerGame() { }
+            public SpectatingMultiplayerGame()
+            {
+            }
 
             public override string GetStatus(bool hideIdentifiableInformation = false) => $"Watching others {base.GetStatus(hideIdentifiableInformation).ToLowerInvariant()}";
         }
@@ -253,7 +271,9 @@ namespace osu.Game.Users
             }
 
             [SerializationConstructor]
-            public InLobby() { }
+            public InLobby()
+            {
+            }
 
             public override string GetStatus(bool hideIdentifiableInformation = false) => @"In a lobby";
 

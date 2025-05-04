@@ -766,10 +766,7 @@ namespace osu.Game.Tests.Visual.Multiplayer
                 multiplayerClient.ChangeUserState(1234, MultiplayerUserState.Ready);
             });
 
-            AddStep("start match", () =>
-            {
-                multiplayerClient.StartMatch();
-            });
+            AddStep("start match", () => { multiplayerClient.StartMatch(); });
 
             AddUntilStep("wait for player", () => multiplayerComponents.CurrentScreen is Player);
 

@@ -19,10 +19,7 @@ namespace osu.Game.Tests.Gameplay
         private HitObjectContainer container;
 
         [SetUp]
-        public void Setup() => Schedule(() =>
-        {
-            Child = container = new HitObjectContainer();
-        });
+        public void Setup() => Schedule(() => { Child = container = new HitObjectContainer(); });
 
         [Test]
         public void TestLateHitObjectIsAddedEarlierInList()

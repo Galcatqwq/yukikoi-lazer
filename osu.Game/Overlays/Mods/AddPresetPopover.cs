@@ -91,10 +91,7 @@ namespace osu.Game.Overlays.Mods
 
             ScheduleAfterChildren(() => GetContainingFocusManager()!.ChangeFocus(nameTextBox));
 
-            nameTextBox.Current.BindValueChanged(s =>
-            {
-                createButton.Enabled.Value = !string.IsNullOrWhiteSpace(s.NewValue);
-            }, true);
+            nameTextBox.Current.BindValueChanged(s => { createButton.Enabled.Value = !string.IsNullOrWhiteSpace(s.NewValue); }, true);
         }
 
         public override bool OnPressed(KeyBindingPressEvent<GlobalAction> e)

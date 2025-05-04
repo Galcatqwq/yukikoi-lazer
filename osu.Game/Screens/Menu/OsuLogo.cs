@@ -332,10 +332,7 @@ namespace osu.Game.Screens.Menu
                     .FadeTo(visualizer_default_alpha, beatLength);
             }
 
-            this.Delay(early_activation).Schedule(() =>
-            {
-                triangles.Velocity += amplitudeAdjust * (effectPoint.KiaiMode ? 6 : 3);
-            });
+            this.Delay(early_activation).Schedule(() => { triangles.Velocity += amplitudeAdjust * (effectPoint.KiaiMode ? 6 : 3); });
         }
 
         public void PlayIntro()

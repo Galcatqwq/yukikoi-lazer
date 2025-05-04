@@ -2,6 +2,7 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 // ReSharper disable IdentifierTypo
@@ -52,7 +53,7 @@ namespace osu.Desktop.Windows
             if (keyHook != IntPtr.Zero || isBlocked)
                 return;
 
-            keyHook = setWindowsHookEx(wh_keyboard_ll, (keyboardHookDelegate = lowLevelKeyboardProc), Marshal.GetHINSTANCE(System.Reflection.Assembly.GetExecutingAssembly().GetModules()[0]), 0);
+            keyHook = setWindowsHookEx(wh_keyboard_ll, keyboardHookDelegate = lowLevelKeyboardProc, Marshal.GetHINSTANCE(Assembly.GetExecutingAssembly().GetModules()[0]), 0);
 
             isBlocked = true;
         }

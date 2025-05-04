@@ -73,46 +73,31 @@ _**italic with underscore, bold with asterisk**_";
         [Test]
         public void TestLink()
         {
-            AddStep("Add Link", () =>
-            {
-                markdownContainer.Text = "[Welcome to osu!](https://osu.ppy.sh)";
-            });
+            AddStep("Add Link", () => { markdownContainer.Text = "[Welcome to osu!](https://osu.ppy.sh)"; });
         }
 
         [Test]
         public void TestLinkWithInlineText()
         {
-            AddStep("Add Link with inline text", () =>
-            {
-                markdownContainer.Text = "Hey, [welcome to osu!](https://osu.ppy.sh) Please enjoy the game.";
-            });
+            AddStep("Add Link with inline text", () => { markdownContainer.Text = "Hey, [welcome to osu!](https://osu.ppy.sh) Please enjoy the game."; });
         }
 
         [Test]
         public void TestLinkWithTitle()
         {
-            AddStep("Add Link with title", () =>
-            {
-                markdownContainer.Text = "[wikipedia](https://www.wikipedia.org \"The Free Encyclopedia\")";
-            });
+            AddStep("Add Link with title", () => { markdownContainer.Text = "[wikipedia](https://www.wikipedia.org \"The Free Encyclopedia\")"; });
         }
 
         [Test]
         public void TestAutoLink()
         {
-            AddStep("Add autolink", () =>
-            {
-                markdownContainer.Text = "<https://discord.gg/ppy>";
-            });
+            AddStep("Add autolink", () => { markdownContainer.Text = "<https://discord.gg/ppy>"; });
         }
 
         [Test]
         public void TestInlineCode()
         {
-            AddStep("Add inline code", () =>
-            {
-                markdownContainer.Text = "This is `inline code` text";
-            });
+            AddStep("Add inline code", () => { markdownContainer.Text = "This is `inline code` text"; });
         }
 
         [Test]

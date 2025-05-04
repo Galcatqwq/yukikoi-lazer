@@ -67,10 +67,7 @@ namespace osu.Game.Rulesets.Osu.Skinning.Argon
         {
             base.LoadComplete();
 
-            accentColour.BindValueChanged(colour =>
-            {
-                fill.Colour = ColourInfo.GradientVertical(colour.NewValue, colour.NewValue.Darken(0.5f));
-            }, true);
+            accentColour.BindValueChanged(colour => { fill.Colour = ColourInfo.GradientVertical(colour.NewValue, colour.NewValue.Darken(0.5f)); }, true);
 
             if (parentObject != null)
             {

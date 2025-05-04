@@ -34,14 +34,12 @@ namespace osu.Game.Tests.Rulesets.Mods
         [TestCase(start_time + duration * ModTimeRamp.FINAL_RATE_PROGRESS, 1.5)]
         [TestCase(start_time + duration, 1.5)]
         [TestCase(15000, 1.5)]
-
         [TestCase(0, 1)]
         [TestCase(start_time, 1)]
         [TestCase(start_time + duration * ModTimeRamp.FINAL_RATE_PROGRESS / 2, 0.75)]
         [TestCase(start_time + duration * ModTimeRamp.FINAL_RATE_PROGRESS, 0.5)]
         [TestCase(start_time + duration, 0.5)]
         [TestCase(15000, 0.5)]
-
         [TestCase(0, 1)]
         [TestCase(start_time, 1)]
         [TestCase(2 * start_time, 1.5)]

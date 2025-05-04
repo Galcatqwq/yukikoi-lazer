@@ -47,7 +47,8 @@ namespace osu.Game.Localisation
         /// <summary>
         /// "All layout elements for layers in the current screen will be reset to defaults."
         /// </summary>
-        public static LocalisableString RevertToDefaultDescription => new TranslatableString(getKey(@"revert_to_default_description"), @"All layout elements for layers in the current screen will be reset to defaults.");
+        public static LocalisableString RevertToDefaultDescription =>
+            new TranslatableString(getKey(@"revert_to_default_description"), @"All layout elements for layers in the current screen will be reset to defaults.");
 
         private static string getKey(string key) => $@"{prefix}:{key}";
     }

@@ -184,7 +184,8 @@ namespace osu.Game.Overlays.Toolbar
         {
             if (Hotkey != null)
             {
-                realm.SubscribeToPropertyChanged(r => r.All<RealmKeyBinding>().FirstOrDefault(rkb => rkb.RulesetName == null && rkb.ActionInt == (int)Hotkey.Value), kb => kb.KeyCombinationString, updateKeyBindingTooltip);
+                realm.SubscribeToPropertyChanged(r => r.All<RealmKeyBinding>().FirstOrDefault(rkb => rkb.RulesetName == null && rkb.ActionInt == (int)Hotkey.Value), kb => kb.KeyCombinationString,
+                    updateKeyBindingTooltip);
             }
         }
 

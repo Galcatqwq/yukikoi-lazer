@@ -36,10 +36,7 @@ namespace osu.Game.Overlays.Settings.Sections.Graphics
             hwAccelCheckbox.Current.Default = hardwareVideoDecoder.Default != HardwareVideoDecoder.None;
             hwAccelCheckbox.Current.Value = hardwareVideoDecoder.Value != HardwareVideoDecoder.None;
 
-            hwAccelCheckbox.Current.BindValueChanged(val =>
-            {
-                hardwareVideoDecoder.Value = val.NewValue ? HardwareVideoDecoder.Any : HardwareVideoDecoder.None;
-            });
+            hwAccelCheckbox.Current.BindValueChanged(val => { hardwareVideoDecoder.Value = val.NewValue ? HardwareVideoDecoder.Any : HardwareVideoDecoder.None; });
         }
     }
 }

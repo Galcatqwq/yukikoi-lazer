@@ -27,10 +27,7 @@ namespace osu.Game.Database
 
             c.CreateMap<BeatmapMetadata, BeatmapMetadata>()
              .ForMember(s => s.Author, cc => cc.Ignore())
-             .AfterMap((s, d) =>
-             {
-                 copyChangesToRealm(s.Author, d.Author);
-             });
+             .AfterMap((s, d) => { copyChangesToRealm(s.Author, d.Author); });
             c.CreateMap<BeatmapDifficulty, BeatmapDifficulty>();
             c.CreateMap<RealmUser, RealmUser>();
             c.CreateMap<RealmFile, RealmFile>();
@@ -287,7 +284,7 @@ namespace osu.Game.Database
                 throw new InvalidOperationException($"Make sure to call {nameof(RealmAccess)}.{nameof(RealmAccess.RegisterForNotifications)}");
 
             bool initial = true;
-            return collection.SubscribeForNotifications(((sender, changes) =>
+            return collection.SubscribeForNotifications((sender, changes) =>
             {
                 if (initial)
                 {
@@ -303,7 +300,7 @@ namespace osu.Game.Database
                 }
 
                 callback(sender, changes);
-            }));
+            });
         }
 
         /// <summary>

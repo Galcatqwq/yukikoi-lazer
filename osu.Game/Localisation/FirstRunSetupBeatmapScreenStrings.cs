@@ -17,12 +17,14 @@ namespace osu.Game.Localisation
         /// <summary>
         /// "&quot;Beatmaps&quot; are what we call sets of playable levels. osu! doesn&#39;t come with any beatmaps pre-loaded. This step will help you get started on your beatmap collection."
         /// </summary>
-        public static LocalisableString Description => new TranslatableString(getKey(@"description"), @"""Beatmaps"" are what we call sets of playable levels. osu! doesn't come with any beatmaps pre-loaded. This step will help you get started on your beatmap collection.");
+        public static LocalisableString Description => new TranslatableString(getKey(@"description"),
+            @"""Beatmaps"" are what we call sets of playable levels. osu! doesn't come with any beatmaps pre-loaded. This step will help you get started on your beatmap collection.");
 
         /// <summary>
         /// "If you are a new player, we recommend playing through the tutorial to get accustomed to the gameplay."
         /// </summary>
-        public static LocalisableString TutorialDescription => new TranslatableString(getKey(@"tutorial_description"), @"If you are a new player, we recommend playing through the tutorial to get accustomed to the gameplay.");
+        public static LocalisableString TutorialDescription =>
+            new TranslatableString(getKey(@"tutorial_description"), @"If you are a new player, we recommend playing through the tutorial to get accustomed to the gameplay.");
 
         /// <summary>
         /// "Get the osu! tutorial"
@@ -42,12 +44,14 @@ namespace osu.Game.Localisation
         /// <summary>
         /// "Beatmaps will be downloaded in the background. You can continue with setup while this happens!"
         /// </summary>
-        public static LocalisableString DownloadingInBackground => new TranslatableString(getKey(@"downloading_in_background"), @"Beatmaps will be downloaded in the background. You can continue with setup while this happens!");
+        public static LocalisableString DownloadingInBackground =>
+            new TranslatableString(getKey(@"downloading_in_background"), @"Beatmaps will be downloaded in the background. You can continue with setup while this happens!");
 
         /// <summary>
         /// "You can also obtain more beatmaps from the main menu &quot;browse&quot; button at any time."
         /// </summary>
-        public static LocalisableString ObtainMoreBeatmaps => new TranslatableString(getKey(@"obtain_more_beatmaps"), @"You can also obtain more beatmaps from the main menu ""browse"" button at any time.");
+        public static LocalisableString ObtainMoreBeatmaps =>
+            new TranslatableString(getKey(@"obtain_more_beatmaps"), @"You can also obtain more beatmaps from the main menu ""browse"" button at any time.");
 
         /// <summary>
         /// "You currently have {0} beatmap(s) loaded!"

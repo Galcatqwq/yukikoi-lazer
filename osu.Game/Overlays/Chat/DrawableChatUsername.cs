@@ -171,10 +171,7 @@ namespace osu.Game.Overlays.Chat
 
                 if (currentChannel?.Value != null)
                 {
-                    items.Add(new OsuMenuItem(ChatStrings.MentionUser, MenuItemType.Standard, () =>
-                    {
-                        currentChannel.Value.TextBoxMessage.Value += $"@{user.Username} ";
-                    }));
+                    items.Add(new OsuMenuItem(ChatStrings.MentionUser, MenuItemType.Standard, () => { currentChannel.Value.TextBoxMessage.Value += $"@{user.Username} "; }));
                 }
 
                 if (!user.Equals(api.LocalUser.Value))

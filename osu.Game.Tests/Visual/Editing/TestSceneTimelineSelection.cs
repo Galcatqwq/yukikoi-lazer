@@ -52,10 +52,7 @@ namespace osu.Game.Tests.Visual.Editing
         {
             TimelineHitObjectBlueprint blueprint;
 
-            AddStep("add object", () =>
-            {
-                EditorBeatmap.Add(new HitCircle { StartTime = 3000 });
-            });
+            AddStep("add object", () => { EditorBeatmap.Add(new HitCircle { StartTime = 3000 }); });
 
             AddStep("enter slider placement", () =>
             {
@@ -71,10 +68,7 @@ namespace osu.Game.Tests.Visual.Editing
                 InputManager.MoveMouseTo(blueprint.ScreenSpaceDrawQuad.TopLeft - new Vector2(10, 0));
             });
 
-            AddStep("end conflicting slider", () =>
-            {
-                InputManager.Click(MouseButton.Right);
-            });
+            AddStep("end conflicting slider", () => { InputManager.Click(MouseButton.Right); });
 
             AddStep("click object", () =>
             {

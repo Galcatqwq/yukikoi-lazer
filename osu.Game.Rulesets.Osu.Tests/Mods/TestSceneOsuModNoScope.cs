@@ -4,8 +4,8 @@
 using System.Linq;
 using NUnit.Framework;
 using osu.Framework.Extensions.ObjectExtensions;
-using osu.Framework.Utils;
 using osu.Framework.Testing;
+using osu.Framework.Utils;
 using osu.Game.Rulesets.Osu.Objects.Drawables;
 using osu.Game.Rulesets.Osu.UI;
 
@@ -26,7 +26,6 @@ namespace osu.Game.Rulesets.Osu.Tests.Mods
         [Test]
         public void TestVisibleDuringSpinner()
         {
-
             AddUntilStep("wait for cursor to hide", () => cursorAlphaAlmostEquals(0));
             AddUntilStep("wait for start of spinner", isSpinning);
             AddUntilStep("wait for cursor to show", () => cursorAlphaAlmostEquals(1));

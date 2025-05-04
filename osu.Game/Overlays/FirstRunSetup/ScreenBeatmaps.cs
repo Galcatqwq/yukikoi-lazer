@@ -170,10 +170,7 @@ namespace osu.Game.Overlays.FirstRunSetup
                     downloadTutorialButton.Complete();
             }, true);
 
-            downloadTracker.Progress.BindValueChanged(progress =>
-            {
-                downloadTutorialButton.SetProgress(progress.NewValue, false);
-            }, true);
+            downloadTracker.Progress.BindValueChanged(progress => { downloadTutorialButton.SetProgress(progress.NewValue, false); }, true);
         }
 
         private void downloadBundled()

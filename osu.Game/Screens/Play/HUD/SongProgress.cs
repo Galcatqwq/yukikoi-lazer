@@ -78,7 +78,9 @@ namespace osu.Game.Screens.Play.HUD
         /// <param name="isIntro">If <c>true</c>, progress is (0..1) through the intro.</param>
         protected abstract void UpdateProgress(double progress, bool isIntro);
 
-        protected virtual void UpdateObjects(IEnumerable<HitObject> objects) { }
+        protected virtual void UpdateObjects(IEnumerable<HitObject> objects)
+        {
+        }
 
         [BackgroundDependencyLoader]
         private void load(DrawableRuleset? drawableRuleset, Player? player)

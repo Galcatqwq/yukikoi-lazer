@@ -3,13 +3,14 @@
 
 #nullable disable
 
-using osu.Game.Rulesets.Objects.Types;
+using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using osu.Framework.Bindables;
 using osu.Game.Audio;
 using osu.Game.Beatmaps;
 using osu.Game.Beatmaps.ControlPoints;
+using osu.Game.Rulesets.Objects.Types;
 
 namespace osu.Game.Rulesets.Objects.Legacy
 {
@@ -35,7 +36,7 @@ namespace osu.Game.Rulesets.Objects.Legacy
         public double Duration
         {
             get => this.SpanCount() * Distance / Velocity;
-            set => throw new System.NotSupportedException($"Adjust via {nameof(RepeatCount)} instead"); // can be implemented if/when needed.
+            set => throw new NotSupportedException($"Adjust via {nameof(RepeatCount)} instead"); // can be implemented if/when needed.
         }
 
         public double EndTime => StartTime + Duration;

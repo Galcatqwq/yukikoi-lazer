@@ -24,10 +24,7 @@ namespace osu.Game.Tests.Visual.Menus
 
             double normalVolume = 1;
 
-            AddStep("get initial volume", () =>
-            {
-                normalVolume = Game.Audio.Tracks.AggregateVolume.Value;
-            });
+            AddStep("get initial volume", () => { normalVolume = Game.Audio.Tracks.AggregateVolume.Value; });
 
             AddStep("duck one", () =>
             {
@@ -69,22 +66,13 @@ namespace osu.Game.Tests.Visual.Menus
 
             double normalVolume = 1;
 
-            AddStep("get initial volume", () =>
-            {
-                normalVolume = Game.Audio.Tracks.AggregateVolume.Value;
-            });
+            AddStep("get initial volume", () => { normalVolume = Game.Audio.Tracks.AggregateVolume.Value; });
 
-            AddStep("duck one", () =>
-            {
-                duckOp1 = Game.MusicController.Duck(duckParameters);
-            });
+            AddStep("duck one", () => { duckOp1 = Game.MusicController.Duck(duckParameters); });
 
             AddUntilStep("wait for duck to complete", () => Game.Audio.Tracks.AggregateVolume.Value, () => Is.EqualTo(normalVolume * 0.5f).Within(0.01));
 
-            AddStep("duck two", () =>
-            {
-                duckOp2 = Game.MusicController.Duck(duckParameters);
-            });
+            AddStep("duck two", () => { duckOp2 = Game.MusicController.Duck(duckParameters); });
 
             AddUntilStep("wait for duck to complete", () => Game.Audio.Tracks.AggregateVolume.Value, () => Is.EqualTo(normalVolume * 0.5f).Within(0.01));
 
@@ -103,10 +91,7 @@ namespace osu.Game.Tests.Visual.Menus
 
             double normalVolume = 1;
 
-            AddStep("get initial volume", () =>
-            {
-                normalVolume = Game.Audio.Tracks.AggregateVolume.Value;
-            });
+            AddStep("get initial volume", () => { normalVolume = Game.Audio.Tracks.AggregateVolume.Value; });
 
             AddStep("duck one", () =>
             {

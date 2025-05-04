@@ -54,13 +54,7 @@ namespace osu.Game.Rulesets.Mania.Tests.Skinning
                         Child = new ScrollingHitObjectContainer
                         {
                             RelativeSizeAxes = Axes.Both,
-                        }.With(c =>
-                        {
-                            c.Add(CreateHitObject().With(h =>
-                            {
-                                h.HitObject.StartTime = Time.Current + 5000;
-                            }));
-                        })
+                        }.With(c => { c.Add(CreateHitObject().With(h => { h.HitObject.StartTime = Time.Current + 5000; })); })
                     },
                 }
             });

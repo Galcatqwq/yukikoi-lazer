@@ -139,10 +139,7 @@ namespace osu.Game.Screens.Menu
                                 Beatmap.SetDefault();
                                 this.Push(new EditorLoader());
                             },
-                            OnEditSkin = () =>
-                            {
-                                skinEditor?.Show();
-                            },
+                            OnEditSkin = () => { skinEditor?.Show(); },
                             OnSolo = loadSoloSongSelect,
                             OnMultiplayer = () => this.Push(new Multiplayer()),
                             OnExit = () =>
@@ -307,7 +304,7 @@ namespace osu.Game.Screens.Menu
 
             bottomElementsFlow.Margin = new MarginPadding
             {
-                Bottom = (versionManager?.DrawHeight + 5) ?? 0
+                Bottom = versionManager?.DrawHeight + 5 ?? 0
             };
         }
 
@@ -404,10 +401,7 @@ namespace osu.Game.Screens.Menu
                     {
                         exitConfirmedViaDialog = true;
                         this.Exit();
-                    }, () =>
-                    {
-                        holdToExitGameOverlay.Abort();
-                    }));
+                    }, () => { holdToExitGameOverlay.Abort(); }));
                 }
 
                 return true;

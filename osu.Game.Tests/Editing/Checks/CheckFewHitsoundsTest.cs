@@ -104,7 +104,7 @@ namespace osu.Game.Tests.Editing.Checks
 
             for (int i = 0; i < 30; ++i)
             {
-                var samples = (i == 0 || i == 15) ? hitsounded : notHitsounded;
+                var samples = i == 0 || i == 15 ? hitsounded : notHitsounded;
 
                 hitObjects.Add(new HitCircle { StartTime = 1000 * i, Samples = samples });
             }

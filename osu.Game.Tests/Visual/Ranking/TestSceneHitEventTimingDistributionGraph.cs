@@ -167,7 +167,7 @@ namespace osu.Game.Tests.Visual.Ranking
 
             for (int i = 0; i < range * 2; i++)
             {
-                int count = (int)(Math.Pow(range - Math.Abs(i - range), 2)) / 10;
+                int count = (int)Math.Pow(range - Math.Abs(i - range), 2) / 10;
 
                 for (int j = 0; j < count; j++)
                     hitEvents.Add(new HitEvent(centre + i - range, 1.0, HitResult.Perfect, placeholder_object, placeholder_object, null));

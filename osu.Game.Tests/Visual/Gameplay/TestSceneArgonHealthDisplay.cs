@@ -71,15 +71,9 @@ namespace osu.Game.Tests.Visual.Gameplay
         {
             AddRepeatStep("apply miss judgement", applyMiss, 5);
 
-            AddRepeatStep(@"decrease hp slightly", delegate
-            {
-                healthProcessor.Health.Value -= 0.01f;
-            }, 10);
+            AddRepeatStep(@"decrease hp slightly", delegate { healthProcessor.Health.Value -= 0.01f; }, 10);
 
-            AddRepeatStep(@"increase hp without flash", delegate
-            {
-                healthProcessor.Health.Value += 0.1f;
-            }, 3);
+            AddRepeatStep(@"increase hp without flash", delegate { healthProcessor.Health.Value += 0.1f; }, 3);
 
             AddRepeatStep(@"increase hp with flash", delegate
             {

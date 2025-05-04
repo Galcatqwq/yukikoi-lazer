@@ -136,7 +136,7 @@ namespace osu.Game.Tests.Online
 
             var deserialised = JsonConvert.DeserializeObject<SoloScoreInfo>(JsonConvert.SerializeObject(score));
 
-            Assert.That((deserialised?.Mods[0])?.Settings["speed_change"], Is.EqualTo(2));
+            Assert.That(deserialised?.Mods[0]?.Settings["speed_change"], Is.EqualTo(2));
         }
 
         [Test]

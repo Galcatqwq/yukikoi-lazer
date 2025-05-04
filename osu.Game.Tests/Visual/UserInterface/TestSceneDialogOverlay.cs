@@ -99,7 +99,8 @@ namespace osu.Game.Tests.Visual.UserInterface
             {
                 Icon = FontAwesome.Regular.TrashAlt,
                 HeaderText = @"Confirm deletion ofConfirm deletion ofConfirm deletion ofConfirm deletion ofConfirm deletion ofConfirm deletion of",
-                BodyText = @"Ayase Rie - Yuima-ru*World TVver.Ayase Rie - Yuima-ru*World TVver.Ayase Rie - Yuima-ru*World TVver.Ayase Rie - Yuima-ru*World TVver.Ayase Rie - Yuima-ru*World TVver.Ayase Rie - Yuima-ru*World TVver.Ayase Rie - Yuima-ru*World TVver.Ayase Rie - Yuima-ru*World TVver.Ayase Rie - Yuima-ru*World TVver. ",
+                BodyText =
+                    @"Ayase Rie - Yuima-ru*World TVver.Ayase Rie - Yuima-ru*World TVver.Ayase Rie - Yuima-ru*World TVver.Ayase Rie - Yuima-ru*World TVver.Ayase Rie - Yuima-ru*World TVver.Ayase Rie - Yuima-ru*World TVver.Ayase Rie - Yuima-ru*World TVver.Ayase Rie - Yuima-ru*World TVver.Ayase Rie - Yuima-ru*World TVver. ",
                 Buttons = new PopupDialogButton[]
                 {
                     new PopupDialogOkButton

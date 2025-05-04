@@ -159,10 +159,7 @@ namespace osu.Game.Overlays.BeatmapListing
             background.Colour = colourProvider.Dark6;
 
             allowExplicitContent = config.GetBindable<bool>(OsuSetting.ShowOnlineExplicitContent);
-            allowExplicitContent.BindValueChanged(allow =>
-            {
-                ExplicitContent.Value = allow.NewValue ? SearchExplicit.Show : SearchExplicit.Hide;
-            }, true);
+            allowExplicitContent.BindValueChanged(allow => { ExplicitContent.Value = allow.NewValue ? SearchExplicit.Show : SearchExplicit.Hide; }, true);
         }
 
         public void TakeFocus() => textBox.TakeFocus();

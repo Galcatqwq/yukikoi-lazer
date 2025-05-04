@@ -30,10 +30,7 @@ namespace osu.Game.Screens.OnlinePlay.Components
         [BackgroundDependencyLoader]
         private void load(OsuColour colours)
         {
-            status.BindValueChanged(s =>
-            {
-                this.FadeColour(colours.ForRoomCategory(category.Value) ?? s.NewValue.GetAppropriateColour(colours), transitionDuration);
-            }, true);
+            status.BindValueChanged(s => { this.FadeColour(colours.ForRoomCategory(category.Value) ?? s.NewValue.GetAppropriateColour(colours), transitionDuration); }, true);
         }
     }
 }

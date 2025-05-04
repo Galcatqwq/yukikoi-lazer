@@ -40,7 +40,7 @@ namespace osu.Game.Graphics.Containers
         {
             if (AutoSizeAxes != Axes.None)
             {
-                content.RelativeSizeAxes = (Axes.Both & ~AutoSizeAxes);
+                content.RelativeSizeAxes = Axes.Both & ~AutoSizeAxes;
                 content.AutoSizeAxes = AutoSizeAxes;
             }
 

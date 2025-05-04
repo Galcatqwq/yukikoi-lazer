@@ -51,10 +51,7 @@ namespace osu.Game.Rulesets.Mania.Skinning.Argon
                 ((IBindable<bool>)hittingLayer.IsHitting).BindTo(holdNote.IsHitting);
             }
 
-            AccentColour.BindValueChanged(colour =>
-            {
-                background.Colour = colour.NewValue.Darken(0.6f);
-            }, true);
+            AccentColour.BindValueChanged(colour => { background.Colour = colour.NewValue.Darken(0.6f); }, true);
         }
 
         public void Recycle()

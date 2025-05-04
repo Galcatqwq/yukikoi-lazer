@@ -59,9 +59,9 @@ namespace osu.Game.Rulesets.Catch.Difficulty.Skills
 
             float distanceMoved = playerPosition - lastPlayerPosition.Value;
 
-            double weightedStrainTime = catchCurrent.StrainTime + 13 + (3 / catcherSpeedMultiplier);
+            double weightedStrainTime = catchCurrent.StrainTime + 13 + 3 / catcherSpeedMultiplier;
 
-            double distanceAddition = (Math.Pow(Math.Abs(distanceMoved), 1.3) / 510);
+            double distanceAddition = Math.Pow(Math.Abs(distanceMoved), 1.3) / 510;
             double sqrtStrain = Math.Sqrt(weightedStrainTime);
 
             double edgeDashBonus = 0;
@@ -92,7 +92,8 @@ namespace osu.Game.Rulesets.Catch.Difficulty.Skills
                     playerPosition = catchCurrent.NormalizedPosition;
                 }
 
-                distanceAddition *= 1.0 + edgeDashBonus * ((20 - catchCurrent.LastObject.DistanceToHyperDash) / 20) * Math.Pow((Math.Min(catchCurrent.StrainTime * catcherSpeedMultiplier, 265) / 265), 1.5); // Edge Dashes are easier at lower ms values
+                distanceAddition *= 1.0 + edgeDashBonus * ((20 - catchCurrent.LastObject.DistanceToHyperDash) / 20)
+                                                        * Math.Pow(Math.Min(catchCurrent.StrainTime * catcherSpeedMultiplier, 265) / 265, 1.5); // Edge Dashes are easier at lower ms values
             }
 
             lastPlayerPosition = playerPosition;

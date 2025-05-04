@@ -90,10 +90,7 @@ namespace osu.Game.Tests.Visual.Editing
                 InputManager.Click(MouseButton.Left);
             });
 
-            AddUntilStep("wait for offset changed", () =>
-            {
-                return timingScreen.SelectedGroup.Value.ControlPoints.Any(c => c is TimingControlPoint) && timingScreen.SelectedGroup.Value.Time > 2170;
-            });
+            AddUntilStep("wait for offset changed", () => { return timingScreen.SelectedGroup.Value.ControlPoints.Any(c => c is TimingControlPoint) && timingScreen.SelectedGroup.Value.Time > 2170; });
 
             AddStep("simulate undo", () =>
             {
@@ -108,10 +105,7 @@ namespace osu.Game.Tests.Visual.Editing
                 }
             });
 
-            AddUntilStep("selection retained", () =>
-            {
-                return timingScreen.SelectedGroup.Value.ControlPoints.Any(c => c is TimingControlPoint) && timingScreen.SelectedGroup.Value.Time > 2170;
-            });
+            AddUntilStep("selection retained", () => { return timingScreen.SelectedGroup.Value.ControlPoints.Any(c => c is TimingControlPoint) && timingScreen.SelectedGroup.Value.Time > 2170; });
         }
 
         [Test]

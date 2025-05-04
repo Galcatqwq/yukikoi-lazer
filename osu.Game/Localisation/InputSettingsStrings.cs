@@ -72,7 +72,8 @@ namespace osu.Game.Localisation
         /// <summary>
         /// "The binding you&#39;ve selected conflicts with another existing binding."
         /// </summary>
-        public static LocalisableString KeyBindingConflictDetected => new TranslatableString(getKey(@"key_binding_conflict_detected"), @"The binding you've selected conflicts with another existing binding.");
+        public static LocalisableString KeyBindingConflictDetected =>
+            new TranslatableString(getKey(@"key_binding_conflict_detected"), @"The binding you've selected conflicts with another existing binding.");
 
         /// <summary>
         /// "Keep existing"

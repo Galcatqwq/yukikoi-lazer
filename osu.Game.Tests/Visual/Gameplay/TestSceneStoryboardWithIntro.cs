@@ -13,6 +13,7 @@ using osu.Game.Rulesets.Osu.Objects;
 using osu.Game.Screens.Play;
 using osu.Game.Storyboards;
 using osuTK;
+using osuTK.Input;
 
 namespace osu.Game.Tests.Visual.Gameplay
 {
@@ -65,7 +66,7 @@ namespace osu.Game.Tests.Visual.Gameplay
             AddStep($"set first object start time to {firstObject}", () => firstObjectStartTime = firstObject);
             CreateTest();
 
-            AddStep("skip", () => InputManager.Key(osuTK.Input.Key.Space));
+            AddStep("skip", () => InputManager.Key(Key.Space));
             AddAssert("skip performed", () => Player.ChildrenOfType<SkipOverlay>().Any(s => s.SkipCount == 1));
             AddUntilStep("gameplay clock advanced", () => Player.GameplayClockContainer.CurrentTime, () => Is.GreaterThanOrEqualTo(firstObject - 2000));
         }
@@ -77,11 +78,11 @@ namespace osu.Game.Tests.Visual.Gameplay
             AddStep("set first object start time to 11000", () => firstObjectStartTime = 11000);
             CreateTest();
 
-            AddStep("skip", () => InputManager.Key(osuTK.Input.Key.Space));
+            AddStep("skip", () => InputManager.Key(Key.Space));
             AddAssert("skip performed", () => Player.ChildrenOfType<SkipOverlay>().Any(s => s.SkipCount == 1));
             AddUntilStep("gameplay clock advanced", () => Player.GameplayClockContainer.CurrentTime, () => Is.GreaterThanOrEqualTo(0));
 
-            AddStep("skip", () => InputManager.Key(osuTK.Input.Key.Space));
+            AddStep("skip", () => InputManager.Key(Key.Space));
             AddAssert("skip performed", () => Player.ChildrenOfType<SkipOverlay>().Any(s => s.SkipCount == 2));
             AddUntilStep("gameplay clock advanced", () => Player.GameplayClockContainer.CurrentTime, () => Is.GreaterThanOrEqualTo(9000));
         }

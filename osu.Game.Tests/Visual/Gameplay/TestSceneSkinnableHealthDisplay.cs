@@ -45,20 +45,11 @@ namespace osu.Game.Tests.Visual.Gameplay
         [Test]
         public void TestHealthDisplayIncrementing()
         {
-            AddRepeatStep("apply miss judgement", delegate
-            {
-                healthProcessor.ApplyResult(new JudgementResult(new HitObject(), new Judgement()) { Type = HitResult.Miss });
-            }, 5);
+            AddRepeatStep("apply miss judgement", delegate { healthProcessor.ApplyResult(new JudgementResult(new HitObject(), new Judgement()) { Type = HitResult.Miss }); }, 5);
 
-            AddRepeatStep(@"decrease hp slightly", delegate
-            {
-                healthProcessor.Health.Value -= 0.01f;
-            }, 10);
+            AddRepeatStep(@"decrease hp slightly", delegate { healthProcessor.Health.Value -= 0.01f; }, 10);
 
-            AddRepeatStep(@"increase hp without flash", delegate
-            {
-                healthProcessor.Health.Value += 0.1f;
-            }, 3);
+            AddRepeatStep(@"increase hp without flash", delegate { healthProcessor.Health.Value += 0.1f; }, 3);
 
             AddRepeatStep(@"increase hp with flash", delegate
             {

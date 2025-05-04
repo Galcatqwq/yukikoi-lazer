@@ -292,8 +292,8 @@ namespace osu.Game.Overlays.Notifications
                 {
                     var childBounding = Children.First().BoundingBox;
 
-                    if (X < 0) childBounding *= new Vector2(1, Math.Max(0, 1 + (X / 300)));
-                    if (Y > 0) childBounding *= new Vector2(1, Math.Max(0, 1 - (Y / 200)));
+                    if (X < 0) childBounding *= new Vector2(1, Math.Max(0, 1 + X / 300));
+                    if (Y > 0) childBounding *= new Vector2(1, Math.Max(0, 1 - Y / 200));
 
                     return childBounding;
                 }

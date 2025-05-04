@@ -7,11 +7,11 @@ using Newtonsoft.Json;
 using NUnit.Framework;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
-using osu.Game.Graphics.Cursor;
-using osu.Game.Tournament.Screens.Editors;
 using osu.Framework.Testing;
+using osu.Game.Graphics.Cursor;
 using osu.Game.Graphics.UserInterface;
 using osu.Game.Overlays.Dialog;
+using osu.Game.Tournament.Screens.Editors;
 using osu.Game.Tournament.Screens.Editors.Components;
 using osuTK;
 using osuTK.Input;
@@ -38,10 +38,7 @@ namespace osu.Game.Tournament.Tests.Screens
         public void TestResetBracketTeamsCancelled()
         {
             Bindable<string> matchBeforeReset = new Bindable<string>();
-            AddStep("save current match state", () =>
-            {
-                matchBeforeReset.Value = JsonConvert.SerializeObject(Ladder.CurrentMatch.Value);
-            });
+            AddStep("save current match state", () => { matchBeforeReset.Value = JsonConvert.SerializeObject(Ladder.CurrentMatch.Value); });
             AddStep("pull up context menu", () =>
             {
                 InputManager.MoveMouseTo(ladderEditorScreen);

@@ -53,10 +53,7 @@ namespace osu.Game.Rulesets.Catch.Tests
         [Test]
         public void TestBasicScenarios()
         {
-            AddStep("set up score multiplier", () =>
-            {
-                scoreMultiplier.BindValueChanged(_ => Rerun());
-            });
+            AddStep("set up score multiplier", () => { scoreMultiplier.BindValueChanged(_ => Rerun()); });
             AddStep("set max combo to 100", () => MaxCombo.Value = 100);
             AddStep("set perfect score", () =>
             {
@@ -163,7 +160,7 @@ namespace osu.Game.Rulesets.Catch.Tests
             }
 
             public long TotalScore
-                => (int)Math.Round((1000000 * comboPortion / comboPortionMax) * modMultiplier); // vast simplification, as we're not doing ticks here.
+                => (int)Math.Round(1000000 * comboPortion / comboPortionMax * modMultiplier); // vast simplification, as we're not doing ticks here.
         }
 
         private class CatchProcessorBasedScoringAlgorithm : ProcessorBasedScoringAlgorithm

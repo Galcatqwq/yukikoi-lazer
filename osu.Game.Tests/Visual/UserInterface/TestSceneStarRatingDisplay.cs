@@ -58,10 +58,7 @@ namespace osu.Game.Tests.Visual.UserInterface
                 Scale = new Vector2(3f),
             });
 
-            AddRepeatStep("set random value", () =>
-            {
-                starRating.Current.Value = new StarDifficulty(RNG.NextDouble(0.0, 11.0), 1);
-            }, 10);
+            AddRepeatStep("set random value", () => { starRating.Current.Value = new StarDifficulty(RNG.NextDouble(0.0, 11.0), 1); }, 10);
 
             AddSliderStep("set exact stars", 0.0, 11.0, 5.55, d =>
             {

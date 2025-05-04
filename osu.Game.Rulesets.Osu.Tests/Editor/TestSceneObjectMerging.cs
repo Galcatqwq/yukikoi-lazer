@@ -247,10 +247,7 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
                 EditorBeatmap.SelectedHitObjects.AddRange([slider1, slider2]);
             });
 
-            AddStep("move sliders to the same start time", () =>
-            {
-                slider2!.StartTime = slider1!.StartTime;
-            });
+            AddStep("move sliders to the same start time", () => { slider2!.StartTime = slider1!.StartTime; });
 
             mergeSelection();
 

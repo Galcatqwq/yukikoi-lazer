@@ -216,10 +216,7 @@ namespace osu.Game.Tests.Visual.Gameplay
         {
             controlPoints.ForEach(point => point.Time += sequenceStartTime);
 
-            scrollContainers.ForEach(container =>
-            {
-                container.ControlPoints.AddRange(controlPoints);
-            });
+            scrollContainers.ForEach(container => { container.ControlPoints.AddRange(controlPoints); });
 
             foreach (var playfield in playfields)
             {

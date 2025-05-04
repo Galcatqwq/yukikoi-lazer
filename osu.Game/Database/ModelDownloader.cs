@@ -71,7 +71,7 @@ namespace osu.Game.Database
                     bool importSuccessful;
 
                     if (originalModel != null)
-                        importSuccessful = (await importer.ImportAsUpdate(notification, new ImportTask(filename), originalModel).ConfigureAwait(false)) != null;
+                        importSuccessful = await importer.ImportAsUpdate(notification, new ImportTask(filename), originalModel).ConfigureAwait(false) != null;
                     else
                         importSuccessful = (await importer.Import(notification, new[] { new ImportTask(filename) }).ConfigureAwait(false)).Any();
 

@@ -26,7 +26,6 @@ namespace osu.Game.Online.Metadata
         public override IBindableDictionary<int, UserPresence> UserStates => userStates;
         private readonly BindableDictionary<int, UserPresence> userStates = new BindableDictionary<int, UserPresence>();
 
-
         private readonly string endpoint;
 
         private IHubClientConnector? connector;

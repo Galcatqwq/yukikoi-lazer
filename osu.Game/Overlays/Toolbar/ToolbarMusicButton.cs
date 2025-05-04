@@ -128,10 +128,7 @@ namespace osu.Game.Overlays.Toolbar
             }
 
             contractTransform?.Cancel();
-            contractTransform = Scheduler.AddDelayed(() =>
-            {
-                volumeDisplay.ResizeWidthTo(3f, 500, Easing.OutQuint);
-            }, 1000);
+            contractTransform = Scheduler.AddDelayed(() => { volumeDisplay.ResizeWidthTo(3f, 500, Easing.OutQuint); }, 1000);
         }
     }
 }

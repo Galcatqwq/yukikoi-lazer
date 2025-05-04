@@ -4,6 +4,7 @@
 #nullable disable
 
 using System;
+using osu.Framework.Graphics;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Localisation;
 using osu.Game.Graphics.Containers;
@@ -21,19 +22,16 @@ namespace osu.Game.Online.Placeholders
 
             AddArbitraryDrawable(new OsuAnimatedButton
             {
-                AutoSizeAxes = Framework.Graphics.Axes.Both,
+                AutoSizeAxes = Axes.Both,
                 Child = textFlow = new OsuTextFlowContainer(cp => cp.Font = cp.Font.With(size: TEXT_SIZE))
                 {
-                    AutoSizeAxes = Framework.Graphics.Axes.Both,
-                    Margin = new Framework.Graphics.MarginPadding(5)
+                    AutoSizeAxes = Axes.Both,
+                    Margin = new MarginPadding(5)
                 },
                 Action = () => Action?.Invoke()
             });
 
-            textFlow.AddIcon(icon, i =>
-            {
-                i.Padding = new Framework.Graphics.MarginPadding { Right = 10 };
-            });
+            textFlow.AddIcon(icon, i => { i.Padding = new MarginPadding { Right = 10 }; });
 
             textFlow.AddText(actionMessage);
         }

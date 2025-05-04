@@ -85,10 +85,7 @@ namespace osu.Game.Screens.OnlinePlay.Lounge.Components
                     RelativeSizeAxes = Axes.Both,
                     Colour = colours.Background5,
                 },
-                CreateBackground().With(d =>
-                {
-                    d.RelativeSizeAxes = Axes.Both;
-                }),
+                CreateBackground().With(d => { d.RelativeSizeAxes = Axes.Both; }),
                 wrapper = new DelayedLoadWrapper(() =>
                     new Container
                     {
@@ -257,10 +254,7 @@ namespace osu.Game.Screens.OnlinePlay.Lounge.Components
                 }, true);
 
                 roomType.BindTo(Room.Type);
-                roomType.BindValueChanged(t =>
-                {
-                    endDateInfo.Alpha = t.NewValue == MatchType.Playlists ? 1 : 0;
-                }, true);
+                roomType.BindValueChanged(t => { endDateInfo.Alpha = t.NewValue == MatchType.Playlists ? 1 : 0; }, true);
 
                 hasPassword.BindTo(Room.HasPassword);
                 hasPassword.BindValueChanged(v => passwordIcon.Alpha = v.NewValue ? 1 : 0, true);

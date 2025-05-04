@@ -25,7 +25,7 @@ namespace osu.Game.Tests.Visual.Gameplay
         private AudioManager audio { get; set; }
 
         private int resultsDisplayWaitCount =>
-            (int)((Screens.Play.Player.RESULTS_DISPLAY_DELAY / TimePerAction) * 2);
+            (int)(Screens.Play.Player.RESULTS_DISPLAY_DELAY / TimePerAction * 2);
 
         protected override bool AllowFail => false;
 

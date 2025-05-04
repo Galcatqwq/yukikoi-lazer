@@ -63,7 +63,7 @@ namespace osu.Game.Tests.Database
         [Test]
         public void ExportFileWithSuperLongNameTest()
         {
-            int expectedLength = TestLegacyModelExporter.MAX_FILENAME_LENGTH - (legacyExporter.GetExtension().Length);
+            int expectedLength = TestLegacyModelExporter.MAX_FILENAME_LENGTH - legacyExporter.GetExtension().Length;
             string expectedName = long_filename.Remove(expectedLength);
 
             var item = new TestModel(long_filename);
@@ -75,7 +75,7 @@ namespace osu.Game.Tests.Database
         [Test]
         public void ExportFileWithSuperLongNameMultipleTimesTest()
         {
-            int expectedLength = TestLegacyModelExporter.MAX_FILENAME_LENGTH - (legacyExporter.GetExtension().Length);
+            int expectedLength = TestLegacyModelExporter.MAX_FILENAME_LENGTH - legacyExporter.GetExtension().Length;
             string expectedName = long_filename.Remove(expectedLength);
 
             var item = new TestModel(long_filename);
@@ -92,10 +92,7 @@ namespace osu.Game.Tests.Database
 
         private void exportItemAndAssert(TestModel item, string expectedName)
         {
-            Assert.DoesNotThrow(() =>
-            {
-                Task.Run(() => legacyExporter.ExportAsync(new RealmLiveUnmanaged<TestModel>(item))).WaitSafely();
-            });
+            Assert.DoesNotThrow(() => { Task.Run(() => legacyExporter.ExportAsync(new RealmLiveUnmanaged<TestModel>(item))).WaitSafely(); });
             Assert.That(storage.Exists($"exports/{expectedName}{legacyExporter.GetExtension()}"), Is.True);
         }
 

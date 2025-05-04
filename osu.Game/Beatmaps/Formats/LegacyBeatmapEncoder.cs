@@ -313,7 +313,7 @@ namespace osu.Game.Beatmaps.Formats
                         ? samples.OfType<ConvertHitObjectParser.LegacyHitSampleInfo>().Max(o => o.CustomSampleBank)
                         : -1;
 
-                    return new LegacyBeatmapDecoder.LegacySampleControlPoint { Time = time, SampleVolume = volume, CustomSampleBank = customIndex };
+                    return new LegacyDecoder<Beatmap>.LegacySampleControlPoint { Time = time, SampleVolume = volume, CustomSampleBank = customIndex };
                 }
             }
 

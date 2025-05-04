@@ -103,8 +103,11 @@ namespace osu.Game.Rulesets.Osu.Tests
 
         private partial class TestLegacyMainCirclePiece : LegacyMainCirclePiece
         {
-            public new Sprite? CircleSprite => base.CircleSprite.ChildrenOfType<Sprite>().Where(s => !string.IsNullOrEmpty(s.Texture?.AssetName)).DistinctBy(s => s.Texture.AssetName).SingleOrDefault();
-            public new Sprite? OverlaySprite => base.OverlaySprite.ChildrenOfType<Sprite>().Where(s => !string.IsNullOrEmpty(s.Texture?.AssetName)).DistinctBy(s => s.Texture.AssetName).SingleOrDefault();
+            public new Sprite? CircleSprite =>
+                base.CircleSprite.ChildrenOfType<Sprite>().Where(s => !string.IsNullOrEmpty(s.Texture?.AssetName)).DistinctBy(s => s.Texture.AssetName).SingleOrDefault();
+
+            public new Sprite? OverlaySprite =>
+                base.OverlaySprite.ChildrenOfType<Sprite>().Where(s => !string.IsNullOrEmpty(s.Texture?.AssetName)).DistinctBy(s => s.Texture.AssetName).SingleOrDefault();
 
             public TestLegacyMainCirclePiece(string? priorityLookupPrefix)
                 : base(priorityLookupPrefix, false)

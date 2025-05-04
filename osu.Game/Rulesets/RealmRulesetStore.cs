@@ -83,7 +83,7 @@ namespace osu.Game.Rulesets
                             continue;
                         }
 
-                        var instance = (Activator.CreateInstance(resolvedType) as Ruleset);
+                        var instance = Activator.CreateInstance(resolvedType) as Ruleset;
                         var instanceInfo = instance?.RulesetInfo
                                            ?? throw new RulesetLoadException(@"Instantiation failure");
 

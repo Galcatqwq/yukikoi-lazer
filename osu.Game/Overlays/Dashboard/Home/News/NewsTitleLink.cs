@@ -26,10 +26,7 @@ namespace osu.Game.Overlays.Dashboard.Home.News
         [BackgroundDependencyLoader]
         private void load(GameHost host, OverlayColourProvider colourProvider)
         {
-            Child = new TextFlowContainer(t =>
-            {
-                t.Font = OsuFont.GetFont(weight: FontWeight.Bold);
-            })
+            Child = new TextFlowContainer(t => { t.Font = OsuFont.GetFont(weight: FontWeight.Bold); })
             {
                 RelativeSizeAxes = Axes.X,
                 AutoSizeAxes = Axes.Y,

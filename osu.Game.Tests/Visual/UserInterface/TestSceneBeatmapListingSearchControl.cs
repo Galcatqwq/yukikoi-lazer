@@ -77,7 +77,8 @@ namespace osu.Game.Tests.Visual.UserInterface
             };
 
             control.Query.BindValueChanged(q => query.Text = $"Query: {q.NewValue}", true);
-            control.General.BindCollectionChanged((_, _) => general.Text = $"General: {(control.General.Any() ? string.Join('.', control.General.Select(i => i.ToString().ToSnakeCase())) : "")}", true);
+            control.General.BindCollectionChanged((_, _) => general.Text = $"General: {(control.General.Any() ? string.Join('.', control.General.Select(i => i.ToString().ToSnakeCase())) : "")}",
+                true);
             control.Ruleset.BindValueChanged(r => ruleset.Text = $"Ruleset: {r.NewValue}", true);
             control.Category.BindValueChanged(c => category.Text = $"Category: {c.NewValue}", true);
             control.Genre.BindValueChanged(g => genre.Text = $"Genre: {g.NewValue}", true);

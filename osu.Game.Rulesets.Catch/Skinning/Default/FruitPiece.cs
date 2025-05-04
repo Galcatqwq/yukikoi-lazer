@@ -39,10 +39,7 @@ namespace osu.Game.Rulesets.Catch.Skinning.Default
         {
             base.LoadComplete();
 
-            IndexInBeatmap.BindValueChanged(index =>
-            {
-                VisualRepresentation.Value = Fruit.GetVisualRepresentation(index.NewValue);
-            }, true);
+            IndexInBeatmap.BindValueChanged(index => { VisualRepresentation.Value = Fruit.GetVisualRepresentation(index.NewValue); }, true);
         }
     }
 }

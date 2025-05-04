@@ -57,7 +57,7 @@ namespace osu.Game.Overlays.Toolbar
         {
             float secondFractional = now.Second / 60f;
             float minuteFractional = (now.Minute + secondFractional) / 60f;
-            float hourFractional = ((minuteFractional + now.Hour) % 12) / 12f;
+            float hourFractional = (minuteFractional + now.Hour) % 12 / 12f;
 
             updateRotation(hour, hourFractional);
             updateRotation(minute, minuteFractional);

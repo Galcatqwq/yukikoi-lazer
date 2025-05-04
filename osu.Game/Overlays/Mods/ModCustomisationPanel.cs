@@ -117,10 +117,7 @@ namespace osu.Game.Overlays.Mods
         {
             base.LoadComplete();
 
-            Enabled.BindValueChanged(e =>
-            {
-                this.FadeColour(OsuColour.Gray(e.NewValue ? 1f : 0.6f), 300, Easing.OutQuint);
-            }, true);
+            Enabled.BindValueChanged(e => { this.FadeColour(OsuColour.Gray(e.NewValue ? 1f : 0.6f), 300, Easing.OutQuint); }, true);
 
             ExpandedState.BindValueChanged(_ => updateDisplay(), true);
             SelectedMods.BindValueChanged(_ => updateMods(), true);

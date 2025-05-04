@@ -349,11 +349,11 @@ namespace osu.Game.Tests.Visual.Multiplayer
 
         private void assertHandleVisibility(int index, bool visible)
             => AddAssert($"handle {index} {(visible ? "is" : "is not")} visible",
-                () => (playlist.ChildrenOfType<OsuRearrangeableListItem<PlaylistItem>.PlaylistItemHandle>().ElementAt(index).Alpha > 0) == visible);
+                () => playlist.ChildrenOfType<OsuRearrangeableListItem<PlaylistItem>.PlaylistItemHandle>().ElementAt(index).Alpha > 0 == visible);
 
         private void assertDeleteButtonVisibility(int index, bool visible)
             => AddAssert($"delete button {index} {(visible ? "is" : "is not")} visible",
-                () => (playlist.ChildrenOfType<DrawableRoomPlaylistItem.PlaylistRemoveButton>().ElementAt(2 + index * 2).Alpha > 0) == visible);
+                () => playlist.ChildrenOfType<DrawableRoomPlaylistItem.PlaylistRemoveButton>().ElementAt(2 + index * 2).Alpha > 0 == visible);
 
         private void createPlaylistWithBeatmaps(Func<IEnumerable<IBeatmapInfo>> beatmaps) => createPlaylist(p =>
         {

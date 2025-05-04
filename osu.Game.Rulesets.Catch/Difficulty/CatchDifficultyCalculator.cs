@@ -77,7 +77,7 @@ namespace osu.Game.Rulesets.Catch.Difficulty
             halfCatcherWidth = Catcher.CalculateCatchWidth(beatmap.Difficulty) * 0.5f;
 
             // For circle sizes above 5.5, reduce the catcher width further to simulate imperfect gameplay.
-            halfCatcherWidth *= 1 - (Math.Max(0, beatmap.Difficulty.CircleSize - 5.5f) * 0.0625f);
+            halfCatcherWidth *= 1 - Math.Max(0, beatmap.Difficulty.CircleSize - 5.5f) * 0.0625f;
 
             return new Skill[]
             {

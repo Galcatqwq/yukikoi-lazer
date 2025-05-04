@@ -4,6 +4,7 @@
 using osu.Framework.Allocation;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Game.Graphics;
@@ -29,7 +30,7 @@ namespace osu.Game.Rulesets.Taiko.UI
                     Anchor = Anchor.TopRight,
                     RelativeSizeAxes = Axes.Y,
                     Width = 10,
-                    Colour = Framework.Graphics.Colour.ColourInfo.GradientHorizontal(Color4.Black.Opacity(0.6f), Color4.Black.Opacity(0)),
+                    Colour = ColourInfo.GradientHorizontal(Color4.Black.Opacity(0.6f), Color4.Black.Opacity(0)),
                 },
             };
         }

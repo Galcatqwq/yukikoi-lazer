@@ -215,7 +215,8 @@ namespace osu.Game.Overlays.Profile.Sections.Recent
             rulesets.AvailableRulesets.FirstOrDefault(r => r.ShortName == activity.Mode)?.Name ?? activity.Mode;
 
         private void addUserLink()
-            => content.AddLink(activity.User.AsNonNull().Username, LinkAction.OpenUserProfile, getLinkArgument(activity.User.AsNonNull().Url), creationParameters: t => t.Font = getLinkFont(FontWeight.Bold));
+            => content.AddLink(activity.User.AsNonNull().Username, LinkAction.OpenUserProfile, getLinkArgument(activity.User.AsNonNull().Url),
+                creationParameters: t => t.Font = getLinkFont(FontWeight.Bold));
 
         private void addBeatmapLink()
             => content.AddLink(activity.Beatmap.AsNonNull().Title, LinkAction.OpenBeatmap, getLinkArgument(activity.Beatmap.AsNonNull().Url), creationParameters: t => t.Font = getLinkFont());

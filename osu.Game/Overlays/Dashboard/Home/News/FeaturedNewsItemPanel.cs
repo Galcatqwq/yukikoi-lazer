@@ -84,10 +84,7 @@ namespace osu.Game.Overlays.Dashboard.Home.News
                                         Children = new Drawable[]
                                         {
                                             new NewsTitleLink(post),
-                                            new TextFlowContainer(f =>
-                                            {
-                                                f.Font = OsuFont.GetFont(size: 12, weight: FontWeight.Regular);
-                                            })
+                                            new TextFlowContainer(f => { f.Font = OsuFont.GetFont(size: 12, weight: FontWeight.Regular); })
                                             {
                                                 RelativeSizeAxes = Axes.X,
                                                 AutoSizeAxes = Axes.Y,

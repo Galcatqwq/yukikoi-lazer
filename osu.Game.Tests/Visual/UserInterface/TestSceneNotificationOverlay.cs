@@ -106,10 +106,7 @@ namespace osu.Game.Tests.Visual.UserInterface
                 InputManager.MoveMouseTo(notification.ChildrenOfType<Notification>().Single().ScreenSpaceDrawQuad.Centre + new Vector2(500, 0));
             });
 
-            AddStep("fling away", () =>
-            {
-                InputManager.ReleaseButton(MouseButton.Left);
-            });
+            AddStep("fling away", () => { InputManager.ReleaseButton(MouseButton.Left); });
 
             AddAssert("was not closed", () => !notification.WasClosed);
             AddAssert("was not activated", () => !activated);
@@ -143,10 +140,7 @@ namespace osu.Game.Tests.Visual.UserInterface
                 InputManager.MoveMouseTo(notificationOverlay.ChildrenOfType<Notification>().Single().ScreenSpaceDrawQuad.Centre + new Vector2(-500, 0));
             });
 
-            AddStep("fling away", () =>
-            {
-                InputManager.ReleaseButton(MouseButton.Left);
-            });
+            AddStep("fling away", () => { InputManager.ReleaseButton(MouseButton.Left); });
 
             AddUntilStep("wait for closed", () => notification.WasClosed);
             AddAssert("was not activated", () => !activated);
@@ -180,10 +174,7 @@ namespace osu.Game.Tests.Visual.UserInterface
                 InputManager.MoveMouseTo(notificationOverlay.ChildrenOfType<Notification>().Single().ScreenSpaceDrawQuad.Centre + new Vector2(-500, 0));
             });
 
-            AddStep("attempt fling", () =>
-            {
-                InputManager.ReleaseButton(MouseButton.Left);
-            });
+            AddStep("attempt fling", () => { InputManager.ReleaseButton(MouseButton.Left); });
 
             AddUntilStep("was not closed", () => !notification.WasClosed);
             AddUntilStep("was not cancelled", () => notification.State == ProgressNotificationState.Active);

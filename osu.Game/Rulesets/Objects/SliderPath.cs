@@ -337,7 +337,9 @@ namespace osu.Game.Rulesets.Objects
                         break;
 
                     // taken from https://github.com/ppy/osu-framework/blob/1201e641699a1d50d2f6f9295192dad6263d5820/osu.Framework/Utils/PathApproximator.cs#L181-L186
-                    int subPoints = (2f * circularArcProperties.Radius <= 0.1f) ? 2 : Math.Max(2, (int)Math.Ceiling(circularArcProperties.ThetaRange / (2.0 * Math.Acos(1f - (0.1f / circularArcProperties.Radius)))));
+                    int subPoints = 2f * circularArcProperties.Radius <= 0.1f
+                        ? 2
+                        : Math.Max(2, (int)Math.Ceiling(circularArcProperties.ThetaRange / (2.0 * Math.Acos(1f - 0.1f / circularArcProperties.Radius))));
 
                     // 1000 subpoints requires an arc length of at least ~120 thousand to occur
                     // See here for calculations https://www.desmos.com/calculator/umj6jvmcz7

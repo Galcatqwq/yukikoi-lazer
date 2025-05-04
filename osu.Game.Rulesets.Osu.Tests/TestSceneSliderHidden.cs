@@ -10,9 +10,6 @@ namespace osu.Game.Rulesets.Osu.Tests
     public partial class TestSceneSliderHidden : TestSceneSlider
     {
         [SetUp]
-        public void SetUp() => Schedule(() =>
-        {
-            SelectedMods.Value = new[] { new OsuModHidden() };
-        });
+        public void SetUp() => Schedule(() => { SelectedMods.Value = new[] { new OsuModHidden() }; });
     }
 }

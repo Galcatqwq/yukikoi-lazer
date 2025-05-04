@@ -109,15 +109,10 @@ namespace osu.Game.Tests.Visual.Gameplay
                 InputManager.PressButton(MouseButton.Left);
             });
 
-            AddStep("Drag to bottom right", () =>
-            {
-                InputManager.MoveMouseTo(box3.ScreenSpaceDrawQuad.TopRight + new Vector2(-box3.ScreenSpaceDrawQuad.Width / 8, box3.ScreenSpaceDrawQuad.Height / 4));
-            });
+            AddStep("Drag to bottom right",
+                () => { InputManager.MoveMouseTo(box3.ScreenSpaceDrawQuad.TopRight + new Vector2(-box3.ScreenSpaceDrawQuad.Width / 8, box3.ScreenSpaceDrawQuad.Height / 4)); });
 
-            AddStep("Release button", () =>
-            {
-                InputManager.ReleaseButton(MouseButton.Left);
-            });
+            AddStep("Release button", () => { InputManager.ReleaseButton(MouseButton.Left); });
 
             AddAssert("First two boxes selected", () => skinEditor.SelectedComponents, () => Is.EqualTo(new[] { box1, box2 }));
 
@@ -127,15 +122,9 @@ namespace osu.Game.Tests.Visual.Gameplay
                 InputManager.PressButton(MouseButton.Left);
             });
 
-            AddStep("Drag to top left", () =>
-            {
-                InputManager.MoveMouseTo(box2.ScreenSpaceDrawQuad.Centre - new Vector2(box2.ScreenSpaceDrawQuad.Width / 4));
-            });
+            AddStep("Drag to top left", () => { InputManager.MoveMouseTo(box2.ScreenSpaceDrawQuad.Centre - new Vector2(box2.ScreenSpaceDrawQuad.Width / 4)); });
 
-            AddStep("Release button", () =>
-            {
-                InputManager.ReleaseButton(MouseButton.Left);
-            });
+            AddStep("Release button", () => { InputManager.ReleaseButton(MouseButton.Left); });
 
             AddAssert("Last two boxes selected", () => skinEditor.SelectedComponents, () => Is.EqualTo(new[] { box2, box3 }));
 
@@ -153,10 +142,8 @@ namespace osu.Game.Tests.Visual.Gameplay
 
             for (int i = 0; i < 3; i++)
             {
-                AddStep("Add big black box", () =>
-                {
-                    skinEditor.ChildrenOfType<SkinComponentToolbox.ToolboxComponentButton>().First(b => b.ChildrenOfType<BigBlackBox>().FirstOrDefault() != null).TriggerClick();
-                });
+                AddStep("Add big black box",
+                    () => { skinEditor.ChildrenOfType<SkinComponentToolbox.ToolboxComponentButton>().First(b => b.ChildrenOfType<BigBlackBox>().FirstOrDefault() != null).TriggerClick(); });
 
                 AddStep("store box", () =>
                 {

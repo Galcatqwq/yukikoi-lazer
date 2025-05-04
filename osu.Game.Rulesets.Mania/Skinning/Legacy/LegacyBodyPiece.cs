@@ -216,7 +216,7 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
             if (holdNote.Body.HasHoldBreak)
                 missFadeTime.Value = holdNote.Body.Result.TimeAbsolute;
 
-            int scaleDirection = (direction.Value == ScrollingDirection.Down ? 1 : -1);
+            int scaleDirection = direction.Value == ScrollingDirection.Down ? 1 : -1;
 
             // here we go...
             switch (bodyStyle)

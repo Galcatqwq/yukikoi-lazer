@@ -2,12 +2,12 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using osu.Framework.Bindables;
+using osu.Framework.Graphics;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.UserInterface;
-using osu.Framework.Graphics;
-using osuTK.Graphics;
-using osuTK;
 using osu.Framework.Input.Events;
+using osuTK;
+using osuTK.Graphics;
 
 namespace osu.Game.Overlays.BeatmapListing
 {
@@ -135,10 +135,8 @@ namespace osu.Game.Overlays.BeatmapListing
             {
                 base.LoadComplete();
 
-                SortDirection.BindValueChanged(direction =>
-                {
-                    icon.ScaleTo(direction.NewValue == Overlays.SortDirection.Ascending && Active.Value ? new Vector2(1f, -1f) : Vector2.One, 300, Easing.OutQuint);
-                }, true);
+                SortDirection.BindValueChanged(
+                    direction => { icon.ScaleTo(direction.NewValue == Overlays.SortDirection.Ascending && Active.Value ? new Vector2(1f, -1f) : Vector2.One, 300, Easing.OutQuint); }, true);
             }
 
             protected override void UpdateState()

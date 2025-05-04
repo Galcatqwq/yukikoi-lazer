@@ -44,10 +44,7 @@ namespace osu.Game.Tests.Visual.Editing
         [SetUpSteps]
         public void SetUpSteps()
         {
-            AddStep("create beatmap", () =>
-            {
-                Beatmap.Value = new WaveformTestBeatmap(audio);
-            });
+            AddStep("create beatmap", () => { Beatmap.Value = new WaveformTestBeatmap(audio); });
 
             AddStep("Create component", () =>
             {
@@ -83,10 +80,7 @@ namespace osu.Game.Tests.Visual.Editing
         [Test]
         public void TestBasic()
         {
-            AddStep("set low bpm", () =>
-            {
-                editorBeatmap.ControlPointInfo.TimingPoints.First().BeatLength = 1000;
-            });
+            AddStep("set low bpm", () => { editorBeatmap.ControlPointInfo.TimingPoints.First().BeatLength = 1000; });
 
             AddStep("click tap button", () =>
             {

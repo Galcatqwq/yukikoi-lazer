@@ -432,7 +432,7 @@ namespace osu.Game.Screens.Play.HUD.HitErrorMeters
                 , arrow_move_duration, Easing.OutQuint);
         }
 
-        private float getRelativeJudgementPosition(double value) => Math.Clamp((float)((value / maxHitWindow) + 1) / 2, 0, 1);
+        private float getRelativeJudgementPosition(double value) => Math.Clamp((float)(value / maxHitWindow + 1) / 2, 0, 1);
 
         internal partial class JudgementLine : PoolableDrawable
         {

@@ -103,7 +103,7 @@ namespace osu.Game.Rulesets.Catch.Objects
                             AddNested(new TinyDroplet
                             {
                                 StartTime = t + lastEvent.Value.Time,
-                                X = EffectiveX + Path.PositionAt(lastEvent.Value.PathProgress + (t / sinceLastTick) * (e.PathProgress - lastEvent.Value.PathProgress)).X,
+                                X = EffectiveX + Path.PositionAt(lastEvent.Value.PathProgress + t / sinceLastTick * (e.PathProgress - lastEvent.Value.PathProgress)).X,
                             });
                         }
                     }

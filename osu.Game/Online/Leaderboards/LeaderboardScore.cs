@@ -22,17 +22,18 @@ using osu.Game.Graphics;
 using osu.Game.Graphics.Containers;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Graphics.UserInterface;
-using osu.Game.Overlays;
-using osu.Game.Rulesets.UI;
-using osu.Game.Screens.Select;
-using osu.Game.Scoring;
-using osu.Game.Users.Drawables;
-using osuTK;
-using osuTK.Graphics;
 using osu.Game.Online.API;
+using osu.Game.Overlays;
 using osu.Game.Resources.Localisation.Web;
 using osu.Game.Rulesets.Mods;
+using osu.Game.Rulesets.UI;
+using osu.Game.Scoring;
+using osu.Game.Screens.Select;
+using osu.Game.Users.Drawables;
 using osu.Game.Utils;
+using osuTK;
+using osuTK.Graphics;
+using CommonStrings = osu.Game.Localisation.CommonStrings;
 
 namespace osu.Game.Online.Leaderboards
 {
@@ -425,8 +426,8 @@ namespace osu.Game.Online.Leaderboards
 
                 if (Score.Files.Count > 0)
                 {
-                    items.Add(new OsuMenuItem(Localisation.CommonStrings.Export, MenuItemType.Standard, () => scoreManager.Export(Score)));
-                    items.Add(new OsuMenuItem(CommonStrings.ButtonsDelete, MenuItemType.Destructive, () => dialogOverlay?.Push(new LocalScoreDeleteDialog(Score))));
+                    items.Add(new OsuMenuItem(CommonStrings.Export, MenuItemType.Standard, () => scoreManager.Export(Score)));
+                    items.Add(new OsuMenuItem(Resources.Localisation.Web.CommonStrings.ButtonsDelete, MenuItemType.Destructive, () => dialogOverlay?.Push(new LocalScoreDeleteDialog(Score))));
                 }
 
                 return items.ToArray();

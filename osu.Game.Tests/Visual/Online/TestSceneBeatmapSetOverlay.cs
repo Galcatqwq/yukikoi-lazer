@@ -1,23 +1,23 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using NUnit.Framework;
-using osu.Framework.Allocation;
-using osu.Game.Beatmaps;
-using osu.Game.Overlays;
-using osu.Game.Overlays.BeatmapSet;
-using osu.Game.Rulesets;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NUnit.Framework;
+using osu.Framework.Allocation;
 using osu.Framework.Testing;
+using osu.Game.Beatmaps;
 using osu.Game.Beatmaps.Drawables;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Online.API;
 using osu.Game.Online.API.Requests;
 using osu.Game.Online.API.Requests.Responses;
+using osu.Game.Overlays;
+using osu.Game.Overlays.BeatmapSet;
 using osu.Game.Overlays.BeatmapSet.Scores;
 using osu.Game.Resources.Localisation.Web;
+using osu.Game.Rulesets;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Osu.Mods;
 using osu.Game.Screens.Select.Details;
@@ -166,7 +166,8 @@ namespace osu.Game.Tests.Visual.Online
                 overlay.ShowBeatmapSet(set);
             });
 
-            AddAssert("shown beatmaps of current ruleset", () => overlay.Header.HeaderContent.Picker.Difficulties.All(b => b.Beatmap.Ruleset.OnlineID == overlay.Header.RulesetSelector.Current.Value.OnlineID));
+            AddAssert("shown beatmaps of current ruleset",
+                () => overlay.Header.HeaderContent.Picker.Difficulties.All(b => b.Beatmap.Ruleset.OnlineID == overlay.Header.RulesetSelector.Current.Value.OnlineID));
             AddAssert("left-most beatmap selected", () => overlay.Header.HeaderContent.Picker.Difficulties.First().State == BeatmapPicker.DifficultySelectorState.Selected);
         }
 
@@ -285,15 +286,9 @@ namespace osu.Game.Tests.Visual.Online
         public void TestBeatmapSetWithGuestDifficulty()
         {
             AddStep("show map", () => overlay.ShowBeatmapSet(createBeatmapSetWithGuestDifficulty()));
-            AddStep("move mouse to host difficulty", () =>
-            {
-                InputManager.MoveMouseTo(overlay.ChildrenOfType<DifficultyIcon>().ElementAt(0));
-            });
+            AddStep("move mouse to host difficulty", () => { InputManager.MoveMouseTo(overlay.ChildrenOfType<DifficultyIcon>().ElementAt(0)); });
             AddAssert("guest mapper information not shown", () => overlay.ChildrenOfType<BeatmapPicker>().Single().ChildrenOfType<OsuSpriteText>().All(s => s.Text != "BanchoBot"));
-            AddStep("move mouse to guest difficulty", () =>
-            {
-                InputManager.MoveMouseTo(overlay.ChildrenOfType<DifficultyIcon>().ElementAt(1));
-            });
+            AddStep("move mouse to guest difficulty", () => { InputManager.MoveMouseTo(overlay.ChildrenOfType<DifficultyIcon>().ElementAt(1)); });
             AddAssert("guest mapper information shown", () => overlay.ChildrenOfType<BeatmapPicker>().Single().ChildrenOfType<OsuSpriteText>().Any(s => s.Text == "BanchoBot"));
         }
 

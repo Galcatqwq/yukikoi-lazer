@@ -40,7 +40,7 @@ namespace osu.Game.Rulesets.Mania.Skinning.Default
                         if (stage.IsSpecialColumn(columnInStage))
                             return SkinUtils.As<TValue>(new Bindable<Color4>(colourSpecial));
 
-                        int distanceToEdge = Math.Min(columnInStage, (stage.Columns - 1) - columnInStage);
+                        int distanceToEdge = Math.Min(columnInStage, stage.Columns - 1 - columnInStage);
                         return SkinUtils.As<TValue>(new Bindable<Color4>(distanceToEdge % 2 == 0 ? colourOdd : colourEven));
                 }
             }

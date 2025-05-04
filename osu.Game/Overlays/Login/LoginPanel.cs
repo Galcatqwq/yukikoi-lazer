@@ -19,6 +19,7 @@ using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Overlays.Settings;
 using osu.Game.Users;
 using osuTK;
+using CommonStrings = osu.Game.Resources.Localisation.Web.CommonStrings;
 
 namespace osu.Game.Overlays.Login
 {
@@ -128,7 +129,7 @@ namespace osu.Game.Overlays.Login
                         },
                     };
 
-                    linkFlow.AddLink(Resources.Localisation.Web.CommonStrings.ButtonsCancel.ToLower(), api.Logout, string.Empty);
+                    linkFlow.AddLink(CommonStrings.ButtonsCancel.ToLower(), api.Logout, string.Empty);
                     break;
 
                 case APIState.Online:

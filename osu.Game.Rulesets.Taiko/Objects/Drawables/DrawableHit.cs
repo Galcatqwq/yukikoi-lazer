@@ -27,11 +27,7 @@ namespace osu.Game.Rulesets.Taiko.Objects.Drawables
         /// <summary>
         /// The action that caused this <see cref="DrawableHit"/> to be hit.
         /// </summary>
-        public TaikoAction? HitAction
-        {
-            get;
-            private set;
-        }
+        public TaikoAction? HitAction { get; private set; }
 
         private bool validActionPressed;
 

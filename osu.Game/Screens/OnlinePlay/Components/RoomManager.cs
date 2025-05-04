@@ -61,10 +61,7 @@ namespace osu.Game.Screens.OnlinePlay.Components
                 onSuccess?.Invoke(room);
             };
 
-            req.Failure += exception =>
-            {
-                onError?.Invoke(req.Response?.Error ?? exception.Message);
-            };
+            req.Failure += exception => { onError?.Invoke(req.Response?.Error ?? exception.Message); };
 
             api.Queue(req);
         }

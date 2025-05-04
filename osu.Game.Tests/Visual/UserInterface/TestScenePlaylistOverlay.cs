@@ -12,6 +12,7 @@ using osu.Framework.Testing;
 using osu.Game.Beatmaps;
 using osu.Game.Collections;
 using osu.Game.Database;
+using osu.Game.Graphics.Containers;
 using osu.Game.Overlays.Music;
 using osu.Game.Rulesets;
 using osu.Game.Tests.Resources;
@@ -85,7 +86,7 @@ namespace osu.Game.Tests.Visual.UserInterface
             AddStep("hold 1st item handle", () =>
             {
                 firstItem = this.ChildrenOfType<PlaylistItem>().First();
-                var handle = firstItem.ChildrenOfType<PlaylistItem.PlaylistItemHandle>().First();
+                var handle = firstItem.ChildrenOfType<OsuRearrangeableListItem<Live<BeatmapSetInfo>>.PlaylistItemHandle>().First();
 
                 InputManager.MoveMouseTo(handle.ScreenSpaceDrawQuad.Centre);
                 InputManager.PressButton(MouseButton.Left);
@@ -147,17 +148,11 @@ namespace osu.Game.Tests.Visual.UserInterface
 
             AddUntilStep("wait for dropdown to have new collection", () => collectionDropdown().Items.Count() == 2);
 
-            AddStep("Filter to collection", () =>
-            {
-                collectionDropdown().Current.Value = collectionDropdown().Items.Last();
-            });
+            AddStep("Filter to collection", () => { collectionDropdown().Current.Value = collectionDropdown().Items.Last(); });
 
             AddUntilStep("No items present", () => !playlistOverlay.ChildrenOfType<PlaylistItem>().Any(i => i.MatchingFilter));
 
-            AddStep("Import new non-matching beatmap", () =>
-            {
-                beatmapManager.Import(TestResources.CreateTestBeatmapSetInfo(1));
-            });
+            AddStep("Import new non-matching beatmap", () => { beatmapManager.Import(TestResources.CreateTestBeatmapSetInfo(1)); });
 
             AddStep("Force realm refresh", () => Realm.Run(r => r.Refresh()));
 

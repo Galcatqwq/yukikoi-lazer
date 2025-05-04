@@ -234,10 +234,7 @@ namespace osu.Game.Rulesets.Catch.Tests.Editor
 
         private void selectEverything()
         {
-            AddStep("Select everything", () =>
-            {
-                EditorBeatmap.SelectedHitObjects.AddRange(EditorBeatmap.HitObjects);
-            });
+            AddStep("Select everything", () => { EditorBeatmap.SelectedHitObjects.AddRange(EditorBeatmap.HitObjects); });
         }
 
         private void reverseSelection()

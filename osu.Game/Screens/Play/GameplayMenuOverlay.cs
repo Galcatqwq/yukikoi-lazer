@@ -19,9 +19,9 @@ using osu.Game.Graphics.Containers;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Graphics.UserInterface;
 using osu.Game.Input.Bindings;
+using osu.Game.Localisation;
 using osuTK;
 using osuTK.Graphics;
-using osu.Game.Localisation;
 
 namespace osu.Game.Screens.Play
 {
@@ -245,12 +245,12 @@ namespace osu.Game.Screens.Play
 
             (double firstHitTime, double lastHitTime) = gameplayState.Beatmap.CalculatePlayableBounds();
 
-            double playableLength = (lastHitTime - firstHitTime);
+            double playableLength = lastHitTime - firstHitTime;
 
             if (playableLength == 0)
                 return 0;
 
-            return (int)Math.Clamp(((gameplayClock.CurrentTime - firstHitTime) / playableLength) * 100, 0, 100);
+            return (int)Math.Clamp((gameplayClock.CurrentTime - firstHitTime) / playableLength * 100, 0, 100);
         }
 
         private partial class Button : DialogButton

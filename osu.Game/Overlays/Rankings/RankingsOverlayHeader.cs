@@ -42,10 +42,7 @@ namespace osu.Game.Overlays.Rankings
         {
             base.LoadComplete();
 
-            Current.BindValueChanged(scope =>
-            {
-                rulesetSelector.FadeTo(showRulesetSelector(scope.NewValue) ? 1 : 0, 200, Easing.OutQuint);
-            }, true);
+            Current.BindValueChanged(scope => { rulesetSelector.FadeTo(showRulesetSelector(scope.NewValue) ? 1 : 0, 200, Easing.OutQuint); }, true);
 
             bool showRulesetSelector(RankingsScope scope)
             {

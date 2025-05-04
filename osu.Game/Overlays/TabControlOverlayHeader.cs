@@ -61,10 +61,7 @@ namespace osu.Game.Overlays
                         Padding = new MarginPadding { Horizontal = ContentSidePadding },
                         Children = new[]
                         {
-                            TabControl = CreateTabControl().With(control =>
-                            {
-                                control.Current = Current;
-                            }),
+                            TabControl = CreateTabControl().With(control => { control.Current = Current; }),
                             CreateTabControlContent().With(content =>
                             {
                                 content.Anchor = Anchor.CentreRight;

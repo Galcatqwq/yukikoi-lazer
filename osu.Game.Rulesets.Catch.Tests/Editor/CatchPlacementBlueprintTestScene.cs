@@ -55,10 +55,7 @@ namespace osu.Game.Rulesets.Catch.Tests.Editor
             InputManager.MoveMouseTo(pos);
         });
 
-        protected void AddClickStep(MouseButton button) => AddStep($"click {button}", () =>
-        {
-            InputManager.Click(button);
-        });
+        protected void AddClickStep(MouseButton button) => AddStep($"click {button}", () => { InputManager.Click(button); });
 
         protected IEnumerable<FruitOutline> FruitOutlines => Content.ChildrenOfType<FruitOutline>();
 

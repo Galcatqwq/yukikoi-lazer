@@ -15,6 +15,7 @@ using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Osu;
 using osu.Game.Rulesets.Osu.Mods;
 using osu.Game.Rulesets.Scoring;
+using osu.Game.Rulesets.UI;
 using osu.Game.Screens.OnlinePlay.Multiplayer;
 using osu.Game.Screens.Play;
 
@@ -45,7 +46,7 @@ namespace osu.Game.Tests.Visual.Multiplayer
             // ensure that even after reaching a failed state, score processor keeps accounting for new hit results.
             // the testing method used here (autopilot + hold key) is sort-of dodgy, but works enough.
             AddAssert("score is zero", () => player.GameplayState.ScoreProcessor.TotalScore.Value == 0);
-            AddStep("hold key", () => player.ChildrenOfType<OsuInputManager.RulesetKeyBindingContainer>().First().TriggerPressed(OsuAction.LeftButton));
+            AddStep("hold key", () => player.ChildrenOfType<RulesetInputManager<OsuAction>.RulesetKeyBindingContainer>().First().TriggerPressed(OsuAction.LeftButton));
             AddUntilStep("score changed", () => player.GameplayState.ScoreProcessor.TotalScore.Value > 0);
         }
 
@@ -57,10 +58,7 @@ namespace osu.Game.Tests.Visual.Multiplayer
                 SelectedMods.Value = mods?.Invoke() ?? Array.Empty<Mod>();
             });
 
-            AddStep("Start track playing", () =>
-            {
-                Beatmap.Value.Track.Start();
-            });
+            AddStep("Start track playing", () => { Beatmap.Value.Track.Start(); });
 
             AddStep("initialise gameplay", () =>
             {

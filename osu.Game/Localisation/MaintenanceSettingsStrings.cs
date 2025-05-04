@@ -37,7 +37,8 @@ namespace osu.Game.Localisation
         /// <summary>
         /// "Some files couldn't be cleaned up during migration. Clicking this notification will open the folder so you can manually clean things up."
         /// </summary>
-        public static LocalisableString FailedCleanupNotification => new TranslatableString(getKey(@"failed_cleanup_notification"), @"Some files couldn't be cleaned up during migration. Clicking this notification will open the folder so you can manually clean things up.");
+        public static LocalisableString FailedCleanupNotification => new TranslatableString(getKey(@"failed_cleanup_notification"),
+            @"Some files couldn't be cleaned up during migration. Clicking this notification will open the folder so you can manually clean things up.");
 
         /// <summary>
         /// "Please select a new location"
@@ -47,12 +48,14 @@ namespace osu.Game.Localisation
         /// <summary>
         /// "The target directory already seems to have an osu! install. Use that data instead?"
         /// </summary>
-        public static LocalisableString TargetDirectoryAlreadyInstalledOsu => new TranslatableString(getKey(@"target_directory_already_installed_osu"), @"The target directory already seems to have an osu! install. Use that data instead?");
+        public static LocalisableString TargetDirectoryAlreadyInstalledOsu => new TranslatableString(getKey(@"target_directory_already_installed_osu"),
+            @"The target directory already seems to have an osu! install. Use that data instead?");
 
         /// <summary>
         /// "To complete this operation, osu! will close. Please open it again to use the new data location."
         /// </summary>
-        public static LocalisableString RestartAndReOpenRequiredForCompletion => new TranslatableString(getKey(@"restart_and_re_open_required_for_completion"), @"To complete this operation, osu! will close. Please open it again to use the new data location.");
+        public static LocalisableString RestartAndReOpenRequiredForCompletion => new TranslatableString(getKey(@"restart_and_re_open_required_for_completion"),
+            @"To complete this operation, osu! will close. Please open it again to use the new data location.");
 
         /// <summary>
         /// "Delete ALL beatmaps"

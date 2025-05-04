@@ -272,7 +272,7 @@ namespace osu.Game.Tests.Visual.Background
             if (source == BackgroundSource.Skin)
                 setCustomSkin();
 
-            AddUntilStep("wait for beatmap background to be loaded", () => (getCurrentBackground())?.GetType() == backgroundType);
+            AddUntilStep("wait for beatmap background to be loaded", () => getCurrentBackground()?.GetType() == backgroundType);
             AddAssert("next doesn't load new background", () => screen.Next() == false);
         }
 
@@ -283,7 +283,7 @@ namespace osu.Game.Tests.Visual.Background
             setSupporter(supporter);
             setDefaultSkin();
 
-            AddUntilStep("wait for beatmap background to be loaded", () => (getCurrentBackground())?.GetType() == typeof(Graphics.Backgrounds.Background));
+            AddUntilStep("wait for beatmap background to be loaded", () => getCurrentBackground()?.GetType() == typeof(Graphics.Backgrounds.Background));
             AddAssert("next cycles background", () => screen.Next());
         }
 

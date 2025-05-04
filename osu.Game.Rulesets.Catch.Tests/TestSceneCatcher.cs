@@ -9,7 +9,6 @@ using System.Linq;
 using NUnit.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
-using osu.Game.Rulesets.Catch.UI;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Testing;
 using osu.Framework.Utils;
@@ -19,6 +18,7 @@ using osu.Game.Configuration;
 using osu.Game.Rulesets.Catch.Judgements;
 using osu.Game.Rulesets.Catch.Objects;
 using osu.Game.Rulesets.Catch.Objects.Drawables;
+using osu.Game.Rulesets.Catch.UI;
 using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Tests.Visual;
@@ -62,23 +62,11 @@ namespace osu.Game.Rulesets.Catch.Tests
         {
             JudgementResult result1 = null;
             JudgementResult result2 = null;
-            AddStep("catch hyper fruit", () =>
-            {
-                result1 = attemptCatch(new Fruit { HyperDashTarget = new Fruit { X = 100 } });
-            });
-            AddStep("catch normal fruit", () =>
-            {
-                result2 = attemptCatch(new Fruit());
-            });
-            AddStep("revert second result", () =>
-            {
-                catcher.OnRevertResult(result2);
-            });
+            AddStep("catch hyper fruit", () => { result1 = attemptCatch(new Fruit { HyperDashTarget = new Fruit { X = 100 } }); });
+            AddStep("catch normal fruit", () => { result2 = attemptCatch(new Fruit()); });
+            AddStep("revert second result", () => { catcher.OnRevertResult(result2); });
             checkHyperDash(true);
-            AddStep("revert first result", () =>
-            {
-                catcher.OnRevertResult(result1);
-            });
+            AddStep("revert first result", () => { catcher.OnRevertResult(result1); });
             checkHyperDash(false);
         }
 
@@ -86,15 +74,9 @@ namespace osu.Game.Rulesets.Catch.Tests
         public void TestCatcherAnimationStateReverted()
         {
             JudgementResult result = null;
-            AddStep("catch kiai fruit", () =>
-            {
-                result = attemptCatch(new TestKiaiFruit());
-            });
+            AddStep("catch kiai fruit", () => { result = attemptCatch(new TestKiaiFruit()); });
             checkState(CatcherAnimationState.Kiai);
-            AddStep("revert result", () =>
-            {
-                catcher.OnRevertResult(result);
-            });
+            AddStep("revert result", () => { catcher.OnRevertResult(result); });
             checkState(CatcherAnimationState.Idle);
         }
 

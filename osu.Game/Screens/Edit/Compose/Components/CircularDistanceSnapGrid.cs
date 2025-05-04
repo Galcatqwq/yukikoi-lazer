@@ -85,7 +85,7 @@ namespace osu.Game.Screens.Edit.Compose.Components
             // which is usually not considered by an `IDistanceSnapProvider`.
             float distanceSpacingMultiplier = (float)DistanceSpacingMultiplier.Value;
 
-            Vector2 travelVector = (position - StartPosition);
+            Vector2 travelVector = position - StartPosition;
 
             // We need a non-zero travel vector in order to find a valid direction.
             if (travelVector == Vector2.Zero)

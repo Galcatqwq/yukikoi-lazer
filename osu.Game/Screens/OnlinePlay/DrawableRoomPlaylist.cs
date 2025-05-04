@@ -149,10 +149,7 @@ namespace osu.Game.Screens.OnlinePlay
             }
         }
 
-        protected override ScrollContainer<Drawable> CreateScrollContainer() => base.CreateScrollContainer().With(d =>
-        {
-            d.ScrollbarVisible = false;
-        });
+        protected override ScrollContainer<Drawable> CreateScrollContainer() => base.CreateScrollContainer().With(d => { d.ScrollbarVisible = false; });
 
         protected override FillFlowContainer<RearrangeableListItem<PlaylistItem>> CreateListFillFlowContainer() => new FillFlowContainer<RearrangeableListItem<PlaylistItem>>
         {

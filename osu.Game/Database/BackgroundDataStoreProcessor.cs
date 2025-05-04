@@ -297,10 +297,7 @@ namespace osu.Game.Database
 
                         // Can't use async overload because we're not on the update thread.
                         // ReSharper disable once MethodHasAsyncOverload
-                        realmAccess.Write(r =>
-                        {
-                            r.Find<ScoreInfo>(id)!.MaximumStatisticsJson = JsonConvert.SerializeObject(score.MaximumStatistics);
-                        });
+                        realmAccess.Write(r => { r.Find<ScoreInfo>(id)!.MaximumStatisticsJson = JsonConvert.SerializeObject(score.MaximumStatistics); });
                     }
 
                     ++processedCount;

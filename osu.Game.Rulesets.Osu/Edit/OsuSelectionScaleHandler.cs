@@ -165,8 +165,8 @@ namespace osu.Game.Rulesets.Osu.Edit
 
         private (bool X, bool Y) isQuadInBounds(Quad quad)
         {
-            bool xInBounds = (quad.TopLeft.X >= 0) && (quad.BottomRight.X <= OsuPlayfield.BASE_SIZE.X);
-            bool yInBounds = (quad.TopLeft.Y >= 0) && (quad.BottomRight.Y <= OsuPlayfield.BASE_SIZE.Y);
+            bool xInBounds = quad.TopLeft.X >= 0 && quad.BottomRight.X <= OsuPlayfield.BASE_SIZE.X;
+            bool yInBounds = quad.TopLeft.Y >= 0 && quad.BottomRight.Y <= OsuPlayfield.BASE_SIZE.Y;
 
             return (xInBounds, yInBounds);
         }

@@ -100,10 +100,7 @@ namespace osu.Game.Tests.Visual.Online
                     commitText.FadeOutFromOne(1000, Easing.InQuint);
                 };
 
-                bar.OnSearchTermsChanged += text =>
-                {
-                    searchText.Text = $"{nameof(bar.OnSearchTermsChanged)}: {text}";
-                };
+                bar.OnSearchTermsChanged += text => { searchText.Text = $"{nameof(bar.OnSearchTermsChanged)}: {text}"; };
             });
         }
 

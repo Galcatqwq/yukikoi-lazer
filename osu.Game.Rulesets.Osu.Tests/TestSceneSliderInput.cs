@@ -486,10 +486,8 @@ namespace osu.Game.Rulesets.Osu.Tests
 
         private void assertAllMaxJudgements()
         {
-            AddAssert("All judgements max", () =>
-            {
-                return judgementResults.Select(j => (j.HitObject, j.Type));
-            }, () => Is.EqualTo(judgementResults.Select(j => (j.HitObject, j.Judgement.MaxResult))));
+            AddAssert("All judgements max", () => { return judgementResults.Select(j => (j.HitObject, j.Type)); },
+                () => Is.EqualTo(judgementResults.Select(j => (j.HitObject, j.Judgement.MaxResult))));
         }
 
         private void assertHeadMissTailTracked()

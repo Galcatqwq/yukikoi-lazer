@@ -75,7 +75,8 @@ namespace osu.Game.Online.Spectator
 
         [JsonConstructor]
         [SerializationConstructor]
-        public FrameHeader(long totalScore, double accuracy, int combo, int maxCombo, Dictionary<HitResult, int> statistics, ScoreProcessorStatistics scoreProcessorStatistics, DateTimeOffset receivedTime)
+        public FrameHeader(long totalScore, double accuracy, int combo, int maxCombo, Dictionary<HitResult, int> statistics, ScoreProcessorStatistics scoreProcessorStatistics,
+                           DateTimeOffset receivedTime)
         {
             TotalScore = totalScore;
             Accuracy = accuracy;

@@ -3,8 +3,8 @@
 
 using System.Globalization;
 using Newtonsoft.Json.Linq;
-using osu.Framework.IO.Network;
 using osu.Framework.Extensions.IEnumerableExtensions;
+using osu.Framework.IO.Network;
 using osu.Game.Online.API.Requests;
 
 namespace osu.Game.Extensions
@@ -16,10 +16,7 @@ namespace osu.Game.Extensions
         /// </summary>
         public static void AddCursor(this WebRequest webRequest, Cursor cursor)
         {
-            cursor.Properties.ForEach(x =>
-            {
-                webRequest.AddParameter("cursor[" + x.Key + "]", (x.Value as JValue)?.ToString(CultureInfo.InvariantCulture) ?? x.Value.ToString());
-            });
+            cursor.Properties.ForEach(x => { webRequest.AddParameter("cursor[" + x.Key + "]", (x.Value as JValue)?.ToString(CultureInfo.InvariantCulture) ?? x.Value.ToString()); });
         }
     }
 }

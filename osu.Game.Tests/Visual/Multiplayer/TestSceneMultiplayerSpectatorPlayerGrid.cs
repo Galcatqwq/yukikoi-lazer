@@ -19,10 +19,7 @@ namespace osu.Game.Tests.Visual.Multiplayer
         private PlayerGrid grid;
 
         [SetUp]
-        public void Setup() => Schedule(() =>
-        {
-            Child = grid = new PlayerGrid { RelativeSizeAxes = Axes.Both };
-        });
+        public void Setup() => Schedule(() => { Child = grid = new PlayerGrid { RelativeSizeAxes = Axes.Both }; });
 
         [Test]
         public void TestMaximiseAndMinimise()

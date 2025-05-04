@@ -91,10 +91,7 @@ namespace osu.Game.Screens.Menu
                 t.Origin = Anchor.Centre;
                 t.Colour = colours.Pink;
 
-                Schedule(() =>
-                {
-                    heart?.FlashColour(Color4.White, 750, Easing.OutQuint).Loop();
-                });
+                Schedule(() => { heart?.FlashColour(Color4.White, 750, Easing.OutQuint).Loop(); });
             });
 
             // 保留原有的淡入动画

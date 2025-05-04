@@ -62,10 +62,7 @@ namespace osu.Game.Tests.Database
                 });
             });
 
-            AddStep("Run background processor", () =>
-            {
-                Add(new TestBackgroundDataStoreProcessor());
-            });
+            AddStep("Run background processor", () => { Add(new TestBackgroundDataStoreProcessor()); });
 
             AddUntilStep("wait for difficulties repopulated", () =>
             {
@@ -101,10 +98,7 @@ namespace osu.Game.Tests.Database
                 });
             });
 
-            AddStep("Run background processor", () =>
-            {
-                Add(new TestBackgroundDataStoreProcessor());
-            });
+            AddStep("Run background processor", () => { Add(new TestBackgroundDataStoreProcessor()); });
 
             AddWaitStep("wait some", 500);
 

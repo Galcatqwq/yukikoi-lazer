@@ -157,10 +157,7 @@ namespace osu.Game.Tests.Visual.Gameplay
         [TestCase(100, 1)]
         public void TestPerfectCurveAngles(float height, float width)
         {
-            AddStep("create path", () =>
-            {
-                path.ControlPoints.AddRange(createSegment(PathType.PERFECT_CURVE, Vector2.Zero, new Vector2(width / 2, height), new Vector2(width, 0)));
-            });
+            AddStep("create path", () => { path.ControlPoints.AddRange(createSegment(PathType.PERFECT_CURVE, Vector2.Zero, new Vector2(width / 2, height), new Vector2(width, 0))); });
         }
 
         [TestCase(2)]

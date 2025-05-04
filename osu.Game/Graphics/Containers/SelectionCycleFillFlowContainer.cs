@@ -18,7 +18,7 @@ namespace osu.Game.Graphics.Containers
     /// </summary>
     public partial class SelectionCycleFillFlowContainer<T> : FillFlowContainer<T> where T : Drawable, IStateful<SelectionState>
     {
-        public T Selected => (selectedIndex >= 0 && selectedIndex < Count) ? this[selectedIndex.Value] : null;
+        public T Selected => selectedIndex >= 0 && selectedIndex < Count ? this[selectedIndex.Value] : null;
 
         private int? selectedIndex;
 

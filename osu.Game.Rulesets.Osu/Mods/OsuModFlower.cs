@@ -46,7 +46,9 @@ namespace osu.Game.Rulesets.Osu.Mods
             Precision = 0.01f,
         };
 
-        public override Type[] IncompatibleMods => base.IncompatibleMods.Concat(new[] { typeof(OsuModMagnetised), typeof(OsuModAutopilot), typeof(OsuModSpunOut), typeof(OsuModAlternate), typeof(OsuModSingleTap) }).ToArray();
+        public override Type[] IncompatibleMods => base.IncompatibleMods
+                                                       .Concat(new[] { typeof(OsuModMagnetised), typeof(OsuModAutopilot), typeof(OsuModSpunOut), typeof(OsuModAlternate), typeof(OsuModSingleTap) })
+                                                       .ToArray();
 
         public override ModReplayData CreateReplayData(IBeatmap beatmap, IReadOnlyList<Mod> mods)
             => new ModReplayData(new OsuFlowerGenerator(beatmap, mods, JumpMultiplier.Value, AngleOffset.Value).Generate(), new ModCreatedUser { Username = "lazer!dance" });

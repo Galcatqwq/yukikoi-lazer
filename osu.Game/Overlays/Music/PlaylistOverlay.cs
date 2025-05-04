@@ -146,7 +146,7 @@ namespace osu.Game.Overlays.Music
         {
             beatmapSet.PerformRead(set =>
             {
-                if (set.Equals((beatmap.Value?.BeatmapSetInfo)))
+                if (set.Equals(beatmap.Value?.BeatmapSetInfo))
                 {
                     beatmap.Value?.Track.Seek(0);
                     return;

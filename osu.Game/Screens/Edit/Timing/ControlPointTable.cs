@@ -65,7 +65,7 @@ namespace osu.Game.Screens.Edit.Timing
                         {
                             Anchor = Anchor.CentreLeft,
                             Origin = Anchor.CentreLeft,
-                            Margin = new MarginPadding { Left = ControlPointTable.timing_column_width }
+                            Margin = new MarginPadding { Left = timing_column_width }
                         },
                     }
                 },

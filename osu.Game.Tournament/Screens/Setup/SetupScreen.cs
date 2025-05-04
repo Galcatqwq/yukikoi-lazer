@@ -129,10 +129,7 @@ namespace osu.Game.Tournament.Screens.Setup
                 {
                     Label = "Stream area resolution",
                     ButtonText = "Set height",
-                    Action = height =>
-                    {
-                        windowSize.Value = new Size((int)(height * aspect_ratio / TournamentSceneManager.STREAM_AREA_WIDTH * TournamentSceneManager.REQUIRED_WIDTH), height);
-                    }
+                    Action = height => { windowSize.Value = new Size((int)(height * aspect_ratio / TournamentSceneManager.STREAM_AREA_WIDTH * TournamentSceneManager.REQUIRED_WIDTH), height); }
                 },
                 new LabelledSwitchButton
                 {

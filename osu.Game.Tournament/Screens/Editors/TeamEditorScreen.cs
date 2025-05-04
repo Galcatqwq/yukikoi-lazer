@@ -16,8 +16,8 @@ using osu.Game.Graphics.UserInterface;
 using osu.Game.Overlays;
 using osu.Game.Overlays.Settings;
 using osu.Game.Tournament.Models;
-using osu.Game.Tournament.Screens.Editors.Components;
 using osu.Game.Tournament.Screens.Drawings.Components;
+using osu.Game.Tournament.Screens.Editors.Components;
 using osu.Game.Users;
 using osuTK;
 
@@ -141,10 +141,7 @@ namespace osu.Game.Tournament.Screens.Editors
                                 Width = 0.2f,
                                 Margin = new MarginPadding(10),
                                 Text = "Edit seeding results",
-                                Action = () =>
-                                {
-                                    sceneManager?.SetScreen(new SeedingEditorScreen(team, parent));
-                                }
+                                Action = () => { sceneManager?.SetScreen(new SeedingEditorScreen(team, parent)); }
                             },
                             playerEditor,
                             new SettingsButton

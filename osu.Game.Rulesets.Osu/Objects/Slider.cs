@@ -3,10 +3,8 @@
 
 #nullable disable
 
-using osuTK;
-using osu.Game.Rulesets.Objects.Types;
+using System;
 using System.Collections.Generic;
-using osu.Game.Rulesets.Objects;
 using System.Linq;
 using System.Threading;
 using Newtonsoft.Json;
@@ -16,9 +14,12 @@ using osu.Game.Audio;
 using osu.Game.Beatmaps;
 using osu.Game.Beatmaps.ControlPoints;
 using osu.Game.Rulesets.Judgements;
+using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Legacy;
+using osu.Game.Rulesets.Objects.Types;
 using osu.Game.Rulesets.Osu.Judgements;
 using osu.Game.Rulesets.Scoring;
+using osuTK;
 
 namespace osu.Game.Rulesets.Osu.Objects
 {
@@ -30,7 +31,7 @@ namespace osu.Game.Rulesets.Osu.Objects
         public double Duration
         {
             get => EndTime - StartTime;
-            set => throw new System.NotSupportedException($"Adjust via {nameof(RepeatCount)} instead"); // can be implemented if/when needed.
+            set => throw new NotSupportedException($"Adjust via {nameof(RepeatCount)} instead"); // can be implemented if/when needed.
         }
 
         public override IList<HitSampleInfo> AuxiliarySamples => CreateSlidingSamples().Concat(TailSamples).ToArray();
@@ -179,7 +180,7 @@ namespace osu.Game.Rulesets.Osu.Objects
             // for backwards compatibility reasons (intentionally introducing floating point errors to match stable).
             double scoringDistance = Velocity * timingPoint.BeatLength;
 
-            TickDistance = GenerateTicks ? (scoringDistance / difficulty.SliderTickRate * TickDistanceMultiplier) : double.PositiveInfinity;
+            TickDistance = GenerateTicks ? scoringDistance / difficulty.SliderTickRate * TickDistanceMultiplier : double.PositiveInfinity;
         }
 
         protected override void CreateNestedHitObjects(CancellationToken cancellationToken)

@@ -71,10 +71,7 @@ namespace osu.Game.Rulesets.Mania.Edit
                     double selectionStartTime = selectedObjects.Min(ho => ho.StartTime);
                     double selectionEndTime = selectedObjects.Max(ho => ho.GetEndTime());
 
-                    EditorBeatmap.PerformOnSelection(hitObject =>
-                    {
-                        hitObject.StartTime = selectionStartTime + (selectionEndTime - hitObject.GetEndTime());
-                    });
+                    EditorBeatmap.PerformOnSelection(hitObject => { hitObject.StartTime = selectionStartTime + (selectionEndTime - hitObject.GetEndTime()); });
 
                     return true;
 

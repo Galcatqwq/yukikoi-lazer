@@ -56,7 +56,7 @@ namespace osu.Game.Overlays
 
             InternalChildren = new Drawable[]
             {
-                toastContentBackground = (new Box
+                toastContentBackground = new Box
                 {
                     Anchor = Anchor.TopRight,
                     Origin = Anchor.TopRight,
@@ -75,7 +75,7 @@ namespace osu.Game.Overlays
                     postEffectDrawable.Position += new Vector2(70, -50);
                     postEffectDrawable.AutoSizeAxes = Axes.None;
                     postEffectDrawable.RelativeSizeAxes = Axes.X;
-                })),
+                }),
                 toastFlow = new FillFlowContainer<Notification>
                 {
                     LayoutDuration = 150,

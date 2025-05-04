@@ -17,7 +17,8 @@ namespace osu.Game.Localisation.HUD
         /// <summary>
         /// "Whether a graph displaying difficulty throughout the beatmap should be shown"
         /// </summary>
-        public static LocalisableString ShowGraphDescription => new TranslatableString(getKey(@"show_graph_description"), "Whether a graph displaying difficulty throughout the beatmap should be shown");
+        public static LocalisableString ShowGraphDescription =>
+            new TranslatableString(getKey(@"show_graph_description"), "Whether a graph displaying difficulty throughout the beatmap should be shown");
 
         /// <summary>
         /// "Show time"

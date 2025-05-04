@@ -129,10 +129,7 @@ namespace osu.Game.Screens.OnlinePlay.Lounge
 
         public MenuItem[] ContextMenuItems => new MenuItem[]
         {
-            new OsuMenuItem("Create copy", MenuItemType.Standard, () =>
-            {
-                lounge?.OpenCopy(Room);
-            })
+            new OsuMenuItem("Create copy", MenuItemType.Standard, () => { lounge?.OpenCopy(Room); })
         };
 
         public bool OnPressed(KeyBindingPressEvent<GlobalAction> e)

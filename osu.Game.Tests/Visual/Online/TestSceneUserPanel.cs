@@ -168,10 +168,7 @@ namespace osu.Game.Tests.Visual.Online
                     CountryRank = RNG.Next(100000)
                 });
             });
-            AddStep("set statistics to empty", () =>
-            {
-                API.UpdateStatistics(new UserStatistics());
-            });
+            AddStep("set statistics to empty", () => { API.UpdateStatistics(new UserStatistics()); });
         }
 
         private UserActivity soloGameStatusForRuleset(int rulesetId) => new UserActivity.InSoloGame(new BeatmapInfo(), rulesetStore.GetRuleset(rulesetId)!);

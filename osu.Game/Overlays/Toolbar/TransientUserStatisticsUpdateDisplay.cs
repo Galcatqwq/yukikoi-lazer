@@ -78,12 +78,12 @@ namespace osu.Game.Overlays.Toolbar
                 {
                     globalRank.Display(
                         update.Before.GlobalRank ?? update.After.GlobalRank.Value,
-                        Math.Abs((update.After.GlobalRank.Value - update.Before.GlobalRank) ?? 0),
+                        Math.Abs(update.After.GlobalRank.Value - update.Before.GlobalRank ?? 0),
                         update.After.GlobalRank.Value);
                 }
 
                 if (update.After.PP != null)
-                    pp.Display(update.Before.PP ?? update.After.PP.Value, Math.Abs((update.After.PP - update.Before.PP) ?? 0M), update.After.PP.Value);
+                    pp.Display(update.Before.PP ?? update.After.PP.Value, Math.Abs(update.After.PP - update.Before.PP ?? 0M), update.After.PP.Value);
 
                 this.Delay(5000).FadeOut(500, Easing.OutQuint);
             });

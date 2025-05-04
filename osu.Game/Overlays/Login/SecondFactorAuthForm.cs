@@ -108,10 +108,7 @@ namespace osu.Game.Overlays.Login
                     Logger.Error(ex, @"Failed to retrieve new verification code.");
                     loading.Hide();
                 };
-                reissueRequest.Success += () =>
-                {
-                    loading.Hide();
-                };
+                reissueRequest.Success += () => { loading.Hide(); };
 
                 Task.Run(() => api.Perform(reissueRequest));
             });

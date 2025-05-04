@@ -164,7 +164,7 @@ namespace osu.Game.Rulesets.Osu.Tests
                 const double spin_duration = 1000;
                 double currentTime = Time.Current;
 
-                double angle = (currentTime % spin_duration) / spin_duration * 2 * Math.PI;
+                double angle = currentTime % spin_duration / spin_duration * 2 * Math.PI;
                 Vector2 rPos = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
 
                 MoveMouseTo(ToScreenSpace(DrawSize / 2 + DrawSize / 3 * rPos));

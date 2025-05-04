@@ -33,10 +33,7 @@ namespace osu.Game.Tests.Visual.Gameplay
             AddToggleStep("toggle spawning", value => spewer.Active.Value = value);
             AddSliderStep("particle gravity", 0f, 1f, 0f, value => spewer.Gravity = value);
             AddSliderStep("particle velocity", 0f, 1f, 0.5f, value => spewer.MaxVelocity = value);
-            AddStep("move to new location", () =>
-            {
-                spewer.TransformTo(nameof(spewer.SpawnPosition), new Vector2(RNG.NextSingle(), RNG.NextSingle()), 1000, Easing.Out);
-            });
+            AddStep("move to new location", () => { spewer.TransformTo(nameof(spewer.SpawnPosition), new Vector2(RNG.NextSingle(), RNG.NextSingle()), 1000, Easing.Out); });
         }
 
         [SetUpSteps]

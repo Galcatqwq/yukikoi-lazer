@@ -15,9 +15,11 @@ namespace osu.Game.Rulesets.Mania.Tests.Mods
         [TestCase(0.5f)]
         [TestCase(1.5f)]
         [TestCase(3f)]
-        public void TestSizeMultiplier(float sizeMultiplier) => CreateModTest(new ModTestData { Mod = new ManiaModFlashlight { SizeMultiplier = { Value = sizeMultiplier } }, PassCondition = () => true });
+        public void TestSizeMultiplier(float sizeMultiplier) =>
+            CreateModTest(new ModTestData { Mod = new ManiaModFlashlight { SizeMultiplier = { Value = sizeMultiplier } }, PassCondition = () => true });
 
         [Test]
-        public void TestComboBasedSize([Values] bool comboBasedSize) => CreateModTest(new ModTestData { Mod = new ManiaModFlashlight { ComboBasedSize = { Value = comboBasedSize } }, PassCondition = () => true });
+        public void TestComboBasedSize([Values] bool comboBasedSize) =>
+            CreateModTest(new ModTestData { Mod = new ManiaModFlashlight { ComboBasedSize = { Value = comboBasedSize } }, PassCondition = () => true });
     }
 }

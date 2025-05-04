@@ -86,10 +86,7 @@ namespace osu.Game.Rulesets.Osu.Edit
             angleInput.Current.BindValueChanged(angle => rotationInfo.Value = rotationInfo.Value with { Degrees = angle.NewValue });
             rotationOrigin.Items.First().Select();
 
-            rotationHandler.CanRotateAroundSelectionOrigin.BindValueChanged(e =>
-            {
-                selectionCentreButton.Selected.Disabled = !e.NewValue;
-            }, true);
+            rotationHandler.CanRotateAroundSelectionOrigin.BindValueChanged(e => { selectionCentreButton.Selected.Disabled = !e.NewValue; }, true);
 
             rotationInfo.BindValueChanged(rotation =>
             {

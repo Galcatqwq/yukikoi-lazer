@@ -3,12 +3,12 @@
 
 #nullable disable
 
-using osu.Framework.Graphics;
-using osu.Framework.Input.Events;
 using System.Collections.Generic;
 using System.Linq;
-using osu.Framework.Graphics.UserInterface;
 using JetBrains.Annotations;
+using osu.Framework.Graphics;
+using osu.Framework.Graphics.UserInterface;
+using osu.Framework.Input.Events;
 
 namespace osu.Game.Overlays
 {
@@ -24,10 +24,7 @@ namespace osu.Game.Overlays
 
         protected override Dropdown<T> CreateDropdown() => null;
 
-        protected override TabItem<T> CreateTabItem(T value) => CreateStreamItem(value).With(item =>
-        {
-            item.SelectedItem.BindTo(Current);
-        });
+        protected override TabItem<T> CreateTabItem(T value) => CreateStreamItem(value).With(item => { item.SelectedItem.BindTo(Current); });
 
         [NotNull]
         protected abstract OverlayStreamItem<T> CreateStreamItem(T value);

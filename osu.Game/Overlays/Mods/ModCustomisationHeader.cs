@@ -106,10 +106,7 @@ namespace osu.Game.Overlays.Mods
                 }
             }, true);
 
-            ExpandedState.BindValueChanged(v =>
-            {
-                icon.ScaleTo(v.NewValue > ModCustomisationPanelState.Collapsed ? new Vector2(1, -1) : Vector2.One, 300, Easing.OutQuint);
-            }, true);
+            ExpandedState.BindValueChanged(v => { icon.ScaleTo(v.NewValue > ModCustomisationPanelState.Collapsed ? new Vector2(1, -1) : Vector2.One, 300, Easing.OutQuint); }, true);
         }
 
         protected override bool OnClick(ClickEvent e)

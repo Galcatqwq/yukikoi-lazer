@@ -523,7 +523,8 @@ namespace osu.Game.Tests.Chat
         [Test]
         public void TestEmoji()
         {
-            Message result = MessageFormatter.FormatMessage(new Message { Content = "Hello world\uD83D\uDE12<--This is an emoji,There are more emojis among us:\uD83D\uDE10\uD83D\uDE00,\uD83D\uDE20" });
+            Message result = MessageFormatter.FormatMessage(new Message
+                { Content = "Hello world\uD83D\uDE12<--This is an emoji,There are more emojis among us:\uD83D\uDE10\uD83D\uDE00,\uD83D\uDE20" });
             Assert.AreEqual("Hello world[emoji]<--This is an emoji,There are more emojis among us:[emoji][emoji],[emoji]", result.DisplayContent);
             Assert.AreEqual(result.Links.Count, 0);
         }

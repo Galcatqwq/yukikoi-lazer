@@ -109,7 +109,8 @@ namespace osu.Game.Tests.Visual.Gameplay
         {
             base.SetUpSteps();
 
-            AddStep("Add trigger source", () => Player.DrawableRuleset.FrameStableComponents.Add(sampleTriggerSource = new TestGameplaySampleTriggerSource(Player.DrawableRuleset.Playfield.HitObjectContainer)));
+            AddStep("Add trigger source",
+                () => Player.DrawableRuleset.FrameStableComponents.Add(sampleTriggerSource = new TestGameplaySampleTriggerSource(Player.DrawableRuleset.Playfield.HitObjectContainer)));
         }
 
         [Test]

@@ -44,7 +44,7 @@ namespace osu.Game.Rulesets.Osu.UI
             // 1. The last blocking hitobject has been judged.
             // 2. The current time is after the last hitobject's start time.
             // Hits at exactly the same time as the blocking hitobject are allowed for maps that contain simultaneous hitobjects (e.g. /b/372245).
-            return (blockingObject.Judged || time >= blockingObject.HitObject.StartTime) ? ClickAction.Hit : ClickAction.Shake;
+            return blockingObject.Judged || time >= blockingObject.HitObject.StartTime ? ClickAction.Hit : ClickAction.Shake;
         }
 
         public void HandleHit(DrawableHitObject hitObject)

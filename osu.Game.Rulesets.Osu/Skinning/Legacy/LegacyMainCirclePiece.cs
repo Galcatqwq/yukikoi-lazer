@@ -61,7 +61,7 @@ namespace osu.Game.Rulesets.Osu.Skinning.Legacy
 
             // if a base texture for the specified prefix exists, continue using it for subsequent lookups.
             // otherwise fall back to the default prefix "hitcircle".
-            string circleName = (priorityLookupPrefix != null && skin.GetTexture(priorityLookupPrefix) != null) ? priorityLookupPrefix : @"hitcircle";
+            string circleName = priorityLookupPrefix != null && skin.GetTexture(priorityLookupPrefix) != null ? priorityLookupPrefix : @"hitcircle";
 
             Vector2 maxSize = OsuHitObject.OBJECT_DIMENSIONS * 2;
 

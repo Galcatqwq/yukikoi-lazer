@@ -95,7 +95,7 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
                 visibleRange = newRange;
 
                 // actual regeneration only needs to occur if we've passed one of the known next min/max tick boundaries.
-                if (nextMinTick == null || nextMaxTick == null || (visibleRange.min < nextMinTick || visibleRange.max > nextMaxTick))
+                if (nextMinTick == null || nextMaxTick == null || visibleRange.min < nextMinTick || visibleRange.max > nextMaxTick)
                     tickCache.Invalidate();
             }
 

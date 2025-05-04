@@ -72,10 +72,7 @@ namespace osu.Game.Tests.Visual.Gameplay
         [TestCase(true)]
         public void TestVideo(bool scaleTransformProvided)
         {
-            AddStep("allow storyboard lookup", () =>
-            {
-                storyboard.ProvideResources = true;
-            });
+            AddStep("allow storyboard lookup", () => { storyboard.ProvideResources = true; });
 
             AddStep("create video", () => SetContents(_ =>
             {

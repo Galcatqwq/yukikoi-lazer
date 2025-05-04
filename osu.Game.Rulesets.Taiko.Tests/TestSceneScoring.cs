@@ -51,10 +51,7 @@ namespace osu.Game.Rulesets.Taiko.Tests
         [Test]
         public void TestBasicScenarios()
         {
-            AddStep("set up score multiplier", () =>
-            {
-                scoreMultiplier.BindValueChanged(_ => Rerun());
-            });
+            AddStep("set up score multiplier", () => { scoreMultiplier.BindValueChanged(_ => Rerun()); });
             AddStep("set max combo to 100", () => MaxCombo.Value = 100);
             AddStep("set perfect score", () =>
             {
@@ -116,7 +113,7 @@ namespace osu.Game.Rulesets.Taiko.Tests
 
                 // combo multiplier
                 // ReSharper disable once PossibleLossOfFraction
-                TotalScore += (int)((baseScore / 35) * 2 * (ScoreMultiplier.Value + 1) * modMultiplier) * (Math.Min(100, currentCombo) / 10);
+                TotalScore += (int)(baseScore / 35 * 2 * (ScoreMultiplier.Value + 1) * modMultiplier) * (Math.Min(100, currentCombo) / 10);
 
                 currentCombo++;
             }

@@ -518,7 +518,7 @@ namespace osu.Game.Screens.Utility
                     return 960;
 
                 default:
-                    return 1000 + ((difficulty - 10) * 500);
+                    return 1000 + (difficulty - 10) * 500;
             }
         }
     }

@@ -25,10 +25,7 @@ namespace osu.Game.Rulesets.Mania.Tests.Editor
         {
             AddStep("Seek to 0", () => EditorClock.Seek(0));
             AddStep("Select note", () => InputManager.Key(Key.Number2));
-            AddStep("Hover negative span", () =>
-            {
-                InputManager.MoveMouseTo(this.ChildrenOfType<Container>().First(x => x.Name == "Icons").Children[0]);
-            });
+            AddStep("Hover negative span", () => { InputManager.MoveMouseTo(this.ChildrenOfType<Container>().First(x => x.Name == "Icons").Children[0]); });
             AddStep("Click", () => InputManager.Click(MouseButton.Left));
             AddAssert("No notes placed", () => EditorBeatmap.HitObjects.All(x => x.StartTime >= 0));
         }

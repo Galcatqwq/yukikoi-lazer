@@ -57,7 +57,9 @@ namespace osu.Game.Database
             {
                 Directory.Delete(MountedPath, true);
             }
-            catch { }
+            catch
+            {
+            }
 
             return imported;
         }

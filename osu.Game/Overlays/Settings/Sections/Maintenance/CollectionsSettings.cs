@@ -27,10 +27,7 @@ namespace osu.Game.Overlays.Settings.Sections.Maintenance
             Add(new DangerousSettingsButton
             {
                 Text = MaintenanceSettingsStrings.DeleteAllCollections,
-                Action = () =>
-                {
-                    dialogOverlay?.Push(new MassDeleteConfirmationDialog(deleteAllCollections, DeleteConfirmationContentStrings.Collections));
-                }
+                Action = () => { dialogOverlay?.Push(new MassDeleteConfirmationDialog(deleteAllCollections, DeleteConfirmationContentStrings.Collections)); }
             });
         }
 
@@ -49,7 +46,8 @@ namespace osu.Game.Overlays.Settings.Sections.Maintenance
                 }
             });
 
-            notificationOverlay?.Post(new ProgressCompletionNotification { Text = anyDeleted ? MaintenanceSettingsStrings.DeletedAllCollections : MaintenanceSettingsStrings.NoCollectionsFoundToDelete });
+            notificationOverlay?.Post(new ProgressCompletionNotification
+                { Text = anyDeleted ? MaintenanceSettingsStrings.DeletedAllCollections : MaintenanceSettingsStrings.NoCollectionsFoundToDelete });
         }
     }
 }

@@ -107,10 +107,7 @@ namespace osu.Game.Skinning
                 }
             });
 
-            CurrentSkinInfo.ValueChanged += skin =>
-            {
-                CurrentSkin.Value = skin.NewValue.PerformRead(GetSkin);
-            };
+            CurrentSkinInfo.ValueChanged += skin => { CurrentSkin.Value = skin.NewValue.PerformRead(GetSkin); };
 
             CurrentSkin.Value = argonSkin;
             CurrentSkin.ValueChanged += skin =>

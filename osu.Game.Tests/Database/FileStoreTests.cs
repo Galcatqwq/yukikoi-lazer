@@ -1,6 +1,7 @@
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -24,7 +25,7 @@ namespace osu.Game.Tests.Database
 
                 var testData = new MemoryStream(new byte[] { 0, 1, 2, 3 });
 
-                realm.Write(() => files.Add(testData, realm));
+                realm.Write((Action)(() => files.Add(testData, realm)));
 
                 Assert.True(files.Storage.Exists("0/05/054edec1d0211f624fed0cbca9d4f9400b0e491c43742af2c5b0abebf0c990d8"));
                 Assert.True(files.Storage.Exists(realm.All<RealmFile>().First().GetStoragePath()));

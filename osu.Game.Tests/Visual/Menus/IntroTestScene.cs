@@ -106,13 +106,7 @@ namespace osu.Game.Tests.Visual.Menus
                 IntroStack.Push(intro = CreateScreen());
             });
 
-            AddStep("trigger failure", () =>
-            {
-                trackResetDelegate = Scheduler.AddDelayed(() =>
-                {
-                    intro.Beatmap.Value.Track.Seek(0);
-                }, 0, true);
-            });
+            AddStep("trigger failure", () => { trackResetDelegate = Scheduler.AddDelayed(() => { intro.Beatmap.Value.Track.Seek(0); }, 0, true); });
 
             AddUntilStep("wait for menu", () => intro.DidLoadMenu);
 

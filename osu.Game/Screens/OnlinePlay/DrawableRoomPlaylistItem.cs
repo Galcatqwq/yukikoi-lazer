@@ -320,10 +320,7 @@ namespace osu.Game.Screens.OnlinePlay
                     LinkAction.OpenBeatmap,
                     beatmap.OnlineID.ToString(),
                     null,
-                    text =>
-                    {
-                        text.Truncate = true;
-                    });
+                    text => { text.Truncate = true; });
             }
 
             authorText.Clear();

@@ -183,7 +183,7 @@ namespace osu.Game.Graphics.UserInterface
 
             bool hasUpdateSpike = displayedFrameTime < spike_time_ms && elapsedUpdateFrameTime > spike_time_ms;
             // use elapsed frame time rather then FramesPerSecond to better catch stutter frames.
-            bool hasDrawSpike = displayedFpsCount > (1000 / spike_time_ms) && elapsedDrawFrameTime > spike_time_ms;
+            bool hasDrawSpike = displayedFpsCount > 1000 / spike_time_ms && elapsedDrawFrameTime > spike_time_ms;
 
             const float damp_time = 100;
 
@@ -241,7 +241,7 @@ namespace osu.Game.Graphics.UserInterface
                 ? $"{displayedFrameTime:N1}ms"
                 : $"{displayedFrameTime:N0}ms";
 
-            counterUpdateFrameTime.Colour = getColour((1000 / displayedFrameTime) / aimUpdateFPS);
+            counterUpdateFrameTime.Colour = getColour(1000 / displayedFrameTime / aimUpdateFPS);
         }
 
         private bool updateAimFPS()

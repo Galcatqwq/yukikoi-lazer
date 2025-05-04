@@ -150,10 +150,7 @@ namespace osu.Game.Tests.Visual.Gameplay
         [Test]
         public void TestParameterTemporaryEffect()
         {
-            AddStep("create storyboard", () => Child = createStoryboard(s =>
-            {
-                s.Commands.AddFlipV(Easing.None, 1000, 1500, true, false);
-            }));
+            AddStep("create storyboard", () => Child = createStoryboard(s => { s.Commands.AddFlipV(Easing.None, 1000, 1500, true, false); }));
 
             AddAssert("sprite not flipped at t = 0", () => !this.ChildrenOfType<DrawableStoryboardSprite>().Single().FlipV);
 
@@ -169,10 +166,7 @@ namespace osu.Game.Tests.Visual.Gameplay
         [Test]
         public void TestParameterPermanentEffect()
         {
-            AddStep("create storyboard", () => Child = createStoryboard(s =>
-            {
-                s.Commands.AddFlipV(Easing.None, 1000, 1000, true, true);
-            }));
+            AddStep("create storyboard", () => Child = createStoryboard(s => { s.Commands.AddFlipV(Easing.None, 1000, 1000, true, true); }));
 
             AddAssert("sprite flipped at t = 0", () => this.ChildrenOfType<DrawableStoryboardSprite>().Single().FlipV);
 

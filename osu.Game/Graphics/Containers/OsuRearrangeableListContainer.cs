@@ -26,10 +26,7 @@ namespace osu.Game.Graphics.Containers
         private Sample sampleSwap;
         private double sampleLastPlaybackTime;
 
-        protected sealed override RearrangeableListItem<TModel> CreateDrawable(TModel item) => CreateOsuDrawable(item).With(d =>
-        {
-            d.DragActive.BindTo(DragActive);
-        });
+        protected sealed override RearrangeableListItem<TModel> CreateDrawable(TModel item) => CreateOsuDrawable(item).With(d => { d.DragActive.BindTo(DragActive); });
 
         protected abstract OsuRearrangeableListItem<TModel> CreateOsuDrawable(TModel item);
 

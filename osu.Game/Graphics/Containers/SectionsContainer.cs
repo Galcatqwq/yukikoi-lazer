@@ -318,8 +318,8 @@ namespace osu.Game.Graphics.Containers
             scrollContainer.Padding = new MarginPadding { Top = FixedHeader?.LayoutSize.Y ?? 0 };
 
             var newMargin = originalSectionsMargin;
-            newMargin.Top += (ExpandableHeader?.LayoutSize.Y ?? 0);
-            newMargin.Bottom += (footerHeight ?? 0);
+            newMargin.Top += ExpandableHeader?.LayoutSize.Y ?? 0;
+            newMargin.Bottom += footerHeight ?? 0;
 
             scrollContentContainer.Margin = newMargin;
         }

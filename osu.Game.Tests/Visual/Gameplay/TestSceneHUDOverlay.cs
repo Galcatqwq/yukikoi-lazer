@@ -185,10 +185,7 @@ namespace osu.Game.Tests.Visual.Gameplay
 
             AddUntilStep("activated", () => activated);
 
-            AddStep("release mouse button", () =>
-            {
-                InputManager.ReleaseButton(MouseButton.Left);
-            });
+            AddStep("release mouse button", () => { InputManager.ReleaseButton(MouseButton.Left); });
         }
 
         [Test]
@@ -243,10 +240,7 @@ namespace osu.Game.Tests.Visual.Gameplay
             AddUntilStep("wait for components to be hidden", () => hudOverlay.ChildrenOfType<SkinComponentsContainer>().Single().Alpha == 0);
             AddUntilStep("wait for hud load", () => hudOverlay.ChildrenOfType<SkinComponentsContainer>().All(c => c.ComponentsLoaded));
 
-            AddStep("bind on update", () =>
-            {
-                hudOverlay.ChildrenOfType<BarHitErrorMeter>().First().OnUpdate += _ => updateCount++;
-            });
+            AddStep("bind on update", () => { hudOverlay.ChildrenOfType<BarHitErrorMeter>().First().OnUpdate += _ => updateCount++; });
 
             AddUntilStep("wait for updates", () => updateCount > 0);
         }

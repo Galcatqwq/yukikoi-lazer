@@ -6,21 +6,21 @@ using System.Collections.Generic;
 using System.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
-using osu.Framework.Graphics.Shapes;
-using osu.Game.Graphics;
-using osu.Game.Graphics.Sprites;
-using osu.Game.Overlays;
-using osu.Framework.Graphics.UserInterface;
-using osu.Game.Graphics.UserInterface;
 using osu.Framework.Graphics.Cursor;
+using osu.Framework.Graphics.Shapes;
+using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Screens;
+using osu.Game.Graphics;
 using osu.Game.Graphics.Containers;
+using osu.Game.Graphics.Sprites;
+using osu.Game.Graphics.UserInterface;
+using osu.Game.Localisation;
 using osu.Game.Online.API;
 using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Online.Chat;
-using osu.Game.Resources.Localisation.Web;
-using osu.Game.Localisation;
 using osu.Game.Online.Multiplayer;
+using osu.Game.Overlays;
+using osu.Game.Resources.Localisation.Web;
 using osu.Game.Screens;
 using osu.Game.Screens.Play;
 using osu.Game.Users.Drawables;
@@ -148,10 +148,7 @@ namespace osu.Game.Users
 
                 if (User.IsOnline)
                 {
-                    items.Add(new OsuMenuItem(ContextMenuStrings.SpectatePlayer, MenuItemType.Standard, () =>
-                    {
-                        performer?.PerformFromScreen(s => s.Push(new SoloSpectatorScreen(User)));
-                    }));
+                    items.Add(new OsuMenuItem(ContextMenuStrings.SpectatePlayer, MenuItemType.Standard, () => { performer?.PerformFromScreen(s => s.Push(new SoloSpectatorScreen(User))); }));
 
                     if (multiplayerClient?.Room?.Users.All(u => u.UserID != User.Id) == true)
                     {

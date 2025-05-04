@@ -52,7 +52,8 @@ namespace osu.Game.Localisation
         /// <summary>
         /// "The editor must be reloaded to apply this change. The beatmap will be saved."
         /// </summary>
-        public static LocalisableString EditorReloadDialogHeader => new TranslatableString(getKey(@"editor_reload_dialog_header"), @"The editor must be reloaded to apply this change. The beatmap will be saved.");
+        public static LocalisableString EditorReloadDialogHeader =>
+            new TranslatableString(getKey(@"editor_reload_dialog_header"), @"The editor must be reloaded to apply this change. The beatmap will be saved.");
 
         private static string getKey(string key) => $@"{prefix}:{key}";
     }

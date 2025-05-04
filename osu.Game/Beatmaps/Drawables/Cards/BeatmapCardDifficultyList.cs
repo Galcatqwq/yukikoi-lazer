@@ -84,10 +84,7 @@ namespace osu.Game.Beatmaps.Drawables.Cards
                             Anchor = Anchor.CentreLeft,
                             Origin = Anchor.CentreLeft
                         },
-                        new LinkFlowContainer(s =>
-                        {
-                            s.Font = OsuFont.Default.With(size: 14, weight: FontWeight.SemiBold);
-                        }).With(d =>
+                        new LinkFlowContainer(s => { s.Font = OsuFont.Default.With(size: 14, weight: FontWeight.SemiBold); }).With(d =>
                         {
                             d.AutoSizeAxes = Axes.Both;
                             d.Anchor = Anchor.CentreLeft;

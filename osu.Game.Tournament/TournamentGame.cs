@@ -108,10 +108,7 @@ namespace osu.Game.Tournament
                         heightWarning.Alpha = size.NewValue.Width < minWidth ? 1 : 0;
                     }), true);
 
-                    windowMode.BindValueChanged(_ => ScheduleAfterChildren(() =>
-                    {
-                        windowMode.Value = WindowMode.Windowed;
-                    }), true);
+                    windowMode.BindValueChanged(_ => ScheduleAfterChildren(() => { windowMode.Value = WindowMode.Windowed; }), true);
                 });
             }));
         }

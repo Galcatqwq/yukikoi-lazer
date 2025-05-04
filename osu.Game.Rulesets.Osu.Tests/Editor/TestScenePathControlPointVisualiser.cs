@@ -269,10 +269,7 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
 
         private void addControlPointStep(Vector2 position, PathType? type)
         {
-            AddStep($"add {type?.Type} control point at {position}", () =>
-            {
-                slider.Path.ControlPoints.Add(new PathControlPoint(position, type));
-            });
+            AddStep($"add {type?.Type} control point at {position}", () => { slider.Path.ControlPoints.Add(new PathControlPoint(position, type)); });
         }
 
         private void moveMouseToControlPoint(int index)

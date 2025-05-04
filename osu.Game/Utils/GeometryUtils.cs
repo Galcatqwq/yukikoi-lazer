@@ -76,8 +76,8 @@ namespace osu.Game.Utils
         public static Vector2 GetScaledPosition(Anchor reference, Vector2 scale, Quad selectionQuad, Vector2 position)
         {
             // adjust the direction of scale depending on which side the user is dragging.
-            float xOffset = ((reference & Anchor.x0) > 0) ? -scale.X : 0;
-            float yOffset = ((reference & Anchor.y0) > 0) ? -scale.Y : 0;
+            float xOffset = (reference & Anchor.x0) > 0 ? -scale.X : 0;
+            float yOffset = (reference & Anchor.y0) > 0 ? -scale.Y : 0;
 
             // guard against no-ops and NaN.
             if (scale.X != 0 && selectionQuad.Width > 0)

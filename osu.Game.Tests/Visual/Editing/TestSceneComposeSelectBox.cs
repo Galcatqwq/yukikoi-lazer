@@ -177,10 +177,7 @@ namespace osu.Game.Tests.Visual.Editing
             AddStep("retrieve rotation handle", () => rotationHandle = this.ChildrenOfType<SelectionBoxRotationHandle>().First());
 
             AddAssert("rotation handle hidden", () => rotationHandle.Alpha == 0);
-            AddStep("hover over closest scale handle", () =>
-            {
-                InputManager.MoveMouseTo(this.ChildrenOfType<SelectionBoxScaleHandle>().Single(s => s.Anchor == rotationHandle.Anchor));
-            });
+            AddStep("hover over closest scale handle", () => { InputManager.MoveMouseTo(this.ChildrenOfType<SelectionBoxScaleHandle>().Single(s => s.Anchor == rotationHandle.Anchor)); });
             AddUntilStep("rotation handle shown", () => rotationHandle.Alpha == 1);
 
             AddStep("move mouse away", () => InputManager.MoveMouseTo(selectionBox));
@@ -195,10 +192,7 @@ namespace osu.Game.Tests.Visual.Editing
             AddStep("retrieve rotation handle", () => rotationHandle = this.ChildrenOfType<SelectionBoxRotationHandle>().First());
 
             AddAssert("rotation handle hidden", () => rotationHandle.Alpha == 0);
-            AddStep("hover over closest scale handle", () =>
-            {
-                InputManager.MoveMouseTo(this.ChildrenOfType<SelectionBoxScaleHandle>().Single(s => s.Anchor == rotationHandle.Anchor));
-            });
+            AddStep("hover over closest scale handle", () => { InputManager.MoveMouseTo(this.ChildrenOfType<SelectionBoxScaleHandle>().Single(s => s.Anchor == rotationHandle.Anchor)); });
             AddUntilStep("rotation handle shown", () => rotationHandle.Alpha == 1);
             AddAssert("rotation handle not hovered", () => !rotationHandle.IsHovered);
 
@@ -218,10 +212,7 @@ namespace osu.Game.Tests.Visual.Editing
             AddStep("retrieve rotation handle", () => rotationHandle = this.ChildrenOfType<SelectionBoxRotationHandle>().First());
 
             AddAssert("rotation handle hidden", () => rotationHandle.Alpha == 0);
-            AddStep("hover over closest scale handle", () =>
-            {
-                InputManager.MoveMouseTo(this.ChildrenOfType<SelectionBoxScaleHandle>().Single(s => s.Anchor == rotationHandle.Anchor));
-            });
+            AddStep("hover over closest scale handle", () => { InputManager.MoveMouseTo(this.ChildrenOfType<SelectionBoxScaleHandle>().Single(s => s.Anchor == rotationHandle.Anchor)); });
             AddUntilStep("rotation handle shown", () => rotationHandle.Alpha == 1);
             AddStep("hold scale handle", () => InputManager.PressButton(MouseButton.Left));
             AddUntilStep("rotation handle hidden", () => rotationHandle.Alpha == 0);
@@ -233,10 +224,7 @@ namespace osu.Game.Tests.Visual.Editing
             {
                 i = 0;
 
-                mouseMove = Scheduler.AddDelayed(() =>
-                {
-                    InputManager.MoveMouseTo(selectionBox.ScreenSpaceDrawQuad.TopLeft + Vector2.One * (5 * ++i));
-                }, 100, true);
+                mouseMove = Scheduler.AddDelayed(() => { InputManager.MoveMouseTo(selectionBox.ScreenSpaceDrawQuad.TopLeft + Vector2.One * (5 * ++i)); }, 100, true);
             });
             AddAssert("rotation handle still hidden", () => rotationHandle.Alpha == 0);
 

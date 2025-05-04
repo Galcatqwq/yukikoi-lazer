@@ -32,10 +32,7 @@ namespace osu.Game.Tests.Visual.Gameplay
 
             AddWaitStep("wait for playback", 5);
 
-            AddRepeatStep(@"restart animation", () =>
-            {
-                explosion.Restart();
-            }, 10);
+            AddRepeatStep(@"restart animation", () => { explosion.Restart(); }, 10);
         }
     }
 }

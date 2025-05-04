@@ -5,15 +5,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
+using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
-using osu.Framework.Graphics;
 using osu.Framework.Utils;
+using osu.Game.Graphics;
 using osu.Game.Graphics.Containers;
 using osu.Game.Graphics.Sprites;
-using osu.Game.Graphics;
-using osuTK.Graphics;
 using osuTK;
+using osuTK.Graphics;
 
 namespace osu.Game.Tests.Visual.UserInterface
 {
@@ -200,13 +200,13 @@ namespace osu.Game.Tests.Visual.UserInterface
                     break;
 
                 case ScaleMode.Vertical:
-                    if (!(checkScaling(child.ScalingFactor, parentScale.Y, childScale.Y)))
+                    if (!checkScaling(child.ScalingFactor, parentScale.Y, childScale.Y))
                         return false;
 
                     break;
 
                 case ScaleMode.Horizontal:
-                    if (!(checkScaling(child.ScalingFactor, parentScale.X, childScale.X)))
+                    if (!checkScaling(child.ScalingFactor, parentScale.X, childScale.X))
                         return false;
 
                     break;
@@ -226,7 +226,7 @@ namespace osu.Game.Tests.Visual.UserInterface
             {
                 if (parentScale < 1.0f)
                 {
-                    if (!isNearlyZero((parentScale * (1.0f / scalingFactor)) - childScale))
+                    if (!isNearlyZero(parentScale * (1.0f / scalingFactor) - childScale))
                         return false;
                 }
                 else if (!isNearlyZero(parentScale * scalingFactor - childScale))

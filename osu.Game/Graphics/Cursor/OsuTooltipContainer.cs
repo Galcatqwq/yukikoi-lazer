@@ -1,16 +1,16 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using osuTK;
-using osuTK.Graphics;
 using osu.Framework.Allocation;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Cursor;
 using osu.Framework.Graphics.Effects;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Localisation;
-using osu.Framework.Graphics.Containers;
+using osuTK;
+using osuTK.Graphics;
 
 namespace osu.Game.Graphics.Cursor
 {
@@ -72,10 +72,7 @@ namespace osu.Game.Graphics.Cursor
                         RelativeSizeAxes = Axes.Both,
                         Alpha = 0.9f,
                     },
-                    text = new TextFlowContainer(f =>
-                    {
-                        f.Font = OsuFont.GetFont(weight: FontWeight.Regular);
-                    })
+                    text = new TextFlowContainer(f => { f.Font = OsuFont.GetFont(weight: FontWeight.Regular); })
                     {
                         Margin = new MarginPadding(5),
                         AutoSizeAxes = Axes.Both,

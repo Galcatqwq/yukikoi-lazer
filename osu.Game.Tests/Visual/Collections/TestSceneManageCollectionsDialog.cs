@@ -314,10 +314,7 @@ namespace osu.Game.Tests.Visual.Collections
                 InputManager.Click(MouseButton.Left);
             });
 
-            AddStep("change first collection name", () =>
-            {
-                firstItem.ChildrenOfType<TextBox>().First().Text = "First";
-            });
+            AddStep("change first collection name", () => { firstItem.ChildrenOfType<TextBox>().First().Text = "First"; });
 
             if (commitWithEnter)
                 AddStep("commit via enter", () => InputManager.Key(Key.Enter));

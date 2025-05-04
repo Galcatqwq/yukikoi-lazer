@@ -85,10 +85,7 @@ namespace osu.Game.Tests.Visual.UserInterface
         {
             AddRepeatStep("add many sections", () => append(1f), 3);
 
-            AddStep("add section with delayed load content", () =>
-            {
-                container.Add(new TestDelayedLoadSection("delayed"));
-            });
+            AddStep("add section with delayed load content", () => { container.Add(new TestDelayedLoadSection("delayed")); });
 
             AddStep("add final section", () => append(0.5f));
 

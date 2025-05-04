@@ -80,7 +80,7 @@ namespace osu.Game.Rulesets.Taiko.Tests
             var barlines = new BarLineGenerator<BarLine>(beatmap).BarLines;
 
             AddAssert("first barline ommited", () => barlines.All(b => b.StartTime != start_time));
-            AddAssert("second barline generated", () => barlines.Any(b => b.StartTime == start_time + (beat_length * time_signature_numerator)));
+            AddAssert("second barline generated", () => barlines.Any(b => b.StartTime == start_time + beat_length * time_signature_numerator));
         }
 
         [Test]

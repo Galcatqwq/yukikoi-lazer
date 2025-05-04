@@ -20,10 +20,7 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
         [BackgroundDependencyLoader]
         private void load()
         {
-            beatLength.BindValueChanged(beatLength =>
-            {
-                Label.Text = $"{60000 / beatLength.NewValue:n1} BPM";
-            }, true);
+            beatLength.BindValueChanged(beatLength => { Label.Text = $"{60000 / beatLength.NewValue:n1} BPM"; }, true);
         }
     }
 }

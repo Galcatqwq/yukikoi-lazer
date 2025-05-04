@@ -22,7 +22,8 @@ namespace osu.Game.Localisation
         /// <summary>
         /// "If your tablet is not detected, please read [this FAQ]({0}) for troubleshooting steps."
         /// </summary>
-        public static LocalisableString NoTabletDetectedDescription(string url) => new TranslatableString(getKey(@"no_tablet_detected_description"), @"If your tablet is not detected, please read [this FAQ]({0}) for troubleshooting steps.", url);
+        public static LocalisableString NoTabletDetectedDescription(string url) => new TranslatableString(getKey(@"no_tablet_detected_description"),
+            @"If your tablet is not detected, please read [this FAQ]({0}) for troubleshooting steps.", url);
 
         /// <summary>
         /// "Reset to full area"

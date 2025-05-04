@@ -30,7 +30,6 @@ namespace osu.Game.Tests.Visual.Multiplayer
         [TestCase(1048576, 1048576)]
         public void TestDisplayTeamResults(int team1Score, int team2Score)
         {
-
             AddStep("show results screen", () =>
             {
                 var rulesetInfo = new OsuRuleset().RulesetInfo;

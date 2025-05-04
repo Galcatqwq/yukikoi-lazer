@@ -126,10 +126,7 @@ namespace osu.Game.Overlays.Mods
             Body.BorderColour = colours.Orange1;
 
             selectedMods.BindValueChanged(_ => updateState(), true);
-            nameTextBox.Current.BindValueChanged(s =>
-            {
-                saveButton.Enabled.Value = !string.IsNullOrWhiteSpace(s.NewValue);
-            }, true);
+            nameTextBox.Current.BindValueChanged(s => { saveButton.Enabled.Value = !string.IsNullOrWhiteSpace(s.NewValue); }, true);
         }
 
         protected override void LoadComplete()

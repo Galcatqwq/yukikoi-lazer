@@ -985,7 +985,8 @@ namespace osu.Game.Tests.Visual.UserInterface
             AddStep("press backspace", () => InputManager.Key(Key.BackSpace));
             AddAssert("mods not deselected", () => SelectedMods.Value.Single() is OsuModDoubleTime);
 
-            AddStep("move mouse to scroll bar", () => InputManager.MoveMouseTo(modSelectOverlay.ChildrenOfType<ModSelectOverlay.ColumnScrollContainer>().Single().ScreenSpaceDrawQuad.BottomLeft + new Vector2(10f, -5f)));
+            AddStep("move mouse to scroll bar",
+                () => InputManager.MoveMouseTo(modSelectOverlay.ChildrenOfType<ModSelectOverlay.ColumnScrollContainer>().Single().ScreenSpaceDrawQuad.BottomLeft + new Vector2(10f, -5f)));
 
             AddStep("scroll down", () => InputManager.ScrollVerticalBy(-10f));
             AddAssert("column not scrolled", () => modSelectOverlay.ChildrenOfType<ModSelectOverlay.ColumnScrollContainer>().Single().IsScrolledToStart());

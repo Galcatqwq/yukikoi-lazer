@@ -42,10 +42,7 @@ namespace osu.Game.Tests.Beatmaps
         }
 
         [Test]
-        public void TestGetWorkingBeatmap() => AddStep("run test", () =>
-        {
-            Assert.That(beatmaps.GetWorkingBeatmap(importedSet.Beatmaps.First()), Is.Not.Null);
-        });
+        public void TestGetWorkingBeatmap() => AddStep("run test", () => { Assert.That(beatmaps.GetWorkingBeatmap(importedSet.Beatmaps.First()), Is.Not.Null); });
 
         [Test]
         public void TestCachedRetrievalNoFiles() => AddStep("run test", () =>

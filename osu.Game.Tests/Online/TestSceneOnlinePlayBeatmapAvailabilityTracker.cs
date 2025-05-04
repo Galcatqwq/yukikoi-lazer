@@ -158,10 +158,7 @@ namespace osu.Game.Tests.Online
             AddStep("import beatmap", () => beatmaps.Import(testBeatmapFile).WaitSafely());
             addAvailabilityCheckStep("initially locally available", BeatmapAvailability.LocallyAvailable);
 
-            AddStep("import altered beatmap", () =>
-            {
-                beatmaps.Import(TestResources.GetTestBeatmapForImport(true)).WaitSafely();
-            });
+            AddStep("import altered beatmap", () => { beatmaps.Import(TestResources.GetTestBeatmapForImport(true)).WaitSafely(); });
             addAvailabilityCheckStep("state not downloaded", BeatmapAvailability.NotDownloaded);
 
             AddStep("recreate tracker", recreateChildren);
@@ -226,12 +223,13 @@ namespace osu.Game.Tests.Online
                     this.testBeatmapManager = testBeatmapManager;
                 }
 
-                public override Live<BeatmapSetInfo> ImportModel(BeatmapSetInfo item, ArchiveReader archive = null, ImportParameters parameters = default, CancellationToken cancellationToken = default)
+                public override Live<BeatmapSetInfo> ImportModel(BeatmapSetInfo item, ArchiveReader archive = null, ImportParameters parameters = default,
+                                                                 CancellationToken cancellationToken = default)
                 {
                     if (!testBeatmapManager.AllowImport.Wait(TimeSpan.FromSeconds(10), cancellationToken))
                         throw new TimeoutException("Timeout waiting for import to be allowed.");
 
-                    return (testBeatmapManager.CurrentImport = base.ImportModel(item, archive, parameters, cancellationToken));
+                    return testBeatmapManager.CurrentImport = base.ImportModel(item, archive, parameters, cancellationToken);
                 }
             }
         }

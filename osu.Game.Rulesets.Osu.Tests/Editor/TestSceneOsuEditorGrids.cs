@@ -161,7 +161,9 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
             return grid switch
             {
                 RectangularPositionSnapGrid rectangular => rectangular.StartPosition.Value + GeometryUtils.RotateVector(rectangular.Spacing.Value, -rectangular.GridLineRotation.Value),
-                TriangularPositionSnapGrid triangular => triangular.StartPosition.Value + GeometryUtils.RotateVector(new Vector2(triangular.Spacing.Value / 2, triangular.Spacing.Value / 2 * MathF.Sqrt(3)), -triangular.GridLineRotation.Value),
+                TriangularPositionSnapGrid triangular => triangular.StartPosition.Value
+                                                         + GeometryUtils.RotateVector(new Vector2(triangular.Spacing.Value / 2, triangular.Spacing.Value / 2 * MathF.Sqrt(3)),
+                                                             -triangular.GridLineRotation.Value),
                 CircularPositionSnapGrid circular => circular.StartPosition.Value + GeometryUtils.RotateVector(new Vector2(circular.Spacing.Value, 0), -45),
                 _ => Vector2.Zero
             };

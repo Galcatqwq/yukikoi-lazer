@@ -15,10 +15,7 @@ namespace osu.Game.Tests.Visual.UserInterface
 
         public TestSceneFirstRunScreenUIScale()
         {
-            AddStep("load screen", () =>
-            {
-                Child = new ScreenStack(new ScreenUIScale());
-            });
+            AddStep("load screen", () => { Child = new ScreenStack(new ScreenUIScale()); });
         }
     }
 }

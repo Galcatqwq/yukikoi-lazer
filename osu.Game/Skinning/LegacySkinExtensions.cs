@@ -55,7 +55,8 @@ namespace osu.Game.Skinning
             }
         }
 
-        public static Texture[] GetTextures(this ISkin? source, string componentName, WrapMode wrapModeS, WrapMode wrapModeT, bool animatable, string animationSeparator, Vector2? maxSize, out ISkin? retrievalSource)
+        public static Texture[] GetTextures(this ISkin? source, string componentName, WrapMode wrapModeS, WrapMode wrapModeT, bool animatable, string animationSeparator, Vector2? maxSize,
+                                            out ISkin? retrievalSource)
         {
             retrievalSource = null;
 

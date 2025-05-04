@@ -103,10 +103,7 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer
                 {
                     selectionOperation.Dispose();
 
-                    Schedule(() =>
-                    {
-                        Carousel.AllowSelection = true;
-                    });
+                    Schedule(() => { Carousel.AllowSelection = true; });
                 });
             }
             else

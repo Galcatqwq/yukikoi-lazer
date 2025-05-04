@@ -7,31 +7,31 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using osuTK;
-using osuTK.Graphics;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Game.Beatmaps;
-using osu.Game.Beatmaps.Drawables;
-using osu.Game.Graphics;
-using osu.Game.Graphics.Sprites;
-using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Cursor;
 using osu.Framework.Graphics.Effects;
+using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Localisation;
 using osu.Framework.Logging;
+using osu.Game.Beatmaps;
+using osu.Game.Beatmaps.Drawables;
 using osu.Game.Configuration;
 using osu.Game.Extensions;
+using osu.Game.Graphics;
+using osu.Game.Graphics.Containers;
+using osu.Game.Graphics.Sprites;
+using osu.Game.Resources.Localisation.Web;
 using osu.Game.Rulesets;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.UI;
-using osu.Game.Graphics.Containers;
-using osu.Game.Resources.Localisation.Web;
 using osu.Game.Utils;
+using osuTK;
+using osuTK.Graphics;
 
 namespace osu.Game.Screens.Select
 {
@@ -322,10 +322,7 @@ namespace osu.Game.Screens.Select
             {
                 base.LoadComplete();
 
-                starRatingDisplay.DisplayedStars.BindValueChanged(s =>
-                {
-                    difficultyColourBar.Colour = colours.ForStarDifficulty(s.NewValue);
-                }, true);
+                starRatingDisplay.DisplayedStars.BindValueChanged(s => { difficultyColourBar.Colour = colours.ForStarDifficulty(s.NewValue); }, true);
 
                 starDifficulty = difficultyCache.GetBindableDifficulty(working.BeatmapInfo, (cancellationSource = new CancellationTokenSource()).Token);
                 starDifficulty.BindValueChanged(s =>
@@ -435,10 +432,7 @@ namespace osu.Game.Screens.Select
                 if (string.IsNullOrEmpty(metadata.Author.Username))
                     return Empty();
 
-                return new LinkFlowContainer(s =>
-                {
-                    s.Font = OsuFont.GetFont(weight: FontWeight.Bold, size: 15);
-                }).With(d =>
+                return new LinkFlowContainer(s => { s.Font = OsuFont.GetFont(weight: FontWeight.Bold, size: 15); }).With(d =>
                 {
                     d.AutoSizeAxes = Axes.Both;
                     d.AddText("mapped by ");

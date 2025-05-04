@@ -152,7 +152,8 @@ namespace osu.Game.Localisation
         /// <summary>
         /// "In order to change the renderer, the game will close. Please open it again."
         /// </summary>
-        public static LocalisableString ChangeRendererConfirmation => new TranslatableString(getKey(@"change_renderer_configuration"), @"In order to change the renderer, the game will close. Please open it again.");
+        public static LocalisableString ChangeRendererConfirmation =>
+            new TranslatableString(getKey(@"change_renderer_configuration"), @"In order to change the renderer, the game will close. Please open it again.");
 
         /// <summary>
         /// "Minimise osu! when switching to another app"

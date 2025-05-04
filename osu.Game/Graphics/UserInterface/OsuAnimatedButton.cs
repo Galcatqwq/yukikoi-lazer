@@ -80,7 +80,7 @@ namespace osu.Game.Graphics.UserInterface
         {
             if (AutoSizeAxes != Axes.None)
             {
-                content.RelativeSizeAxes = (Axes.Both & ~AutoSizeAxes);
+                content.RelativeSizeAxes = Axes.Both & ~AutoSizeAxes;
                 content.AutoSizeAxes = AutoSizeAxes;
             }
         }

@@ -191,10 +191,8 @@ namespace osu.Game.Graphics.UserInterface
                     Font = OsuFont.Torus.With(size: 10),
                 });
 
-                Current.BindValueChanged(current =>
-                {
-                    currentDisplay.Text = (current.NewValue != Current.Default ? current.NewValue.ToString("N1") : DefaultString) ?? current.NewValue.ToString("N1");
-                }, true);
+                Current.BindValueChanged(
+                    current => { currentDisplay.Text = (current.NewValue != Current.Default ? current.NewValue.ToString("N1") : DefaultString) ?? current.NewValue.ToString("N1"); }, true);
             }
 
             [BackgroundDependencyLoader(true)]

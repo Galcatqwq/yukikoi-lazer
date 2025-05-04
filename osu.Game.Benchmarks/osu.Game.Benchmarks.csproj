@@ -1,20 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <OutputType>Exe</OutputType>
-    <IsPackable>false</IsPackable>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <OutputType>Exe</OutputType>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="BenchmarkDotNet" Version="0.13.12" />
-    <PackageReference Include="nunit" Version="3.14.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="BenchmarkDotNet" Version="0.13.12"/>
+        <PackageReference Include="nunit" Version="3.14.0"/>
+        <PackageReference Include="NUnit3TestAdapter" Version="4.5.0"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\osu.Game.Tests\osu.Game.Tests.csproj" />
-    <ProjectReference Include="..\osu.Game\osu.Game.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\osu.Game.Tests\osu.Game.Tests.csproj"/>
+        <ProjectReference Include="..\osu.Game\osu.Game.csproj"/>
+    </ItemGroup>
 
 </Project>

@@ -70,13 +70,7 @@ namespace osu.Game.Tests.Visual.Editing
         [Test]
         public void TestInitialZoomOutOfRange()
         {
-            AddStep("Invalid ZoomableScrollContainer throws ArgumentException", () =>
-            {
-                Assert.Throws<ArgumentException>(() =>
-                {
-                    _ = new ZoomableScrollContainer(1, 60, 0);
-                });
-            });
+            AddStep("Invalid ZoomableScrollContainer throws ArgumentException", () => { Assert.Throws<ArgumentException>(() => { _ = new ZoomableScrollContainer(1, 60, 0); }); });
         }
 
         [Test]

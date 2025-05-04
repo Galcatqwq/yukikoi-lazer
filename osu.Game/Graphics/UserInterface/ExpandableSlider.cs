@@ -111,10 +111,7 @@ namespace osu.Game.Graphics.UserInterface
         {
             base.LoadComplete();
 
-            expandingContainer?.Expanded.BindValueChanged(containerExpanded =>
-            {
-                Expanded.Value = containerExpanded.NewValue;
-            }, true);
+            expandingContainer?.Expanded.BindValueChanged(containerExpanded => { Expanded.Value = containerExpanded.NewValue; }, true);
 
             Expanded.BindValueChanged(v =>
             {
@@ -123,10 +120,7 @@ namespace osu.Game.Graphics.UserInterface
                 slider.BypassAutoSizeAxes = !v.NewValue ? Axes.Y : Axes.None;
             }, true);
 
-            Current.BindDisabledChanged(disabled =>
-            {
-                slider.Alpha = Expanded.Value ? disabled ? 0.3f : 1 : 0f;
-            });
+            Current.BindDisabledChanged(disabled => { slider.Alpha = Expanded.Value ? disabled ? 0.3f : 1 : 0f; });
         }
     }
 

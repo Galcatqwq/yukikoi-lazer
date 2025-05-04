@@ -51,10 +51,7 @@ namespace osu.Game.Rulesets.Osu.Tests
         [Test]
         public void TestBasicScenarios()
         {
-            AddStep("set up score multiplier", () =>
-            {
-                scoreMultiplier.BindValueChanged(_ => Rerun());
-            });
+            AddStep("set up score multiplier", () => { scoreMultiplier.BindValueChanged(_ => Rerun()); });
             AddStep("set max combo to 100", () => MaxCombo.Value = 100);
             AddStep("set perfect score", () =>
             {

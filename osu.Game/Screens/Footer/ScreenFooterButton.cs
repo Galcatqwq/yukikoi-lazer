@@ -203,7 +203,9 @@ namespace osu.Game.Screens.Footer
             return true;
         }
 
-        public virtual void OnReleased(KeyBindingReleaseEvent<GlobalAction> e) { }
+        public virtual void OnReleased(KeyBindingReleaseEvent<GlobalAction> e)
+        {
+        }
 
         public void UpdateDisplay()
         {

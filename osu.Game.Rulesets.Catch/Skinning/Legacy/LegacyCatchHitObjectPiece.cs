@@ -72,15 +72,9 @@ namespace osu.Game.Rulesets.Catch.Skinning.Legacy
                                  Skin.GetConfig<CatchSkinColour, Color4>(CatchSkinColour.HyperDash)?.Value ??
                                  Catcher.DEFAULT_HYPER_DASH_COLOUR;
 
-            accentColour.BindValueChanged(colour =>
-            {
-                colouredSprite.Colour = LegacyColourCompatibility.DisallowZeroAlpha(colour.NewValue);
-            }, true);
+            accentColour.BindValueChanged(colour => { colouredSprite.Colour = LegacyColourCompatibility.DisallowZeroAlpha(colour.NewValue); }, true);
 
-            hyperDash.BindValueChanged(hyper =>
-            {
-                hyperSprite.Alpha = hyper.NewValue ? 0.7f : 0;
-            }, true);
+            hyperDash.BindValueChanged(hyper => { hyperSprite.Alpha = hyper.NewValue ? 0.7f : 0; }, true);
         }
 
         protected void SetTexture(Texture? texture, Texture? overlayTexture)

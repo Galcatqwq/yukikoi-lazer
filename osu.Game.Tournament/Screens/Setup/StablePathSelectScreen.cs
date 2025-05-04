@@ -133,7 +133,8 @@ namespace osu.Game.Tournament.Screens.Setup
             if (!fileBasedIpc?.SetIPCLocation(target) ?? true)
             {
                 overlay = new DialogOverlay();
-                overlay.Push(new IPCErrorDialog("This is an invalid IPC Directory", "Select a directory that contains an osu! stable cutting edge installation and make sure it has an empty ipc.txt file in it."));
+                overlay.Push(new IPCErrorDialog("This is an invalid IPC Directory",
+                    "Select a directory that contains an osu! stable cutting edge installation and make sure it has an empty ipc.txt file in it."));
                 AddInternal(overlay);
                 Logger.Log("Folder is not an osu! stable CE directory");
                 return;

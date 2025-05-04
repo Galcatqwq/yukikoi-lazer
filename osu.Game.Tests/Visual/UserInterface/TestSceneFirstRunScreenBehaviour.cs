@@ -15,10 +15,7 @@ namespace osu.Game.Tests.Visual.UserInterface
 
         public TestSceneFirstRunScreenBehaviour()
         {
-            AddStep("load screen", () =>
-            {
-                Child = new ScreenStack(new ScreenBehaviour());
-            });
+            AddStep("load screen", () => { Child = new ScreenStack(new ScreenBehaviour()); });
         }
     }
 }

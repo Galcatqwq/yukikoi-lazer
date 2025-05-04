@@ -190,10 +190,7 @@ Line after image";
 
             AddUntilStep("Wait image to load", () => markdownContainer.ChildrenOfType<DelayedLoadWrapper>().First().DelayedLoadCompleted);
 
-            AddStep("Change container width", () =>
-            {
-                markdownContainer.Width = 0.5f;
-            });
+            AddStep("Change container width", () => { markdownContainer.Width = 0.5f; });
 
             AddAssert("Image not exceed container width", () =>
             {
@@ -216,10 +213,7 @@ Line after image";
         [Test]
         public void TestHeadingWithIdAttribute()
         {
-            AddStep("Add heading with ID", () =>
-            {
-                markdownContainer.Text = "# This is a heading with an ID {#this-is-the-id}";
-            });
+            AddStep("Add heading with ID", () => { markdownContainer.Text = "# This is a heading with an ID {#this-is-the-id}"; });
             AddAssert("ID not visible", () => markdownContainer.ChildrenOfType<SpriteText>().All(spriteText => spriteText.Text != "{#this-is-the-id}"));
         }
 

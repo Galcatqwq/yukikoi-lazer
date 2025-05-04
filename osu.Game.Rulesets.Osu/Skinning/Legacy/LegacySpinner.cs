@@ -137,10 +137,7 @@ namespace osu.Game.Rulesets.Osu.Skinning.Legacy
             });
 
             spinsPerMinute = DrawableSpinner.SpinsPerMinute.GetBoundCopy();
-            spinsPerMinute.BindValueChanged(spm =>
-            {
-                spmCounter.Text = Math.Truncate(spm.NewValue).ToString(@"#0");
-            }, true);
+            spinsPerMinute.BindValueChanged(spm => { spmCounter.Text = Math.Truncate(spm.NewValue).ToString(@"#0"); }, true);
 
             completed.BindValueChanged(onCompletedChanged, true);
 

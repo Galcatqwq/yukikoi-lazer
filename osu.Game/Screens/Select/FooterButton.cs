@@ -197,7 +197,9 @@ namespace osu.Game.Screens.Select
             return false;
         }
 
-        public virtual void OnReleased(KeyBindingReleaseEvent<GlobalAction> e) { }
+        public virtual void OnReleased(KeyBindingReleaseEvent<GlobalAction> e)
+        {
+        }
 
         private void updateDisplay()
         {

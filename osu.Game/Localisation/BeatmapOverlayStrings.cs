@@ -19,7 +19,8 @@ namespace osu.Game.Localisation
         ///
         /// This includes content that may not be correctly licensed for osu! usage. Browse at your own risk."
         /// </summary>
-        public static LocalisableString UserContentDisclaimerDescription => new TranslatableString(getKey(@"by_turning_off_the_featured"), @"By turning off the ""Featured Artist"" filter, all user-uploaded content will be displayed.
+        public static LocalisableString UserContentDisclaimerDescription => new TranslatableString(getKey(@"by_turning_off_the_featured"),
+            @"By turning off the ""Featured Artist"" filter, all user-uploaded content will be displayed.
 
 This includes content that may not be correctly licensed for osu! usage. Browse at your own risk.");
 

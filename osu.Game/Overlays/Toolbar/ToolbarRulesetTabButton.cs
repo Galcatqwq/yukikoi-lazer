@@ -55,10 +55,7 @@ namespace osu.Game.Overlays.Toolbar
 
             public bool Active
             {
-                set => Scheduler.AddOnce(() =>
-                {
-                    IconContainer.Colour = value ? Color4Extensions.FromHex("#00FFAA") : colours.GrayF;
-                });
+                set => Scheduler.AddOnce(() => { IconContainer.Colour = value ? Color4Extensions.FromHex("#00FFAA") : colours.GrayF; });
             }
 
             protected override bool OnClick(ClickEvent e)

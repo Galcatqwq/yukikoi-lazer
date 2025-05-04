@@ -889,10 +889,7 @@ namespace osu.Game.Tests.Visual.SongSelect
             AddUntilStep("wait for selection", () => !Beatmap.IsDefault);
 
             DrawableCarouselBeatmapSet set = null!;
-            AddStep("Find the DrawableCarouselBeatmapSet", () =>
-            {
-                set = songSelect!.Carousel.ChildrenOfType<DrawableCarouselBeatmapSet>().First();
-            });
+            AddStep("Find the DrawableCarouselBeatmapSet", () => { set = songSelect!.Carousel.ChildrenOfType<DrawableCarouselBeatmapSet>().First(); });
 
             FilterableDifficultyIcon difficultyIcon = null!;
 

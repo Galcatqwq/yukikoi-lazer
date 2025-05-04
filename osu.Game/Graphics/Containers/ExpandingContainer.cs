@@ -59,10 +59,7 @@ namespace osu.Game.Graphics.Containers
         {
             base.LoadComplete();
 
-            Expanded.BindValueChanged(v =>
-            {
-                this.ResizeWidthTo(v.NewValue ? expandedWidth : contractedWidth, 500, Easing.OutQuint);
-            }, true);
+            Expanded.BindValueChanged(v => { this.ResizeWidthTo(v.NewValue ? expandedWidth : contractedWidth, 500, Easing.OutQuint); }, true);
         }
 
         protected override bool OnHover(HoverEvent e)

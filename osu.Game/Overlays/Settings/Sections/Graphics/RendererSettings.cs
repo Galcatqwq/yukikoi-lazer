@@ -73,10 +73,8 @@ namespace osu.Game.Overlays.Settings.Sections.Graphics
                 }
                 else
                 {
-                    dialogOverlay?.Push(new ConfirmDialog(GraphicsSettingsStrings.ChangeRendererConfirmation, () => game?.AttemptExit(), () =>
-                    {
-                        renderer.Value = automaticRendererInUse ? RendererType.Automatic : host.ResolvedRenderer;
-                    }));
+                    dialogOverlay?.Push(new ConfirmDialog(GraphicsSettingsStrings.ChangeRendererConfirmation, () => game?.AttemptExit(),
+                        () => { renderer.Value = automaticRendererInUse ? RendererType.Automatic : host.ResolvedRenderer; }));
                 }
             });
         }

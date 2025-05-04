@@ -314,6 +314,6 @@ namespace osu.Game.Tests.Visual.Ranking
             => AddUntilStep("first panel centred", () => Precision.AlmostEquals(list.ChildrenOfType<ScorePanel>().First().ScreenSpaceDrawQuad.Centre.X, list.ScreenSpaceDrawQuad.Centre.X, 1));
 
         private void assertScoreState(ScoreInfo score, bool expanded)
-            => AddUntilStep($"score expanded = {expanded}", () => (list.ChildrenOfType<ScorePanel>().Single(p => p.Score.Equals(score)).State == PanelState.Expanded) == expanded);
+            => AddUntilStep($"score expanded = {expanded}", () => list.ChildrenOfType<ScorePanel>().Single(p => p.Score.Equals(score)).State == PanelState.Expanded == expanded);
     }
 }

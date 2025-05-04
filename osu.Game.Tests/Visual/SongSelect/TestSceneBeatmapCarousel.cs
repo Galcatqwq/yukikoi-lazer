@@ -540,7 +540,7 @@ namespace osu.Game.Tests.Visual.SongSelect
 
             AddStep("Remove set", () => carousel.RemoveBeatmapSet(firstAdded));
 
-            checkVisibleItemCount(false, (local_set_count) * local_diff_count);
+            checkVisibleItemCount(false, local_set_count * local_diff_count);
 
             setSelected(local_set_count, 1);
 
@@ -1035,10 +1035,7 @@ namespace osu.Game.Tests.Visual.SongSelect
             AddStep("add single ruleset beatmapset", () =>
             {
                 testSingle = TestResources.CreateTestBeatmapSetInfo(diff_count);
-                testSingle.Beatmaps.ForEach(b =>
-                {
-                    b.Ruleset = rulesets.AvailableRulesets.ElementAt(1);
-                });
+                testSingle.Beatmaps.ForEach(b => { b.Ruleset = rulesets.AvailableRulesets.ElementAt(1); });
 
                 carousel.UpdateBeatmapSet(testSingle);
             });
@@ -1066,10 +1063,7 @@ namespace osu.Game.Tests.Visual.SongSelect
 
             for (int i = 0; i < 5; i++)
             {
-                AddStep("Toggle non-matching filter", () =>
-                {
-                    carousel.Filter(new FilterCriteria { SearchText = Guid.NewGuid().ToString() }, false);
-                });
+                AddStep("Toggle non-matching filter", () => { carousel.Filter(new FilterCriteria { SearchText = Guid.NewGuid().ToString() }, false); });
 
                 AddStep("Restore no filter", () =>
                 {
@@ -1103,10 +1097,7 @@ namespace osu.Game.Tests.Visual.SongSelect
 
             for (int i = 0; i < 5; i++)
             {
-                AddStep("Toggle non-matching filter", () =>
-                {
-                    carousel.Filter(new FilterCriteria { SearchText = Guid.NewGuid().ToString() }, false);
-                });
+                AddStep("Toggle non-matching filter", () => { carousel.Filter(new FilterCriteria { SearchText = Guid.NewGuid().ToString() }, false); });
 
                 AddStep("Restore no filter", () =>
                 {
@@ -1183,10 +1174,7 @@ namespace osu.Game.Tests.Visual.SongSelect
             {
                 var rulesetInfo = getRuleset(i % 3);
 
-                AddStep($"Set ruleset to {rulesetInfo.ShortName}", () =>
-                {
-                    carousel.Filter(new FilterCriteria { Ruleset = rulesetInfo, Sort = SortMode.Title }, false);
-                });
+                AddStep($"Set ruleset to {rulesetInfo.ShortName}", () => { carousel.Filter(new FilterCriteria { Ruleset = rulesetInfo, Sort = SortMode.Title }, false); });
                 waitForSelection(i + 1, 1);
             }
 
@@ -1221,15 +1209,9 @@ namespace osu.Game.Tests.Visual.SongSelect
             for (int i = 2; i < 10; i += 4)
             {
                 setSelected(i, 1);
-                AddStep("Set ruleset to taiko", () =>
-                {
-                    carousel.Filter(new FilterCriteria { Ruleset = rulesets.AvailableRulesets.ElementAt(1), Sort = SortMode.Title }, false);
-                });
+                AddStep("Set ruleset to taiko", () => { carousel.Filter(new FilterCriteria { Ruleset = rulesets.AvailableRulesets.ElementAt(1), Sort = SortMode.Title }, false); });
                 waitForSelection(i - 1, 1);
-                AddStep("Remove ruleset filter", () =>
-                {
-                    carousel.Filter(new FilterCriteria { Sort = SortMode.Title }, false);
-                });
+                AddStep("Remove ruleset filter", () => { carousel.Filter(new FilterCriteria { Sort = SortMode.Title }, false); });
             }
 
             static RulesetInfo getRuleset(int index)

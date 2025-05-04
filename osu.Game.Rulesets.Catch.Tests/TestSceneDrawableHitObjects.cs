@@ -109,7 +109,7 @@ namespace osu.Game.Rulesets.Catch.Tests
                 {
                     X = getXCoords(hit),
                     LastInCombo = i % 4 == 0,
-                    StartTime = playfieldTime + 800 + (200 * i)
+                    StartTime = playfieldTime + 800 + 200 * i
                 };
 
                 fruit.ApplyDefaults(new ControlPointInfo(), new BeatmapDifficulty());
@@ -149,7 +149,7 @@ namespace osu.Game.Rulesets.Catch.Tests
                 {
                     X = getXCoords(hit),
                     LastInCombo = i % 4 == 0,
-                    StartTime = playfieldTime + 800 + (200 * i)
+                    StartTime = playfieldTime + 800 + 200 * i
                 };
 
                 banana.ApplyDefaults(new ControlPointInfo(), new BeatmapDifficulty());

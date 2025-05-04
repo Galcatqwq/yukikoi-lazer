@@ -17,14 +17,8 @@ namespace osu.Game.Graphics.Containers.Markdown.Footnotes
         {
         }
 
-        public override SpriteText CreateOrderMarker(int order) => CreateSpriteText().With(marker =>
-        {
-            marker.Text = LocalisableString.Format("{0}.", order);
-        });
+        public override SpriteText CreateOrderMarker(int order) => CreateSpriteText().With(marker => { marker.Text = LocalisableString.Format("{0}.", order); });
 
-        public override MarkdownTextFlowContainer CreateTextFlow() => base.CreateTextFlow().With(textFlow =>
-        {
-            textFlow.Margin = new MarginPadding { Left = 30 };
-        });
+        public override MarkdownTextFlowContainer CreateTextFlow() => base.CreateTextFlow().With(textFlow => { textFlow.Margin = new MarginPadding { Left = 30 }; });
     }
 }

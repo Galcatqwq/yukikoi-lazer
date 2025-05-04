@@ -4,8 +4,8 @@
 #nullable disable
 
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,18 +21,18 @@ using osu.Framework.Logging;
 using osu.Framework.Testing;
 using osu.Game.Configuration;
 using osu.Game.Graphics.UserInterface;
+using osu.Game.Graphics.UserInterfaceV2;
 using osu.Game.Online.API;
 using osu.Game.Online.API.Requests;
 using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Online.Chat;
 using osu.Game.Overlays;
 using osu.Game.Overlays.Chat;
-using osu.Game.Overlays.Chat.Listing;
 using osu.Game.Overlays.Chat.ChannelList;
+using osu.Game.Overlays.Chat.Listing;
+using osu.Game.Tests.Resources;
 using osuTK;
 using osuTK.Input;
-using osu.Game.Graphics.UserInterfaceV2;
-using osu.Game.Tests.Resources;
 
 namespace osu.Game.Tests.Visual.Online
 {
@@ -93,7 +93,7 @@ namespace osu.Game.Tests.Visual.Online
                         case CreateChannelRequest createRequest:
                             createRequest.TriggerSuccess(new APIChatChannel
                             {
-                                ChannelID = ((int)createRequest.Channel.Id),
+                                ChannelID = (int)createRequest.Channel.Id,
                                 RecentMessages = new List<Message>()
                             });
                             return true;
@@ -138,10 +138,7 @@ namespace osu.Game.Tests.Visual.Online
                 };
             });
 
-            AddStep("Add test channels", () =>
-            {
-                (channelManager.AvailableChannels as BindableList<Channel>)?.AddRange(testChannels);
-            });
+            AddStep("Add test channels", () => { (channelManager.AvailableChannels as BindableList<Channel>)?.AddRange(testChannels); });
         }
 
         [Test]
@@ -527,10 +524,7 @@ namespace osu.Game.Tests.Visual.Online
                 });
             });
 
-            AddStep("Remove messages from other user", () =>
-            {
-                testChannel1.RemoveMessagesFromUser(testUser.Id);
-            });
+            AddStep("Remove messages from other user", () => { testChannel1.RemoveMessagesFromUser(testUser.Id); });
         }
 
         [Test]

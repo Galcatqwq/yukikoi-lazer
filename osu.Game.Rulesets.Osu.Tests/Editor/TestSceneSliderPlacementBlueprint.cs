@@ -497,16 +497,18 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
             AddStep($"click {button}", () => InputManager.Click(button));
         }
 
-        private void assertPlaced(bool expected) => AddAssert($"slider {(expected ? "placed" : "not placed")}", () => (getSlider() != null) == expected);
+        private void assertPlaced(bool expected) => AddAssert($"slider {(expected ? "placed" : "not placed")}", () => getSlider() != null == expected);
 
-        private void assertLength(double expected, double tolerance = 1) => AddAssert($"slider length is {expected}±{tolerance}", () => getSlider()!.Distance, () => Is.EqualTo(expected).Within(tolerance));
+        private void assertLength(double expected, double tolerance = 1) =>
+            AddAssert($"slider length is {expected}±{tolerance}", () => getSlider()!.Distance, () => Is.EqualTo(expected).Within(tolerance));
 
         private void assertControlPointCount(int expected) => AddAssert($"has {expected} control points", () => getSlider()!.Path.ControlPoints.Count, () => Is.EqualTo(expected));
 
         private void assertControlPointTypeDuringPlacement(int index, PathType? type) => AddAssert($"control point {index} is {type?.ToString() ?? "inherit"}",
             () => this.ChildrenOfType<PathControlPointPiece<Slider>>().ElementAt(index).ControlPoint.Type, () => Is.EqualTo(type));
 
-        private void assertFinalControlPointType(int index, PathType? type) => AddAssert($"control point {index} is {type?.ToString() ?? "inherit"}", () => getSlider()!.Path.ControlPoints[index].Type, () => Is.EqualTo(type));
+        private void assertFinalControlPointType(int index, PathType? type) =>
+            AddAssert($"control point {index} is {type?.ToString() ?? "inherit"}", () => getSlider()!.Path.ControlPoints[index].Type, () => Is.EqualTo(type));
 
         private void assertControlPointPosition(int index, Vector2 position) =>
             AddAssert($"control point {index} at {position}", () => Precision.AlmostEquals(position, getSlider()!.Path.ControlPoints[index].Position, 1));

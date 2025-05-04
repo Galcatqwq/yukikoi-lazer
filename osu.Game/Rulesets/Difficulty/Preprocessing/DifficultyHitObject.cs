@@ -72,7 +72,7 @@ namespace osu.Game.Rulesets.Difficulty.Preprocessing
 
         public DifficultyHitObject Next(int forwardsIndex)
         {
-            int index = Index + (forwardsIndex + 1);
+            int index = Index + forwardsIndex + 1;
             return index >= 0 && index < difficultyHitObjects.Count ? difficultyHitObjects[index] : default;
         }
     }

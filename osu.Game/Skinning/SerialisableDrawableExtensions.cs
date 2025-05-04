@@ -32,7 +32,7 @@ namespace osu.Game.Skinning
 
                 foreach (var (_, property) in component.GetSettingsSourceProperties())
                 {
-                    var bindable = ((IBindable)property.GetValue(component)!);
+                    var bindable = (IBindable)property.GetValue(component)!;
 
                     if (!drawableInfo.Settings.TryGetValue(property.Name.ToSnakeCase(), out object? settingValue))
                     {

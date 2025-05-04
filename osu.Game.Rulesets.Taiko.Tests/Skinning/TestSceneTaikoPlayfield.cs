@@ -80,10 +80,7 @@ namespace osu.Game.Rulesets.Taiko.Tests.Skinning
         {
             bool kiai = false;
 
-            AddStep("Toggle kiai", () =>
-            {
-                Beatmap.Value.Beatmap.ControlPointInfo.Add(0, new EffectControlPoint { KiaiMode = (kiai = !kiai) });
-            });
+            AddStep("Toggle kiai", () => { Beatmap.Value.Beatmap.ControlPointInfo.Add(0, new EffectControlPoint { KiaiMode = kiai = !kiai }); });
         }
     }
 }

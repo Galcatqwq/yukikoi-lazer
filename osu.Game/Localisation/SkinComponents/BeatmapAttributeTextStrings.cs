@@ -27,7 +27,8 @@ namespace osu.Game.Localisation.SkinComponents
         /// <summary>
         /// "Supports {{Label}} and {{Value}}, but also including arbitrary attributes like {{StarRating}} (see attribute list for supported values)."
         /// </summary>
-        public static LocalisableString TemplateDescription => new TranslatableString(getKey(@"template_description"), @"Supports {{Label}} and {{Value}}, but also including arbitrary attributes like {{StarRating}} (see attribute list for supported values).");
+        public static LocalisableString TemplateDescription => new TranslatableString(getKey(@"template_description"),
+            @"Supports {{Label}} and {{Value}}, but also including arbitrary attributes like {{StarRating}} (see attribute list for supported values).");
 
         private static string getKey(string key) => $"{prefix}:{key}";
     }

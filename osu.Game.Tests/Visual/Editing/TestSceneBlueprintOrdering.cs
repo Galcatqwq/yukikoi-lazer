@@ -110,10 +110,7 @@ namespace osu.Game.Tests.Visual.Editing
                 InputManager.MoveMouseTo(hitObjectContainer.ScreenSpaceDrawQuad.Centre);
             });
 
-            AddStep("begin placing spinner", () =>
-            {
-                InputManager.Click(MouseButton.Left);
-            });
+            AddStep("begin placing spinner", () => { InputManager.Click(MouseButton.Left); });
             AddStep("end placing spinner", () =>
             {
                 EditorClock.Seek(2500);

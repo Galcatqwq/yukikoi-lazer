@@ -534,7 +534,9 @@ namespace osu.Game
                         realmBlocker = realm.BlockAllOperations("migration");
                         success = true;
                     }
-                    catch { }
+                    catch
+                    {
+                    }
 
                     readyToRun.Set();
                 }, false);

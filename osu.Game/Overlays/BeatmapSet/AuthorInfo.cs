@@ -8,15 +8,15 @@ using osu.Framework.Allocation;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Game.Graphics.Sprites;
-using osu.Game.Users.Drawables;
-using osuTK;
-using osuTK.Graphics;
 using osu.Framework.Graphics.Effects;
 using osu.Framework.Graphics.Sprites;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Containers;
+using osu.Game.Graphics.Sprites;
 using osu.Game.Online.API.Requests.Responses;
+using osu.Game.Users.Drawables;
+using osuTK;
+using osuTK.Graphics;
 using APIUser = osu.Game.Online.API.Requests.Responses.APIUser;
 
 namespace osu.Game.Overlays.BeatmapSet
@@ -153,10 +153,7 @@ namespace osu.Game.Overlays.BeatmapSet
 
                 Children = new[]
                 {
-                    new LinkFlowContainer(s =>
-                    {
-                        s.Font = OsuFont.GetFont(size: 11);
-                    }).With(d =>
+                    new LinkFlowContainer(s => { s.Font = OsuFont.GetFont(size: 11); }).With(d =>
                     {
                         d.AutoSizeAxes = Axes.Both;
                         d.AddText($"{first} ");

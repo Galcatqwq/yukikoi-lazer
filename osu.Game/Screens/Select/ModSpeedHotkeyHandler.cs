@@ -32,10 +32,7 @@ namespace osu.Game.Screens.Select
         {
             base.LoadComplete();
 
-            selectedMods.BindValueChanged(val =>
-            {
-                lastActiveRateAdjustMod = val.NewValue.OfType<ModRateAdjust>().SingleOrDefault() ?? lastActiveRateAdjustMod;
-            }, true);
+            selectedMods.BindValueChanged(val => { lastActiveRateAdjustMod = val.NewValue.OfType<ModRateAdjust>().SingleOrDefault() ?? lastActiveRateAdjustMod; }, true);
         }
 
         public bool ChangeSpeed(double delta, IEnumerable<Mod> availableMods)

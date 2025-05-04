@@ -105,10 +105,7 @@ namespace osu.Game.Tests.Visual.Online
                 };
             });
 
-            AddStep("create watcher", () =>
-            {
-                Child = watcher = new UserStatisticsWatcher();
-            });
+            AddStep("create watcher", () => { Child = watcher = new UserStatisticsWatcher(); });
         }
 
         private UserStatistics tryGetStatistics(int userId, string rulesetName)

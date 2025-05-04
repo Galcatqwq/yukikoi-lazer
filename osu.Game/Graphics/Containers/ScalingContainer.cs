@@ -205,7 +205,7 @@ namespace osu.Game.Graphics.Containers
             bool requiresMasking = targetRect.Size != Vector2.One
                                    // For the top level scaling container, for now we apply masking if safe areas are in use.
                                    // In the future this can likely be removed as more of the actual UI supports overflowing into the safe areas.
-                                   || (targetMode == ScalingMode.Everything && (applySafeAreaPadding.Value && safeAreaPadding.Value.Total != Vector2.Zero));
+                                   || (targetMode == ScalingMode.Everything && applySafeAreaPadding.Value && safeAreaPadding.Value.Total != Vector2.Zero);
 
             if (requiresMasking)
                 sizableContainer.Masking = true;

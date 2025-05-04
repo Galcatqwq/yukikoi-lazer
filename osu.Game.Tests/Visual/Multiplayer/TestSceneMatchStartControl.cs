@@ -198,10 +198,7 @@ namespace osu.Game.Tests.Visual.Multiplayer
                 InputManager.Click(MouseButton.Left);
             });
 
-            AddStep("check request received", () =>
-            {
-                multiplayerClient.Verify(m => m.SendMatchRequest(It.IsAny<StopCountdownRequest>()), Times.Once);
-            });
+            AddStep("check request received", () => { multiplayerClient.Verify(m => m.SendMatchRequest(It.IsAny<StopCountdownRequest>()), Times.Once); });
         }
 
         [Test]
@@ -237,10 +234,7 @@ namespace osu.Game.Tests.Visual.Multiplayer
         [Test]
         public void TestBecomeHostDuringCountdownAndReady()
         {
-            AddStep("add second user as host", () =>
-            {
-                addUser(new APIUser { Id = 2, Username = "Another user" }, true);
-            });
+            AddStep("add second user as host", () => { addUser(new APIUser { Id = 2, Username = "Another user" }, true); });
 
             AddStep("start countdown", () => multiplayerClient.Object.SendMatchRequest(new StartMatchCountdownRequest { Duration = TimeSpan.FromMinutes(1) }).WaitSafely());
             AddUntilStep("countdown started", () => multiplayerRoom.ActiveCountdowns.Any());
@@ -293,10 +287,7 @@ namespace osu.Game.Tests.Visual.Multiplayer
         [Test]
         public void TestToggleStateWhenNotHost()
         {
-            AddStep("add second user as host", () =>
-            {
-                addUser(new APIUser { Id = 2, Username = "Another user" }, true);
-            });
+            AddStep("add second user as host", () => { addUser(new APIUser { Id = 2, Username = "Another user" }, true); });
 
             ClickButtonWhenEnabled<MultiplayerReadyButton>();
             checkLocalUserState(MultiplayerUserState.Ready);
@@ -321,10 +312,7 @@ namespace osu.Game.Tests.Visual.Multiplayer
         [Test]
         public void TestBecomeHostWhileReady()
         {
-            AddStep("add host", () =>
-            {
-                addUser(new APIUser { Id = 2, Username = "Another user" }, true);
-            });
+            AddStep("add host", () => { addUser(new APIUser { Id = 2, Username = "Another user" }, true); });
 
             ClickButtonWhenEnabled<MultiplayerReadyButton>();
 
@@ -336,10 +324,7 @@ namespace osu.Game.Tests.Visual.Multiplayer
         [Test]
         public void TestLoseHostWhileReady()
         {
-            AddStep("setup", () =>
-            {
-                addUser(new APIUser { Id = 2, Username = "Another user" });
-            });
+            AddStep("setup", () => { addUser(new APIUser { Id = 2, Username = "Another user" }); });
 
             ClickButtonWhenEnabled<MultiplayerReadyButton>();
             checkLocalUserState(MultiplayerUserState.Ready);
@@ -365,10 +350,7 @@ namespace osu.Game.Tests.Visual.Multiplayer
 
             ClickButtonWhenEnabled<MultiplayerReadyButton>();
 
-            AddRepeatStep("change user ready state", () =>
-            {
-                changeUserState(RNG.Next(0, users), RNG.NextBool() ? MultiplayerUserState.Ready : MultiplayerUserState.Idle);
-            }, 20);
+            AddRepeatStep("change user ready state", () => { changeUserState(RNG.Next(0, users), RNG.NextBool() ? MultiplayerUserState.Ready : MultiplayerUserState.Idle); }, 20);
 
             AddRepeatStep("ready all users", () =>
             {

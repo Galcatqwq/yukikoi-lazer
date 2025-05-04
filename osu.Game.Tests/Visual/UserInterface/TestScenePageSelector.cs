@@ -68,7 +68,8 @@ namespace osu.Game.Tests.Visual.UserInterface
             AddAssert("Page 1 is current", () => pageSelector.CurrentPage.Value == 0);
         }
 
-        private void checkVisiblePageNumbers(int[] expected) => AddAssert($"Sequence is {string.Join(',', expected.Select(i => i.ToString()))}", () => pageSelector.ChildrenOfType<PageSelectorPageButton>().Select(p => p.PageNumber).SequenceEqual(expected));
+        private void checkVisiblePageNumbers(int[] expected) => AddAssert($"Sequence is {string.Join(',', expected.Select(i => i.ToString()))}",
+            () => pageSelector.ChildrenOfType<PageSelectorPageButton>().Select(p => p.PageNumber).SequenceEqual(expected));
 
         private void selectPageIndex(int pageIndex) =>
             AddStep($"Select page {pageIndex}", () => pageSelector.CurrentPage.Value = pageIndex);

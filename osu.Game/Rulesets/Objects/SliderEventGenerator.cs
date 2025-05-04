@@ -97,7 +97,7 @@ namespace osu.Game.Rulesets.Objects
             // `slider.StartTime + max(slider.Duration / 2, slider.Duration - 36)`
             //
             // As a slider gets shorter than 72 ms, the leniency offered falls below the 36 ms `TAIL_LENIENCY` constant.
-            double legacyLastTickTime = Math.Max(startTime + totalDuration / 2, (finalSpanStartTime + spanDuration) + TAIL_LENIENCY);
+            double legacyLastTickTime = Math.Max(startTime + totalDuration / 2, finalSpanStartTime + spanDuration + TAIL_LENIENCY);
             double legacyLastTickProgress = (legacyLastTickTime - finalSpanStartTime) / spanDuration;
 
             if (spanCount % 2 == 0) legacyLastTickProgress = 1 - legacyLastTickProgress;

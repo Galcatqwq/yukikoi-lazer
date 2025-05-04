@@ -168,7 +168,7 @@ namespace osu.Game.Beatmaps
         {
             const double excess_length = 1000;
 
-            double length = (BeatmapInfo?.Length + excess_length) ?? emptyLength;
+            double length = BeatmapInfo?.Length + excess_length ?? emptyLength;
 
             return audioManager.Tracks.GetVirtual(length);
         }

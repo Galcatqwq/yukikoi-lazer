@@ -168,10 +168,7 @@ namespace osu.Game.Rulesets.Osu.Tests
                 this.autoplay = autoplay;
                 currentBeatmap = beatmap();
             });
-            AddStep("setup default legacy skin", () =>
-            {
-                skinManager.CurrentSkinInfo.Value = skinManager.DefaultClassicSkin.SkinInfo;
-            });
+            AddStep("setup default legacy skin", () => { skinManager.CurrentSkinInfo.Value = skinManager.DefaultClassicSkin.SkinInfo; });
         });
     }
 }

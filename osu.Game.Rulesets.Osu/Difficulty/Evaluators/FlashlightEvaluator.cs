@@ -34,7 +34,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Evaluators
                 return 0;
 
             var osuCurrent = (OsuDifficultyHitObject)current;
-            var osuHitObject = (OsuHitObject)(osuCurrent.BaseObject);
+            var osuHitObject = (OsuHitObject)osuCurrent.BaseObject;
 
             double scalingFactor = 52.0 / osuHitObject.Radius;
             double smallDistNerf = 1.0;
@@ -50,7 +50,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Evaluators
             for (int i = 0; i < Math.Min(current.Index, 10); i++)
             {
                 var currentObj = (OsuDifficultyHitObject)current.Previous(i);
-                var currentHitObject = (OsuHitObject)(currentObj.BaseObject);
+                var currentHitObject = (OsuHitObject)currentObj.BaseObject;
 
                 if (!(currentObj.BaseObject is Spinner))
                 {
@@ -63,7 +63,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Evaluators
                         smallDistNerf = Math.Min(1.0, jumpDistance / 75.0);
 
                     // We also want to nerf stacks so that only the first object of the stack is accounted for.
-                    double stackNerf = Math.Min(1.0, (currentObj.LazyJumpDistance / scalingFactor) / 25.0);
+                    double stackNerf = Math.Min(1.0, currentObj.LazyJumpDistance / scalingFactor / 25.0);
 
                     // Bonus based on how visible the object is.
                     double opacityBonus = 1.0 + max_opacity_bonus * (1.0 - osuCurrent.OpacityAt(currentHitObject.StartTime, hidden));
@@ -105,7 +105,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Evaluators
 
                 // Nerf sliders with repeats, as less memorisation is required.
                 if (osuSlider.RepeatCount > 0)
-                    sliderBonus /= (osuSlider.RepeatCount + 1);
+                    sliderBonus /= osuSlider.RepeatCount + 1;
             }
 
             result += sliderBonus * slider_multiplier;

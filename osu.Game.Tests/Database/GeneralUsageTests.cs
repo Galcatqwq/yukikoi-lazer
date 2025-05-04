@@ -128,13 +128,7 @@ namespace osu.Game.Tests.Database
 
                 realm.RegisterCustomSubscription(r =>
                 {
-                    var subscription = r.All<BeatmapInfo>().QueryAsyncWithNotifications((_, _) =>
-                    {
-                        realm.Run(_ =>
-                        {
-                            callbackRan = true;
-                        });
-                    });
+                    var subscription = r.All<BeatmapInfo>().QueryAsyncWithNotifications((_, _) => { realm.Run(_ => { callbackRan = true; }); });
 
                     // Force the callback above to run.
                     realm.Run(rr => rr.Refresh());

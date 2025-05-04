@@ -818,10 +818,7 @@ namespace osu.Game.Screens.Edit
                     beatmap.EditorTimestamp = clock.CurrentTime;
             });
 
-            ApplyToBackground(b =>
-            {
-                b.DimWhenUserSettingsIgnored.Value = 0;
-            });
+            ApplyToBackground(b => { b.DimWhenUserSettingsIgnored.Value = 0; });
 
             resetTrack();
 

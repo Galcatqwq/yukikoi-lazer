@@ -106,7 +106,8 @@ namespace osu.Game.Rulesets.Catch.Tests.Mods
                     var mirroredNested = (CatchHitObject)mirroredObject.NestedHitObjects[j];
 
                     if (!effectivePositionMirrored(originalNested, mirroredNested))
-                        Assert.Fail($"{originalObject.GetType().Name}'s nested {originalNested.GetType().Name} at time {originalObject.StartTime} is not mirrored ({printEffectivePositions(originalNested, mirroredNested)})");
+                        Assert.Fail(
+                            $"{originalObject.GetType().Name}'s nested {originalNested.GetType().Name} at time {originalObject.StartTime} is not mirrored ({printEffectivePositions(originalNested, mirroredNested)})");
                 }
             }
         }

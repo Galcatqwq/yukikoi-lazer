@@ -100,10 +100,7 @@ namespace osu.Game.Screens.Edit.Timing
                     beatLengthBindable.TriggerChange();
                 };
 
-                beatLengthBindable.BindValueChanged(val =>
-                {
-                    Current.Value = beatLengthToBpm(val.NewValue).ToString("N2");
-                }, true);
+                beatLengthBindable.BindValueChanged(val => { Current.Value = beatLengthToBpm(val.NewValue).ToString("N2"); }, true);
             }
 
             public Bindable<double> Bindable

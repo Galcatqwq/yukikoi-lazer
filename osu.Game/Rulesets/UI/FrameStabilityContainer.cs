@@ -289,7 +289,9 @@ namespace osu.Game.Rulesets.UI
 
         public bool IsRunning => framedClock.IsRunning;
 
-        public void ProcessFrame() { }
+        public void ProcessFrame()
+        {
+        }
 
         public double ElapsedFrameTime => framedClock.ElapsedFrameTime;
 

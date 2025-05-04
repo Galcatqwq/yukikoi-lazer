@@ -219,7 +219,9 @@ namespace osu.Game.Skinning
         /// Invoked after any consumed source change, before the external <see cref="SourceChanged"/> event is fired.
         /// This is also invoked once initially during <see cref="CreateChildDependencies"/> to ensure sources are ready for children consumption.
         /// </summary>
-        protected virtual void RefreshSources() { }
+        protected virtual void RefreshSources()
+        {
+        }
 
         protected void TriggerSourceChanged()
         {

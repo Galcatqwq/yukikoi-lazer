@@ -193,8 +193,6 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer
             await Task.WhenAny(resultsReady.Task, Task.Delay(TimeSpan.FromSeconds(60))).ConfigureAwait(false);
         }
 
-
-
         protected override void Dispose(bool isDisposing)
         {
             base.Dispose(isDisposing);

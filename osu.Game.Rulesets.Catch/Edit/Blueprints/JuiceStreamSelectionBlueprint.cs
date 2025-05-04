@@ -169,10 +169,7 @@ namespace osu.Game.Rulesets.Catch.Edit.Blueprints
 
         private IEnumerable<MenuItem> getContextMenuItems()
         {
-            yield return new OsuMenuItem("Add vertex", MenuItemType.Standard, () =>
-            {
-                editablePath.AddVertex(rightMouseDownPosition);
-            });
+            yield return new OsuMenuItem("Add vertex", MenuItemType.Standard, () => { editablePath.AddVertex(rightMouseDownPosition); });
         }
 
         protected override void Dispose(bool isDisposing)

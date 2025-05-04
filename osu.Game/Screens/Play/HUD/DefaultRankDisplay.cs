@@ -6,6 +6,7 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Game.Online.Leaderboards;
 using osu.Game.Rulesets.Scoring;
+using osu.Game.Scoring;
 using osu.Game.Skinning;
 using osuTK;
 
@@ -26,7 +27,7 @@ namespace osu.Game.Screens.Play.HUD
 
             InternalChildren = new Drawable[]
             {
-                rank = new UpdateableRank(Scoring.ScoreRank.X)
+                rank = new UpdateableRank(ScoreRank.X)
                 {
                     RelativeSizeAxes = Axes.Both
                 },

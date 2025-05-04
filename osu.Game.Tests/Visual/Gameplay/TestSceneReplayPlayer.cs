@@ -159,10 +159,7 @@ namespace osu.Game.Tests.Visual.Gameplay
 
         private void loadPlayerWithBeatmap(IBeatmap? beatmap = null)
         {
-            AddStep("create player", () =>
-            {
-                CreatePlayer(new OsuRuleset(), beatmap);
-            });
+            AddStep("create player", () => { CreatePlayer(new OsuRuleset(), beatmap); });
 
             AddStep("Load player", () => LoadScreen(Player));
             AddUntilStep("player loaded", () => Player.IsLoaded);

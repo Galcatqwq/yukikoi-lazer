@@ -27,7 +27,8 @@ namespace osu.Game.Localisation
         /// <summary>
         /// "Attempts to bypass any operation system mouse acceleration. On windows, this is equivalent to what used to be known as &quot;Raw Input&quot;."
         /// </summary>
-        public static LocalisableString HighPrecisionMouseTooltip => new TranslatableString(getKey(@"high_precision_mouse_tooltip"), @"Attempts to bypass any operation system mouse acceleration. On windows, this is equivalent to what used to be known as ""Raw Input"".");
+        public static LocalisableString HighPrecisionMouseTooltip => new TranslatableString(getKey(@"high_precision_mouse_tooltip"),
+            @"Attempts to bypass any operation system mouse acceleration. On windows, this is equivalent to what used to be known as ""Raw Input"".");
 
         /// <summary>
         /// "Confine mouse cursor to window"
@@ -42,7 +43,8 @@ namespace osu.Game.Localisation
         /// <summary>
         /// "Volume can still be adjusted using the mouse wheel by holding &quot;Alt&quot;"
         /// </summary>
-        public static LocalisableString DisableMouseWheelVolumeAdjustTooltip => new TranslatableString(getKey(@"disable_mouse_wheel_volume_adjust_tooltip"), @"Volume can still be adjusted using the mouse wheel by holding ""Alt""");
+        public static LocalisableString DisableMouseWheelVolumeAdjustTooltip =>
+            new TranslatableString(getKey(@"disable_mouse_wheel_volume_adjust_tooltip"), @"Volume can still be adjusted using the mouse wheel by holding ""Alt""");
 
         /// <summary>
         /// "Disable clicks during gameplay"
@@ -52,7 +54,8 @@ namespace osu.Game.Localisation
         /// <summary>
         /// "Enable high precision mouse to adjust sensitivity"
         /// </summary>
-        public static LocalisableString EnableHighPrecisionForSensitivityAdjust => new TranslatableString(getKey(@"enable_high_precision_for_sensitivity_adjust"), @"Enable high precision mouse to adjust sensitivity");
+        public static LocalisableString EnableHighPrecisionForSensitivityAdjust =>
+            new TranslatableString(getKey(@"enable_high_precision_for_sensitivity_adjust"), @"Enable high precision mouse to adjust sensitivity");
 
         /// <summary>
         /// "Cursor sensitivity"
@@ -62,7 +65,8 @@ namespace osu.Game.Localisation
         /// <summary>
         /// "This setting has known issues on your platform. If you encounter problems, it is recommended to adjust sensitivity externally and keep this disabled for now."
         /// </summary>
-        public static LocalisableString HighPrecisionPlatformWarning => new TranslatableString(getKey(@"high_precision_platform_warning"), @"This setting has known issues on your platform. If you encounter problems, it is recommended to adjust sensitivity externally and keep this disabled for now.");
+        public static LocalisableString HighPrecisionPlatformWarning => new TranslatableString(getKey(@"high_precision_platform_warning"),
+            @"This setting has known issues on your platform. If you encounter problems, it is recommended to adjust sensitivity externally and keep this disabled for now.");
 
         /// <summary>
         /// "Always"

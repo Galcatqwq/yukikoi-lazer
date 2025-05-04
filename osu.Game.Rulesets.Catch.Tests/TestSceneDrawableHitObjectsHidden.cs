@@ -9,9 +9,6 @@ namespace osu.Game.Rulesets.Catch.Tests
     public partial class TestSceneDrawableHitObjectsHidden : TestSceneDrawableHitObjects
     {
         [SetUp]
-        public void SetUp() => Schedule(() =>
-        {
-            SelectedMods.Value = new[] { new CatchModHidden() };
-        });
+        public void SetUp() => Schedule(() => { SelectedMods.Value = new[] { new CatchModHidden() }; });
     }
 }

@@ -105,7 +105,7 @@ namespace osu.Game.Tests.Visual.Editing
             });
 
             AddStep($"set distance spacing = {multiplier}", () => snapProvider.DistanceSpacingMultiplier.Value = multiplier);
-            AddStep("check correct interval count", () => Assert.That((end_time / grid.DistanceBetweenTicks) * multiplier, Is.EqualTo(grid.MaxIntervals)));
+            AddStep("check correct interval count", () => Assert.That(end_time / grid.DistanceBetweenTicks * multiplier, Is.EqualTo(grid.MaxIntervals)));
         }
 
         private partial class TestDistanceSnapGrid : DistanceSnapGrid

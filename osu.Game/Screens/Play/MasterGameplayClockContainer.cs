@@ -187,7 +187,8 @@ namespace osu.Game.Screens.Play
                     }
                     else
                     {
-                        Logger.Log($"Playback discrepancy detected ({playbackDiscrepancyCount} of allowed {allowed_playback_discrepancies}): {elapsedGameplayClockTime:N1} vs {elapsedValidationTime:N1}");
+                        Logger.Log(
+                            $"Playback discrepancy detected ({playbackDiscrepancyCount} of allowed {allowed_playback_discrepancies}): {elapsedGameplayClockTime:N1} vs {elapsedValidationTime:N1}");
                     }
 
                     elapsedValidationTime = null;

@@ -134,7 +134,8 @@ namespace osu.Game.Rulesets.Osu.Tests.Editor
                 return Precision.AlmostEquals(first.EndPosition, third.Position);
             });
 
-            AddStep("move mouse slightly off centre", () => InputManager.MoveMouseTo(playfield.ScreenSpaceDrawQuad.Centre + new Vector2(playfield.ScreenSpaceDrawQuad.Width * -0.21f, playfield.ScreenSpaceDrawQuad.Width * 0.205f)));
+            AddStep("move mouse slightly off centre",
+                () => InputManager.MoveMouseTo(playfield.ScreenSpaceDrawQuad.Centre + new Vector2(playfield.ScreenSpaceDrawQuad.Width * -0.21f, playfield.ScreenSpaceDrawQuad.Width * 0.205f)));
 
             AddAssert("object 2 snapped to 1", () =>
             {

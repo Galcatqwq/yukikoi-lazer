@@ -334,10 +334,7 @@ namespace osu.Game.Tests.Visual.Editing
                 collection = new BeatmapCollection("test copy");
                 collection.BeatmapMD5Hashes.Add(originalMd5 = EditorBeatmap.BeatmapInfo.MD5Hash);
 
-                realm.Write(r =>
-                {
-                    r.Add(collection);
-                });
+                realm.Write(r => { r.Add(collection); });
             });
 
             AddAssert("collection contains original beatmap", () =>
@@ -359,13 +356,7 @@ namespace osu.Game.Tests.Visual.Editing
             AddAssert("collection still points to old beatmap", () => !collection.BeatmapMD5Hashes.Contains(EditorBeatmap.BeatmapInfo.MD5Hash)
                                                                       && collection.BeatmapMD5Hashes.Contains(originalMd5));
 
-            AddStep("clean up collection", () =>
-            {
-                realm.Write(r =>
-                {
-                    r.Remove(collection);
-                });
-            });
+            AddStep("clean up collection", () => { realm.Write(r => { r.Remove(collection); }); });
         }
 
         [Test]

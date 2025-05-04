@@ -177,7 +177,7 @@ namespace osu.Game.Rulesets.Osu.Objects
             // If a change is made here, CatchHitObject.cs should also be updated.
             ComboIndex = lastObj?.ComboIndex ?? 0;
             ComboIndexWithOffsets = lastObj?.ComboIndexWithOffsets ?? 0;
-            IndexInCurrentCombo = (lastObj?.IndexInCurrentCombo + 1) ?? 0;
+            IndexInCurrentCombo = lastObj?.IndexInCurrentCombo + 1 ?? 0;
 
             if (this is Spinner)
             {

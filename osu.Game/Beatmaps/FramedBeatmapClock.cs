@@ -95,10 +95,7 @@ namespace osu.Game.Beatmaps
                 beatmapOffsetSubscription = realm.SubscribeToPropertyChanged(
                     r => r.Find<BeatmapInfo>(beatmap.Value.BeatmapInfo.ID)?.UserSettings,
                     settings => settings.Offset,
-                    val =>
-                    {
-                        userBeatmapOffsetClock.Offset = val;
-                    });
+                    val => { userBeatmapOffsetClock.Offset = val; });
             }
         }
 

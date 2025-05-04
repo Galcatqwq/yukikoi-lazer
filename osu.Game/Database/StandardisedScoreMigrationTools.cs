@@ -313,7 +313,8 @@ namespace osu.Game.Database
         /// <param name="difficulty">The beatmap difficulty.</param>
         /// <param name="attributes">The legacy scoring attributes for the beatmap which the score was set on.</param>
         /// <returns>The standardised total score.</returns>
-        private static (long withoutMods, long withMods) convertFromLegacyTotalScore(ScoreInfo score, Ruleset ruleset, LegacyBeatmapConversionDifficultyInfo difficulty, LegacyScoreAttributes attributes)
+        private static (long withoutMods, long withMods) convertFromLegacyTotalScore(ScoreInfo score, Ruleset ruleset, LegacyBeatmapConversionDifficultyInfo difficulty,
+                                                                                     LegacyScoreAttributes attributes)
         {
             if (!score.IsLegacyScore)
                 return (score.TotalScoreWithoutMods, score.TotalScore);

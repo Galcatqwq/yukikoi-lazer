@@ -167,7 +167,7 @@ namespace osu.Game.Screens.Edit
 
             foreach (int divisor in validDivisors)
             {
-                if ((beat * divisor) % beatDivisor == 0)
+                if (beat * divisor % beatDivisor == 0)
                     return divisor;
             }
 

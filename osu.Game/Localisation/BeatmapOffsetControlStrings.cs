@@ -22,7 +22,8 @@ namespace osu.Game.Localisation
         /// <summary>
         /// "Previous play too short to use for calibration"
         /// </summary>
-        public static LocalisableString PreviousPlayTooShortToUseForCalibration => new TranslatableString(getKey(@"previous_play_too_short_to_use_for_calibration"), @"Previous play too short to use for calibration");
+        public static LocalisableString PreviousPlayTooShortToUseForCalibration =>
+            new TranslatableString(getKey(@"previous_play_too_short_to_use_for_calibration"), @"Previous play too short to use for calibration");
 
         /// <summary>
         /// "Calibrate using last play"

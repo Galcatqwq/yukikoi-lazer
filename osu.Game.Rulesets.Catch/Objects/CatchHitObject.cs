@@ -161,7 +161,7 @@ namespace osu.Game.Rulesets.Catch.Objects
             // If a change is made here, OsuHitObject.cs should also be updated.
             ComboIndex = lastObj?.ComboIndex ?? 0;
             ComboIndexWithOffsets = lastObj?.ComboIndexWithOffsets ?? 0;
-            IndexInCurrentCombo = (lastObj?.IndexInCurrentCombo + 1) ?? 0;
+            IndexInCurrentCombo = lastObj?.IndexInCurrentCombo + 1 ?? 0;
 
             if (this is BananaShower)
             {

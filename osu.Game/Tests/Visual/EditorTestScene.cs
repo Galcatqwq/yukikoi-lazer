@@ -142,12 +142,14 @@ namespace osu.Game.Tests.Visual
         {
             public WorkingBeatmap TestBeatmap;
 
-            public TestBeatmapManager(Storage storage, RealmAccess realm, RulesetStore rulesets, IAPIProvider api, [NotNull] AudioManager audioManager, IResourceStore<byte[]> resources, GameHost host, WorkingBeatmap defaultBeatmap)
+            public TestBeatmapManager(Storage storage, RealmAccess realm, RulesetStore rulesets, IAPIProvider api, [NotNull] AudioManager audioManager, IResourceStore<byte[]> resources, GameHost host,
+                                      WorkingBeatmap defaultBeatmap)
                 : base(storage, realm, api, audioManager, resources, host, defaultBeatmap)
             {
             }
 
-            protected override WorkingBeatmapCache CreateWorkingBeatmapCache(AudioManager audioManager, IResourceStore<byte[]> resources, IResourceStore<byte[]> storage, WorkingBeatmap defaultBeatmap, GameHost host)
+            protected override WorkingBeatmapCache CreateWorkingBeatmapCache(AudioManager audioManager, IResourceStore<byte[]> resources, IResourceStore<byte[]> storage, WorkingBeatmap defaultBeatmap,
+                                                                             GameHost host)
             {
                 return new TestWorkingBeatmapCache(this, audioManager, resources, storage, defaultBeatmap, host);
             }
@@ -168,7 +170,8 @@ namespace osu.Game.Tests.Visual
             {
                 private readonly TestBeatmapManager testBeatmapManager;
 
-                public TestWorkingBeatmapCache(TestBeatmapManager testBeatmapManager, AudioManager audioManager, IResourceStore<byte[]> resourceStore, IResourceStore<byte[]> storage, WorkingBeatmap defaultBeatmap, GameHost gameHost)
+                public TestWorkingBeatmapCache(TestBeatmapManager testBeatmapManager, AudioManager audioManager, IResourceStore<byte[]> resourceStore, IResourceStore<byte[]> storage,
+                                               WorkingBeatmap defaultBeatmap, GameHost gameHost)
                     : base(testBeatmapManager.BeatmapTrackStore, audioManager, resourceStore, storage, defaultBeatmap, gameHost)
                 {
                     this.testBeatmapManager = testBeatmapManager;

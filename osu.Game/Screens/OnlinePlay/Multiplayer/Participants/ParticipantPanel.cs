@@ -195,7 +195,7 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Participants
 
             userStateDisplay.UpdateStatus(User.State, User.BeatmapAvailability);
 
-            if ((User.BeatmapAvailability.State == DownloadState.LocallyAvailable) && (User.State != MultiplayerUserState.Spectating))
+            if (User.BeatmapAvailability.State == DownloadState.LocallyAvailable && User.State != MultiplayerUserState.Spectating)
                 userModsDisplay.FadeIn(fade_time);
             else
                 userModsDisplay.FadeOut(fade_time);
@@ -205,10 +205,7 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Participants
 
             // If the mods are updated at the end of the frame, the flow container will skip a reflow cycle: https://github.com/ppy/osu-framework/issues/4187
             // This looks particularly jarring here, so re-schedule the update to that start of our frame as a fix.
-            Schedule(() =>
-            {
-                userModsDisplay.Current.Value = ruleset != null ? User.Mods.Select(m => m.ToMod(ruleset)).ToList() : Array.Empty<Mod>();
-            });
+            Schedule(() => { userModsDisplay.Current.Value = ruleset != null ? User.Mods.Select(m => m.ToMod(ruleset)).ToList() : Array.Empty<Mod>(); });
         }
 
         public MenuItem[]? ContextMenuItems

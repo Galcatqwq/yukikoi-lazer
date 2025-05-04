@@ -22,6 +22,8 @@ namespace osu.Game.Screens.OnlinePlay.Match
             return false;
         }
 
-        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e) { }
+        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e)
+        {
+        }
     }
 }

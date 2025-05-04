@@ -261,10 +261,7 @@ namespace osu.Desktop
             }
 
             var request = new GetRoomRequest(roomId);
-            request.Success += room => Schedule(() =>
-            {
-                game.PresentMultiplayerMatch(room, password);
-            });
+            request.Success += room => Schedule(() => { game.PresentMultiplayerMatch(room, password); });
             request.Failure += _ => Logger.Log($"Could not join multiplayer room, room could not be found (room ID: {roomId}).", LoggingTarget.Network, LogLevel.Important);
             api.Queue(request);
         });

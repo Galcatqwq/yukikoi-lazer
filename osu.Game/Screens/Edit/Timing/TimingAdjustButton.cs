@@ -106,7 +106,7 @@ namespace osu.Game.Screens.Edit.Timing
 
             hoveredBox.Flash();
 
-            repeatBehaviour.SampleFrequencyModifier = (hoveredBox.Multiplier / max_multiplier) * 0.2;
+            repeatBehaviour.SampleFrequencyModifier = hoveredBox.Multiplier / max_multiplier * 0.2;
             return true;
         }
 
