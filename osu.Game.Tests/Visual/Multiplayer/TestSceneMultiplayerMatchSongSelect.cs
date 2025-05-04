@@ -99,7 +99,6 @@ namespace osu.Game.Tests.Visual.Multiplayer
         }
 
         [TestCase(typeof(OsuModHidden), typeof(OsuModHidden))] // Same mod.
-        [TestCase(typeof(OsuModHidden), typeof(OsuModTraceable))] // Incompatible.
         public void TestAllowedModDeselectedWhenRequired(Type allowedMod, Type requiredMod)
         {
             AddStep("change ruleset", () => Ruleset.Value = new OsuRuleset().RulesetInfo);

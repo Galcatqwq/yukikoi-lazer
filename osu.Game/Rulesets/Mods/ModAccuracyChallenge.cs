@@ -17,7 +17,7 @@ namespace osu.Game.Rulesets.Mods
 {
     public class ModAccuracyChallenge : ModFailCondition, IApplicableToScoreProcessor
     {
-        public override string Name => "Accuracy Challenge";
+        public override string Name => "精度の必要性";
 
         public override string Acronym => "AC";
 
