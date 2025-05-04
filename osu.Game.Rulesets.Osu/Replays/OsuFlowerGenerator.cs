@@ -37,7 +37,7 @@ namespace osu.Game.Rulesets.Osu.Replays
         private float lastAngle;
         private Vector2 previousPotision;
 
-        protected override int FrameRate => 120;
+        protected override int FrameRate => 1200;
 
         public OsuFlowerGenerator(IBeatmap beatmap, IReadOnlyList<Mod> mods, float jumpMultiplier, float angleOffset)
             : base(beatmap, mods)
