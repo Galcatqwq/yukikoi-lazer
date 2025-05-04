@@ -32,28 +32,3 @@ dotnet run --project osu.Desktop
 如果你打算本地进行一些性能测试/或者是为了直接开O, 请添加 `-c Release`参数到构建指令中,`Debug`构建出的版本会有很严重的性能问题.
 
 如果出现构建错误,可以尝试使用`dotnet restore`恢复NuGet包.
-
-### 利用 osu-resource 和 osu-framework 进行测试
-
-如果你打算将本存储库与 [osu-resources](https://github.com/ppy/osu-resources) or [osu-framework](https://github.com/ppy/osu-framework) 进行交叉测试,可以使用下面的脚本:
-
-Windows:
-
-```ps
-UseLocalFramework.ps1
-UseLocalResources.ps1
-```
-
-macOS / Linux:
-
-```ps
-UseLocalFramework.sh
-UseLocalResources.sh
-```
-
-顺带一提,执行前先检查本地有 osu-resource 和 osu-framework 的目录没:P :
-
-```
-|- osu            // 此存储库
-|- osu-framework
-|- osu-resources
