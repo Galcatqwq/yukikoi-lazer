@@ -20,7 +20,7 @@ namespace osu.Game.Rulesets.Osu.Configuration
         {
             base.InitialiseDefaults();
             SetDefault(OsuRulesetSetting.SnakingInSliders, true);
-            SetDefault(OsuRulesetSetting.SnakingOutSliders, true);
+            SetDefault(OsuRulesetSetting.SnakingOutSliders, false);
             SetDefault(OsuRulesetSetting.ShowCursorTrail, true);
             SetDefault(OsuRulesetSetting.ShowCursorRipples, false);
             SetDefault(OsuRulesetSetting.PlayfieldBorderStyle, PlayfieldBorderStyle.None);
