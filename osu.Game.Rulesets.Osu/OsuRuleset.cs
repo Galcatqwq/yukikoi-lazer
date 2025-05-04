@@ -195,8 +195,6 @@ namespace osu.Game.Rulesets.Osu
                         new OsuModFlower()
                     };
 
-
-
                 case ModType.System:
                     return new Mod[]
                     {
