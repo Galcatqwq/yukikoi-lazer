@@ -17,8 +17,8 @@
 克隆存储库:
 
 ```shell
-git clone https://github.com/Galcatqwq/yukikoi-lazer
-cd yukikoi-lazer
+git clone https://github.com/Galcatqwq/Yukikoi-lazer
+cd Yukikoi-lazer
 ```
 
 #### 通过 CLI 构建
