@@ -11,7 +11,7 @@ namespace osu.Game.Rulesets.Mods
 {
     public abstract class ModHardRock : Mod, IApplicableToDifficulty
     {
-        public override string Name => "摇滚";
+        public override string Name => "专家模式";
         public override string Acronym => "HR";
         public override IconUsage? Icon => OsuIcon.ModHardRock;
         public override ModType Type => ModType.DifficultyIncrease;

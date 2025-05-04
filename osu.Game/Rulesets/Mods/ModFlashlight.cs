@@ -31,17 +31,17 @@ namespace osu.Game.Rulesets.Mods
 {
     public abstract class ModFlashlight : Mod
     {
-        public override string Name => "Flashlight";
+        public override string Name => "电筒";
         public override string Acronym => "FL";
         public override IconUsage? Icon => OsuIcon.ModFlashlight;
         public override ModType Type => ModType.DifficultyIncrease;
-        public override LocalisableString Description => "Restricted view area.";
+        public override LocalisableString Description => "他们来了.....";
         public override bool Ranked => UsesDefaultConfiguration;
 
-        [SettingSource("Flashlight size", "Multiplier applied to the default flashlight size.")]
+        [SettingSource("照明大小", "改变手电筒功率(.")]
         public abstract BindableFloat SizeMultiplier { get; }
 
-        [SettingSource("Change size based on combo", "Decrease the flashlight size as combo increases.")]
+        [SettingSource("大小跟随combo数", "随着combo上升视野逐渐变小,归零恢复.")]
         public abstract BindableBool ComboBasedSize { get; }
 
         /// <summary>

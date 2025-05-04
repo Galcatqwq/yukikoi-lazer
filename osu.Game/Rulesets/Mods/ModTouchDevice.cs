@@ -10,10 +10,10 @@ namespace osu.Game.Rulesets.Mods
 {
     public class ModTouchDevice : Mod, IApplicableMod
     {
-        public sealed override string Name => "Touch Device";
+        public sealed override string Name => "触屏";
         public sealed override string Acronym => "TD";
         public sealed override IconUsage? Icon => OsuIcon.PlayStyleTouch;
-        public sealed override LocalisableString Description => "Automatically applied to plays on devices with a touchscreen.";
+        public sealed override LocalisableString Description => "我去是高贵的触屏大神.";
         public sealed override double ScoreMultiplier => 1;
         public sealed override ModType Type => ModType.System;
         public sealed override bool ValidForMultiplayer => false;

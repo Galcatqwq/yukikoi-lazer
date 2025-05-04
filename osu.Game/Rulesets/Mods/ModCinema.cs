@@ -28,7 +28,7 @@ namespace osu.Game.Rulesets.Mods
         public override string Name => "剧院模式";
         public override string Acronym => "CN";
         public override IconUsage? Icon => OsuIcon.ModCinema;
-        public override LocalisableString Description => "Watch the video without visual distractions.";
+        public override LocalisableString Description => "尽享音乐,还有故事板!";
 
         public override Type[] IncompatibleMods => base.IncompatibleMods.Concat(new[] { typeof(ModAutoplay), typeof(ModNoFail), typeof(ModFailCondition) }).ToArray();
 

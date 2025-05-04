@@ -13,7 +13,7 @@ namespace osu.Game.Rulesets.Mods
 {
     public abstract class ModNoFail : Mod, IApplicableFailOverride, IApplicableToHUD, IReadFromConfig
     {
-        public override string Name => "无敌";
+        public override string Name => "锁血";
         public override string Acronym => "NF";
         public override IconUsage? Icon => OsuIcon.ModNoFail;
         public override ModType Type => ModType.DifficultyReduction;

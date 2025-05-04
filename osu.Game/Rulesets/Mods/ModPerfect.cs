@@ -13,12 +13,12 @@ namespace osu.Game.Rulesets.Mods
 {
     public abstract class ModPerfect : ModFailCondition
     {
-        public override string Name => "Perfect";
+        public override string Name => "完美";
         public override string Acronym => "PF";
         public override IconUsage? Icon => OsuIcon.ModPerfect;
         public override ModType Type => ModType.DifficultyIncrease;
         public override double ScoreMultiplier => 1;
-        public override LocalisableString Description => "SS or quit.";
+        public override LocalisableString Description => "不SS，便重试";
         public override bool Ranked => true;
 
         public override Type[] IncompatibleMods => base.IncompatibleMods.Concat(new[] { typeof(ModSuddenDeath), typeof(ModAccuracyChallenge) }).ToArray();

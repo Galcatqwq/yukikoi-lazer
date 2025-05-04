@@ -99,7 +99,7 @@ namespace osu.Game.Configuration
 
             SetDefault(OsuSetting.MenuVoice, true);
             SetDefault(OsuSetting.MenuMusic, true);
-            SetDefault(OsuSetting.MenuTips, true);
+            SetDefault(OsuSetting.MenuTips, false);
 
             SetDefault(OsuSetting.AudioOffset, 0, -500.0, 500.0, 1);
 
@@ -116,11 +116,11 @@ namespace osu.Game.Configuration
             SetDefault(OsuSetting.TouchDisableGameplayTaps, false);
 
             // Graphics
-            SetDefault(OsuSetting.ShowFpsDisplay, false);
+            SetDefault(OsuSetting.ShowFpsDisplay, true);
 
             SetDefault(OsuSetting.ShowStoryboard, true);
             SetDefault(OsuSetting.BeatmapSkins, true);
-            SetDefault(OsuSetting.BeatmapColours, true);
+            SetDefault(OsuSetting.BeatmapColours, false);
             SetDefault(OsuSetting.BeatmapHitsounds, true);
 
             SetDefault(OsuSetting.CursorRotation, true);
@@ -136,7 +136,7 @@ namespace osu.Game.Configuration
             SetDefault(OsuSetting.BlurLevel, 0, 0, 1, 0.01);
             SetDefault(OsuSetting.LightenDuringBreaks, true);
 
-            SetDefault(OsuSetting.HitLighting, true);
+            SetDefault(OsuSetting.HitLighting, false);
 
             SetDefault(OsuSetting.HUDVisibilityMode, HUDVisibilityMode.Always);
             SetDefault(OsuSetting.ShowHealthDisplayWhenCantFail, true);
