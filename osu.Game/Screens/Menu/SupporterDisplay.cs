@@ -74,47 +74,36 @@ namespace osu.Game.Screens.Menu
 
             static void formatSemiBold(SpriteText t) => t.Font = OsuFont.GetFont(size: font_size, weight: FontWeight.SemiBold);
 
-            currentUser.BindTo(api.LocalUser);
-            currentUser.BindValueChanged(e =>
+            // 移除对 currentUser 的绑定和状态检查，直接设置支持者内容
+            supportFlow.Children.ForEach(d => d.FadeOut().Expire());
+
+            // 直接显示支持者感谢信息
+            supportFlow.AddText("感谢您使用免费的撒泼特(", formatSemiBold);
+            backgroundBox.FadeColour(colours.Pink, 250);
+
+            // 添加心形图标并设置动画
+            supportFlow.AddIcon(FontAwesome.Solid.Heart, t =>
             {
-                supportFlow.Children.ForEach(d => d.FadeOut().Expire());
+                heart = t;
 
-                if (e.NewValue.IsSupporter)
+                t.Padding = new MarginPadding { Left = 5, Top = 1 };
+                t.Font = t.Font.With(size: font_size);
+                t.Origin = Anchor.Centre;
+                t.Colour = colours.Pink;
+
+                Schedule(() =>
                 {
-                    supportFlow.AddText("Eternal thanks to you for supporting osu!", formatSemiBold);
-
-                    backgroundBox.FadeColour(colours.Pink, 250);
-                }
-                else
-                {
-                    supportFlow.AddText("Consider becoming an ", formatSemiBold);
-                    supportFlow.AddLink("osu!supporter", "https://osu.ppy.sh/home/support", formatSemiBold);
-                    supportFlow.AddText(" to help support osu!'s development", formatSemiBold);
-
-                    backgroundBox.FadeColour(colours.Pink4, 250);
-                }
-
-                supportFlow.AddIcon(FontAwesome.Solid.Heart, t =>
-                {
-                    heart = t;
-
-                    t.Padding = new MarginPadding { Left = 5, Top = 1 };
-                    t.Font = t.Font.With(size: font_size);
-                    t.Origin = Anchor.Centre;
-                    t.Colour = colours.Pink;
-
-                    Schedule(() =>
-                    {
-                        heart?.FlashColour(Color4.White, 750, Easing.OutQuint).Loop();
-                    });
+                    heart?.FlashColour(Color4.White, 750, Easing.OutQuint).Loop();
                 });
-            }, true);
+            });
 
+            // 保留原有的淡入动画
             this
                 .FadeOut()
                 .Delay(1000)
                 .FadeInFromZero(800, Easing.OutQuint);
 
+            // 保留自动隐藏逻辑
             scheduleDismissal();
         }
 
