@@ -641,7 +641,7 @@ namespace osu.Game.Online.API
     {
         public GuestUser()
         {
-            Username = @"Guest";
+            Username = @"NayutaMeow";
             Id = SYSTEM_USER_ID;
         }
     }

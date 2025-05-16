@@ -8,7 +8,7 @@ namespace osu.Game.Rulesets.Mods
 {
     public abstract class ModClassic : Mod
     {
-        public override string Name => "经典";
+        public override string Name => "Classic Mode";
 
         public override string Acronym => "CL";
 
@@ -16,7 +16,7 @@ namespace osu.Game.Rulesets.Mods
 
         public override IconUsage? Icon => FontAwesome.Solid.History;
 
-        public override LocalisableString Description => "梦回V1";
+        public override LocalisableString Description => "启用 Classic Mode";
 
         public override ModType Type => ModType.Conversion;
 

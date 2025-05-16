@@ -20,7 +20,7 @@ namespace osu.Game.Rulesets.Osu.Mods
 {
     public class OsuModRelax : ModRelax, IUpdatableByPlayfield, IApplicableToDrawableRuleset<OsuHitObject>, IApplicableToPlayer, IHasNoTimedInputs
     {
-        public override LocalisableString Description => @"开启RelaxMode.";
+        public override LocalisableString Description => @"启用 Relax Mode.";
 
         public override Type[] IncompatibleMods =>
             base.IncompatibleMods.Concat(new[] { typeof(Nullable) }).ToArray();
