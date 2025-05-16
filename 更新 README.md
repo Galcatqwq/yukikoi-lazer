@@ -18,7 +18,6 @@
 
 ```shell
 git clone https://github.com/Galcatqwq/Yukikoi-lazer
-cd Yukikoi-lazer
 ```
 
 ### 构建
