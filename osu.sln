@@ -19,8 +19,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "osu.Desktop", "osu.Desktop\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "osu.Game.Tournament", "osu.Game.Tournament\osu.Game.Tournament.csproj", "{5672CA4D-1B37-425B-A118-A8DA26E78938}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "osu.Game.Tournament.Tests", "osu.Game.Tournament.Tests\osu.Game.Tournament.Tests.csproj", "{5789E78D-38F9-4072-AB7B-978F34B2C17F}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osu.iOS", "osu.iOS\osu.iOS.csproj", "{3F082D0B-A964-43D7-BDF7-C256D76A50D0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osu.Game.Tests.iOS", "osu.Game.Tests.iOS\osu.Game.Tests.iOS.csproj", "{65FF8E19-6934-469B-B690-23C6D6E56A17}"
@@ -101,10 +99,6 @@ Global
 		{5672CA4D-1B37-425B-A118-A8DA26E78938}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5672CA4D-1B37-425B-A118-A8DA26E78938}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5672CA4D-1B37-425B-A118-A8DA26E78938}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5789E78D-38F9-4072-AB7B-978F34B2C17F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5789E78D-38F9-4072-AB7B-978F34B2C17F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5789E78D-38F9-4072-AB7B-978F34B2C17F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5789E78D-38F9-4072-AB7B-978F34B2C17F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3F082D0B-A964-43D7-BDF7-C256D76A50D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3F082D0B-A964-43D7-BDF7-C256D76A50D0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3F082D0B-A964-43D7-BDF7-C256D76A50D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU

@@ -10,7 +10,6 @@
       "osu.Game.Rulesets.Sandbox\\osu.Game.Rulesets.Sandbox.csproj",
       "osu.Game.Rulesets.Taiko\\osu.Game.Rulesets.Taiko.csproj",
       "osu.Game.Tests\\osu.Game.Tests.csproj",
-      "osu.Game.Tournament.Tests\\osu.Game.Tournament.Tests.csproj",
       "osu.Game.Tournament\\osu.Game.Tournament.csproj",
       "osu.Game\\osu.Game.csproj"
     ]
