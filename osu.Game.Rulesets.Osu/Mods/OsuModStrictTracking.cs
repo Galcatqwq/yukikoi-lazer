@@ -26,7 +26,7 @@ namespace osu.Game.Rulesets.Osu.Mods
         public override ModType Type => ModType.DifficultyIncrease;
         public override LocalisableString Description => @"不要放开我~.";
         public override double ScoreMultiplier => 1.0;
-        public override Type[] IncompatibleMods => new[] { typeof(ModClassic), typeof(OsuModTargetPractice) };
+        public override Type[] IncompatibleMods => new[] { typeof(ModClassic) };
 
         public void ApplyToDrawableHitObject(DrawableHitObject drawable)
         {

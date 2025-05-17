@@ -111,9 +111,6 @@ namespace osu.Game.Rulesets.Osu
             if (mods.HasFlag(LegacyMods.SpunOut))
                 yield return new OsuModSpunOut();
 
-            if (mods.HasFlag(LegacyMods.Target))
-                yield return new OsuModTargetPractice();
-
             if (mods.HasFlag(LegacyMods.TouchDevice))
                 yield return new OsuModTouchDevice();
 
@@ -135,14 +132,6 @@ namespace osu.Game.Rulesets.Osu
 
                     case OsuModSpunOut:
                         value |= LegacyMods.SpunOut;
-                        break;
-
-                    case OsuModTargetPractice:
-                        value |= LegacyMods.Target;
-                        break;
-
-                    case OsuModTouchDevice:
-                        value |= LegacyMods.TouchDevice;
                         break;
                 }
             }
@@ -170,6 +159,7 @@ namespace osu.Game.Rulesets.Osu
                         new MultiMod(new OsuModSuddenDeath(), new OsuModPerfect()),
                         new MultiMod(new OsuModDoubleTime(), new OsuModNightcore()),
                         new OsuModHidden(),
+                        new OsuModFlashlight(),
                         new OsuModStrictTracking(),
                         new OsuModAccuracyChallenge(),
                     };
@@ -177,21 +167,19 @@ namespace osu.Game.Rulesets.Osu
                 case ModType.Conversion:
                     return new Mod[]
                     {
-                        new OsuModTargetPractice(),
-                        new OsuModDifficultyAdjust(),
                         new OsuModClassic(),
+                        new OsuModDifficultyAdjust(),
                         new OsuModRandom(),
-                        new MultiMod(new OsuModAlternate(), new OsuModSingleTap())
+                        new MultiMod(new OsuModAlternate(), new OsuModSingleTap()),
                     };
 
                 case ModType.Automation:
                     return new Mod[]
                     {
                         new MultiMod(new OsuModAutoplay(), new OsuModCinema()),
-
                         new OsuModAutopilot(),
                         new OsuModSpunOut(),
-                        new OsuModFlower()
+                        new OsuModFlower(),
                     };
 
                 case ModType.System:

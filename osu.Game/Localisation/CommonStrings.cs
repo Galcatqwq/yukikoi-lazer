@@ -174,6 +174,11 @@ namespace osu.Game.Localisation
         /// </summary>
         public static LocalisableString General => new TranslatableString(getKey(@"general"), @"General");
 
+        /// <summary>
+        /// "没有缩圈,圆圈渐隐,分数略微提高"
+        /// </summary>
+        public static LocalisableString 没有缩圈圆圈渐隐分数略微提高 => new TranslatableString(getKey(@"没有缩圈圆圈渐隐分数略微提高"), @"没有缩圈,圆圈渐隐,分数略微提高");
+
         private static string getKey(string key) => $@"{prefix}:{key}";
     }
 }

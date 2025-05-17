@@ -23,7 +23,7 @@ namespace osu.Game.Rulesets.Osu.Mods
         [SettingSource("只消隐缩圈", "启用后, 物件本体不会随时间消隐.")]
         public Bindable<bool> OnlyFadeApproachCircles { get; } = new BindableBool();
 
-        public override LocalisableString Description => @"Play with no approach circles and fading circles/sliders.";
+        public override LocalisableString Description => @"没有缩圈,圆圈渐隐,分数略微提高.";
         public override double ScoreMultiplier => UsesDefaultConfiguration ? 1.06 : 1;
 
         public override Type[] IncompatibleMods => new Type[] { };

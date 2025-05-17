@@ -2,6 +2,7 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
+using System.Data.SqlTypes;
 using System.Linq;
 using osu.Game.Rulesets.Mods;
 
@@ -11,7 +12,7 @@ namespace osu.Game.Rulesets.Osu.Mods
     {
         public override Type[] IncompatibleMods => base.IncompatibleMods.Concat(new[]
         {
-            typeof(OsuModTargetPractice),
+            typeof(INullable),
         }).ToArray();
     }
 }
