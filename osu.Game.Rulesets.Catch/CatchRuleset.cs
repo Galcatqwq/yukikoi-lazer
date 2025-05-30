@@ -109,6 +109,7 @@ namespace osu.Game.Rulesets.Catch
                 case ModType.DifficultyReduction:
                     return new Mod[]
                     {
+                        new CatchModRelax(),
                         new CatchModEasy(),
                         new CatchModNoFail(),
                         new MultiMod(new CatchModHalfTime(), new CatchModDaycore())
@@ -137,7 +138,6 @@ namespace osu.Game.Rulesets.Catch
                     return new Mod[]
                     {
                         new MultiMod(new CatchModAutoplay(), new CatchModCinema()),
-                        new CatchModRelax(),
                     };
 
                 case ModType.System:
