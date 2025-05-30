@@ -434,12 +434,6 @@ namespace osu.Game.Screens.Play
                 Children = new[]
                 {
                     DimmableStoryboard.OverlayLayerContainer.CreateProxy(),
-                    BreakOverlay = new BreakOverlay(working.Beatmap.BeatmapInfo.LetterboxInBreaks, ScoreProcessor)
-                    {
-                        Clock = DrawableRuleset.FrameStableClock,
-                        ProcessCustomClock = false,
-                        Breaks = working.Beatmap.Breaks
-                    },
                     // display the cursor above some HUD elements.
                     DrawableRuleset.Cursor?.CreateProxy() ?? new Container(),
                     DrawableRuleset.ResumeOverlay?.CreateProxy() ?? new Container(),

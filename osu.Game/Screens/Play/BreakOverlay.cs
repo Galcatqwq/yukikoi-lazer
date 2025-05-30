@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.UserInterface;
 using osu.Game.Beatmaps.Timing;
 using osu.Game.Rulesets.Scoring;
@@ -45,66 +44,12 @@ namespace osu.Game.Screens.Play
 
         public override bool RemoveCompletedTransforms => false;
 
-        private readonly Container remainingTimeAdjustmentBox;
-        private readonly Container remainingTimeBox;
-        private readonly RemainingTimeCounter remainingTimeCounter;
-        private readonly BreakArrows breakArrows;
-        private readonly ScoreProcessor scoreProcessor;
-        private readonly BreakInfo info;
-
-        public BreakOverlay(bool letterboxing, ScoreProcessor scoreProcessor)
-        {
-            this.scoreProcessor = scoreProcessor;
-            RelativeSizeAxes = Axes.Both;
-
-            Child = fadeContainer = new Container
-            {
-                Alpha = 0,
-                RelativeSizeAxes = Axes.Both,
-                Children = new Drawable[]
-                {
-                    new LetterboxOverlay
-                    {
-                        Alpha = letterboxing ? 1 : 0,
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                    },
-                    remainingTimeAdjustmentBox = new Container
-                    {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        AutoSizeAxes = Axes.Y,
-                        RelativeSizeAxes = Axes.X,
-                        Width = 0,
-                        Child = remainingTimeBox = new Circle
-                        {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            RelativeSizeAxes = Axes.X,
-                            Height = 8,
-                            Masking = true,
-                        }
-                    },
-                    remainingTimeCounter = new RemainingTimeCounter
-                    {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.BottomCentre,
-                        Margin = new MarginPadding { Bottom = vertical_margin },
-                    },
-                    info = new BreakInfo
-                    {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.TopCentre,
-                        Margin = new MarginPadding { Top = vertical_margin },
-                    },
-                    breakArrows = new BreakArrows
-                    {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                    }
-                }
-            };
-        }
+        private readonly Container remainingTimeAdjustmentBox = null;
+        private readonly Container remainingTimeBox = null;
+        private readonly RemainingTimeCounter remainingTimeCounter = null;
+        private readonly BreakArrows breakArrows = null;
+        private readonly ScoreProcessor scoreProcessor = null;
+        private readonly BreakInfo info = null;
 
         protected override void LoadComplete()
         {
