@@ -35,7 +35,7 @@ namespace osu.Game.Rulesets.Scoring
         private const double accuracy_cutoff_s = 0.94;
         private const double accuracy_cutoff_a = 0.9;
         private const double accuracy_cutoff_b = 0.8;
-        private const double accuracy_cutoff_c = 0.7;
+        private const double accuracy_cutoff_c = 0.01;
         private const double accuracy_cutoff_d = 0;
 
         /// <summary>
