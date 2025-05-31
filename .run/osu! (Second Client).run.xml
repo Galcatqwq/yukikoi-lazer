@@ -7,6 +7,7 @@
     <option name="USE_EXTERNAL_CONSOLE" value="0" />
     <option name="USE_MONO" value="0" />
     <option name="RUNTIME_ARGUMENTS" value="" />
+    <option name="RUNTIME_TYPE" value="custom:90978979-3a71-40a6-9eef-93da0d3d50f8" />
     <option name="PROJECT_PATH" value="$PROJECT_DIR$/osu.Desktop/osu.Desktop.csproj" />
     <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
     <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
