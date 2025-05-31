@@ -8,8 +8,6 @@
     <!-- NullabilityInfoContextSupport is disabled by default for Android -->
     <NullabilityInfoContextSupport>true</NullabilityInfoContextSupport>
     <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
-    <PublishAot>true</PublishAot>
-    <UseInterpreter>false</UseInterpreter>
     <SelfContained>true</SelfContained>
     <AotAssemblies>true</AotAssemblies>
     <AndroidAotMode>Full</AndroidAotMode>
