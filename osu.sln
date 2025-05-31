@@ -33,14 +33,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osu.Game.Rulesets.Catch.Tes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osu.Android", "osu.Android\osu.Android.csproj", "{D1D5F9A8-B40B-40E6-B02F-482D03346D3D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osu.Game.Rulesets.Catch.Tests.Android", "osu.Game.Rulesets.Catch.Tests.Android\osu.Game.Rulesets.Catch.Tests.Android.csproj", "{C5379ECB-3A94-4D2F-AC3B-2615AC23EB0D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osu.Game.Rulesets.Mania.Tests.Android", "osu.Game.Rulesets.Mania.Tests.Android\osu.Game.Rulesets.Mania.Tests.Android.csproj", "{531F1092-DB27-445D-AA33-2A77C7187C99}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osu.Game.Rulesets.Osu.Tests.Android", "osu.Game.Rulesets.Osu.Tests.Android\osu.Game.Rulesets.Osu.Tests.Android.csproj", "{90CAB706-39CB-4B93-9629-3218A6FF8E9B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osu.Game.Rulesets.Taiko.Tests.Android", "osu.Game.Rulesets.Taiko.Tests.Android\osu.Game.Rulesets.Taiko.Tests.Android.csproj", "{3701A0A1-8476-42C6-B5C4-D24129B4A484}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osu.Game.Tests.Android", "osu.Game.Tests.Android\osu.Game.Tests.Android.csproj", "{5CC222DC-5716-4499-B897-DCBDDA4A5CF9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{10DF8F12-50FD-45D8-8A38-17BA764BF54D}"
