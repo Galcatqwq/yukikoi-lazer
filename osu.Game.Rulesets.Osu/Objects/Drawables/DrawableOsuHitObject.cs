@@ -113,7 +113,9 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
         /// <summary>
         /// Shake the hit object in case it was clicked far too early or late (aka "note lock").
         /// </summary>
-        public virtual void Shake() { }
+        public virtual void Shake()
+        {
+        }
 
         /// <summary>
         /// Causes this <see cref="DrawableOsuHitObject"/> to get hit, disregarding all conditions in implementations of <see cref="DrawableHitObject.CheckForResult"/>.

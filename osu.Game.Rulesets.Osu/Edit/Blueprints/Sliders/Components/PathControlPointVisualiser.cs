@@ -187,20 +187,23 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.Sliders.Components
                 case NotifyCollectionChangedAction.Add:
                     Debug.Assert(e.NewItems != null);
 
-                    for (int i = 0; i < e.NewItems.Count; i++)
+                    if (e.NewItems != null)
                     {
-                        var point = (PathControlPoint)e.NewItems[i];
-
-                        Pieces.Add(new PathControlPointPiece<T>(hitObject, point).With(d =>
+                        for (int i = 0; i < e.NewItems.Count; i++)
                         {
-                            if (allowSelection)
-                                d.RequestSelection = selectionRequested;
+                            var point = (PathControlPoint)e.NewItems[i];
 
-                            d.ControlPoint.Changed += controlPointChanged;
-                            d.DragStarted = DragStarted;
-                            d.DragInProgress = DragInProgress;
-                            d.DragEnded = DragEnded;
-                        }));
+                            Pieces.Add(new PathControlPointPiece<T>(hitObject, point).With(d =>
+                            {
+                                if (allowSelection)
+                                    d.RequestSelection = selectionRequested;
+
+                                d.ControlPoint.Changed += controlPointChanged;
+                                d.DragStarted = DragStarted;
+                                d.DragInProgress = DragInProgress;
+                                d.DragEnded = DragEnded;
+                            }));
+                        }
                     }
 
                     break;

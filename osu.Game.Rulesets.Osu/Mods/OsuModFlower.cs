@@ -27,7 +27,7 @@ namespace osu.Game.Rulesets.Osu.Mods
         public override bool RequiresConfiguration => true;
 
         [SettingSource("Jump multiplier")]
-        public BindableFloat JumpMultiplier { get; set; } = new BindableFloat()
+        public BindableFloat JumpMultiplier { get; set; } = new BindableFloat
         {
             Value = 0.6f,
             Default = 0.6f,
