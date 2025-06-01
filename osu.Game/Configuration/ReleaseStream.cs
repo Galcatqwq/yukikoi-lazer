@@ -6,8 +6,8 @@ namespace osu.Game.Configuration
     public enum ReleaseStream
     {
         Lazer,
-        Stable,
-        Beta40,
+        UnStable,
+        Beta114514,
         ppysb
     }
 }
