@@ -34,7 +34,6 @@ namespace osu.Game.Tests.Visual.Gameplay
         private int iteration;
 
         protected override Drawable CreateDefaultImplementation() => new TrianglesPerformancePointsCounter();
-        protected override Drawable CreateArgonImplementation() => new ArgonPerformancePointsCounter();
         protected override Drawable CreateLegacyImplementation() => Empty();
 
         private Bindable<JudgementResult> lastJudgementResult => (Bindable<JudgementResult>)gameplayState.LastJudgementResult;

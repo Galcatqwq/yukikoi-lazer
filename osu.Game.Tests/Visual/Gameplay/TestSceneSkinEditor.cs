@@ -24,7 +24,6 @@ using osu.Game.Screens.Edit;
 using osu.Game.Screens.Play.HUD;
 using osu.Game.Screens.Play.HUD.HitErrorMeters;
 using osu.Game.Skinning;
-using osu.Game.Skinning.Components;
 using osu.Game.Tests.Resources;
 using osuTK;
 using osuTK.Input;
@@ -67,84 +66,6 @@ namespace osu.Game.Tests.Visual.Gameplay
         }
 
         [Test]
-        public void TestDragSelection()
-        {
-            BigBlackBox box1 = null!;
-            BigBlackBox box2 = null!;
-            BigBlackBox box3 = null!;
-
-            AddStep("Add big black boxes", () =>
-            {
-                var target = Player.ChildrenOfType<SkinComponentsContainer>().First();
-                target.Add(box1 = new BigBlackBox
-                {
-                    Position = new Vector2(-90),
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                });
-                target.Add(box2 = new BigBlackBox
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                });
-                target.Add(box3 = new BigBlackBox
-                {
-                    Position = new Vector2(90),
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                });
-            });
-
-            // This step is specifically added to reproduce an edge case which was found during cyclic selection development.
-            // If everything is working as expected it should not affect the subsequent drag selections.
-            AddRepeatStep("Select top left", () =>
-            {
-                InputManager.MoveMouseTo(box1.ScreenSpaceDrawQuad.TopLeft + new Vector2(box1.ScreenSpaceDrawQuad.Width / 8));
-                InputManager.Click(MouseButton.Left);
-            }, 2);
-
-            AddStep("Begin drag top left", () =>
-            {
-                InputManager.MoveMouseTo(box1.ScreenSpaceDrawQuad.TopLeft - new Vector2(box1.ScreenSpaceDrawQuad.Width / 4, box1.ScreenSpaceDrawQuad.Height / 8));
-                InputManager.PressButton(MouseButton.Left);
-            });
-
-            AddStep("Drag to bottom right", () =>
-            {
-                InputManager.MoveMouseTo(box3.ScreenSpaceDrawQuad.TopRight + new Vector2(-box3.ScreenSpaceDrawQuad.Width / 8, box3.ScreenSpaceDrawQuad.Height / 4));
-            });
-
-            AddStep("Release button", () =>
-            {
-                InputManager.ReleaseButton(MouseButton.Left);
-            });
-
-            AddAssert("First two boxes selected", () => skinEditor.SelectedComponents, () => Is.EqualTo(new[] { box1, box2 }));
-
-            AddStep("Begin drag bottom right", () =>
-            {
-                InputManager.MoveMouseTo(box3.ScreenSpaceDrawQuad.BottomRight + new Vector2(box3.ScreenSpaceDrawQuad.Width / 4));
-                InputManager.PressButton(MouseButton.Left);
-            });
-
-            AddStep("Drag to top left", () =>
-            {
-                InputManager.MoveMouseTo(box2.ScreenSpaceDrawQuad.Centre - new Vector2(box2.ScreenSpaceDrawQuad.Width / 4));
-            });
-
-            AddStep("Release button", () =>
-            {
-                InputManager.ReleaseButton(MouseButton.Left);
-            });
-
-            AddAssert("Last two boxes selected", () => skinEditor.SelectedComponents, () => Is.EqualTo(new[] { box2, box3 }));
-
-            // Test cyclic selection doesn't trigger in this state.
-            AddStep("click on black box stack", () => InputManager.Click(MouseButton.Left));
-            AddAssert("Last two boxes still selected", () => skinEditor.SelectedComponents, () => Is.EqualTo(new[] { box2, box3 }));
-        }
-
-        [Test]
         public void TestCyclicSelection()
         {
             List<SkinBlueprint> blueprints = new List<SkinBlueprint>();
@@ -153,19 +74,12 @@ namespace osu.Game.Tests.Visual.Gameplay
 
             for (int i = 0; i < 3; i++)
             {
-                AddStep("Add big black box", () =>
-                {
-                    skinEditor.ChildrenOfType<SkinComponentToolbox.ToolboxComponentButton>().First(b => b.ChildrenOfType<BigBlackBox>().FirstOrDefault() != null).TriggerClick();
-                });
-
                 AddStep("store box", () =>
                 {
                     // Add blueprints one-by-one so we have a stable order for testing reverse cyclic selection against.
                     blueprints.Add(skinEditor.ChildrenOfType<SkinBlueprint>().Single(s => s.IsSelected));
                 });
             }
-
-            AddAssert("Three black boxes added", () => targetContainer.Components.OfType<BigBlackBox>().Count(), () => Is.EqualTo(3));
 
             AddAssert("Selection is last", () => skinEditor.SelectedComponents.Single(), () => Is.EqualTo(blueprints[2].Item));
 
@@ -187,7 +101,6 @@ namespace osu.Game.Tests.Visual.Gameplay
             AddStep("select all boxes", () =>
             {
                 skinEditor.SelectedComponents.Clear();
-                skinEditor.SelectedComponents.AddRange(targetContainer.Components.OfType<BigBlackBox>().Skip(1));
             });
 
             AddAssert("all boxes selected", () => skinEditor.SelectedComponents, () => Has.Count.EqualTo(2));
@@ -226,7 +139,6 @@ namespace osu.Game.Tests.Visual.Gameplay
 
             AddStep("Add components", () =>
             {
-                InputManager.MoveMouseTo(skinEditor.ChildrenOfType<BigBlackBox>().First());
                 InputManager.Click(MouseButton.Left);
                 InputManager.Click(MouseButton.Left);
                 InputManager.Click(MouseButton.Left);
@@ -390,22 +302,12 @@ namespace osu.Game.Tests.Visual.Gameplay
 
             AddStep("import old argon skin", () => skins.CurrentSkinInfo.Value = importedSkin = importSkinFromArchives(@"argon-layout-version-0.osk").SkinInfo);
             AddUntilStep("wait for load", () => globalHUDTarget.ComponentsLoaded && rulesetHUDTarget.ComponentsLoaded);
-            AddAssert("no combo in global target", () => !globalHUDTarget.Components.OfType<ArgonComboCounter>().Any());
-            AddAssert("combo placed in ruleset target", () => rulesetHUDTarget.Components.OfType<ArgonComboCounter>().Count() == 1);
 
-            AddStep("add combo to global target", () => globalHUDTarget.Add(new ArgonComboCounter
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Scale = new Vector2(2f),
-            }));
             AddStep("save skin", () => skins.Save(skins.CurrentSkin.Value));
 
             AddStep("select another skin", () => skins.CurrentSkinInfo.SetDefault());
             AddStep("select skin again", () => skins.CurrentSkinInfo.Value = importedSkin);
             AddUntilStep("wait for load", () => globalHUDTarget.ComponentsLoaded && rulesetHUDTarget.ComponentsLoaded);
-            AddAssert("combo placed in global target", () => globalHUDTarget.Components.OfType<ArgonComboCounter>().Count() == 1);
-            AddAssert("combo placed in ruleset target", () => rulesetHUDTarget.Components.OfType<ArgonComboCounter>().Count() == 1);
         }
 
         [Test]

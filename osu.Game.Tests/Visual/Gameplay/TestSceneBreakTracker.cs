@@ -26,8 +26,9 @@ namespace osu.Game.Tests.Visual.Gameplay
             new BreakPeriod(6000, 13500),
         };
 
-        public TestSceneBreakTracker()
+        public TestSceneBreakTracker(BreakOverlay breakOverlay)
         {
+            this.breakOverlay = breakOverlay;
             AddRange(new Drawable[]
             {
                 breakTracker = new TestBreakTracker(),

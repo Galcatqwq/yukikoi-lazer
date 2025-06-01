@@ -2,10 +2,8 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
-using System.Linq;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
-using osu.Framework.Testing;
 using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Mania.Beatmaps;
 using osu.Game.Rulesets.Scoring;
@@ -40,21 +38,7 @@ namespace osu.Game.Rulesets.Mania.Skinning.Argon
                     switch (containerLookup.Target)
                     {
                         case SkinComponentsContainerLookup.TargetArea.MainHUDComponents:
-                            return new DefaultSkinComponentsContainer(container =>
-                            {
-                                var combo = container.ChildrenOfType<ArgonManiaComboCounter>().FirstOrDefault();
-
-                                if (combo != null)
-                                {
-                                    combo.ShowLabel.Value = false;
-                                    combo.Anchor = Anchor.TopCentre;
-                                    combo.Origin = Anchor.Centre;
-                                    combo.Y = 200;
-                                }
-                            })
-                            {
-                                new ArgonManiaComboCounter(),
-                            };
+                            break;
                     }
 
                     return null;

@@ -20,7 +20,6 @@ using osu.Framework.Logging;
 using osu.Game.Audio;
 using osu.Game.Database;
 using osu.Game.IO;
-using osu.Game.Rulesets;
 using osu.Game.Screens.Play.HUD;
 
 namespace osu.Game.Skinning
@@ -260,20 +259,11 @@ namespace osu.Game.Skinning
 
                     var comboCounters = globalHUDComponents.Where(c =>
                         c.Type.Name == nameof(LegacyDefaultComboCounter) ||
-                        c.Type.Name == nameof(DefaultComboCounter) ||
-                        c.Type.Name == nameof(ArgonComboCounter)).ToArray();
+                        c.Type.Name == nameof(DefaultComboCounter));
 
                     layout.Update(null, globalHUDComponents.Except(comboCounters).ToArray());
 
-                    resources.RealmAccess.Run(r =>
-                    {
-                        foreach (var ruleset in r.All<RulesetInfo>())
-                        {
-                            layout.Update(ruleset, layout.TryGetDrawableInfo(ruleset, out var rulesetHUDComponents)
-                                ? rulesetHUDComponents.Concat(comboCounters).ToArray()
-                                : comboCounters);
-                        }
-                    });
+                    resources.RealmAccess.Run(r => { });
 
                     break;
                 }

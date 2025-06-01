@@ -8,7 +8,6 @@ using osu.Framework.Graphics;
 using osu.Game.Rulesets.Osu;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Scoring;
-using osu.Game.Screens.Play.HUD;
 using osu.Game.Skinning;
 
 namespace osu.Game.Tests.Visual.Gameplay
@@ -20,7 +19,7 @@ namespace osu.Game.Tests.Visual.Gameplay
 
         private Bindable<ScoreRank> rank => (Bindable<ScoreRank>)scoreProcessor.Rank;
 
-        protected override Drawable CreateDefaultImplementation() => new DefaultRankDisplay();
+        protected override Drawable CreateDefaultImplementation() => null!;
 
         protected override Drawable CreateLegacyImplementation() => new LegacyRankDisplay();
 

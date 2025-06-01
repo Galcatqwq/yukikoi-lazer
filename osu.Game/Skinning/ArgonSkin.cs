@@ -7,7 +7,6 @@ using JetBrains.Annotations;
 using osu.Framework.Audio.Sample;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
-using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Textures;
 using osu.Game.Audio;
 using osu.Game.Beatmaps.Formats;
@@ -16,7 +15,6 @@ using osu.Game.IO;
 using osu.Game.Screens.Play;
 using osu.Game.Screens.Play.HUD;
 using osu.Game.Screens.Play.HUD.HitErrorMeters;
-using osu.Game.Skinning.Components;
 using osuTK;
 using osuTK.Graphics;
 
@@ -111,30 +109,9 @@ namespace osu.Game.Skinning
 
                             return songSelectComponents;
 
-                        case SkinComponentsContainerLookup.TargetArea.MainHUDComponents:
-                            if (containerLookup.Ruleset != null)
-                            {
-                                return new Container
-                                {
-                                    RelativeSizeAxes = Axes.Both,
-                                    Child = new ArgonComboCounter
-                                    {
-                                        Anchor = Anchor.BottomLeft,
-                                        Origin = Anchor.BottomLeft,
-                                        Position = new Vector2(36, -66),
-                                        Scale = new Vector2(1.3f),
-                                    },
-                                };
-                            }
-
                             var mainHUDComponents = new DefaultSkinComponentsContainer(container =>
                             {
                                 var health = container.OfType<ArgonHealthDisplay>().FirstOrDefault();
-                                var healthLine = container.OfType<BoxElement>().FirstOrDefault();
-                                var wedgePieces = container.OfType<ArgonWedgePiece>().ToArray();
-                                var score = container.OfType<ArgonScoreCounter>().FirstOrDefault();
-                                var accuracy = container.OfType<ArgonAccuracyCounter>().FirstOrDefault();
-                                var performancePoints = container.OfType<ArgonPerformancePointsCounter>().FirstOrDefault();
                                 var songProgress = container.OfType<ArgonSongProgress>().FirstOrDefault();
                                 var keyCounter = container.OfType<ArgonKeyCounterDisplay>().FirstOrDefault();
 
@@ -149,38 +126,6 @@ namespace osu.Game.Skinning
                                     health.Width = 300;
                                     health.BarHeight.Value = 30f;
                                     health.Position = new Vector2(components_x_offset, 20f);
-
-                                    if (healthLine != null)
-                                    {
-                                        healthLine.Anchor = Anchor.TopLeft;
-                                        healthLine.Origin = Anchor.CentreLeft;
-                                        healthLine.Y = health.Y + ArgonHealthDisplay.MAIN_PATH_RADIUS;
-                                        healthLine.Size = new Vector2(45, 3);
-                                    }
-
-                                    foreach (var wedgePiece in wedgePieces)
-                                        wedgePiece.Position += new Vector2(-50, 15);
-
-                                    if (score != null)
-                                    {
-                                        score.Origin = Anchor.TopRight;
-                                        score.Position = new Vector2(components_x_offset + 200, wedgePieces.Last().Y + 30);
-                                    }
-
-                                    if (accuracy != null)
-                                    {
-                                        // +4 to vertically align the accuracy counter with the score counter.
-                                        accuracy.Position = new Vector2(-20, 20);
-                                        accuracy.Anchor = Anchor.TopRight;
-                                        accuracy.Origin = Anchor.TopRight;
-                                    }
-
-                                    if (performancePoints != null && accuracy != null)
-                                    {
-                                        performancePoints.Position = new Vector2(accuracy.X, accuracy.Y + accuracy.DrawHeight + 10);
-                                        performancePoints.Anchor = Anchor.TopRight;
-                                        performancePoints.Origin = Anchor.TopRight;
-                                    }
 
                                     var hitError = container.OfType<HitErrorMeter>().FirstOrDefault();
 
@@ -221,29 +166,6 @@ namespace osu.Game.Skinning
                             {
                                 Children = new Drawable[]
                                 {
-                                    new ArgonWedgePiece
-                                    {
-                                        Size = new Vector2(380, 72),
-                                    },
-                                    new ArgonWedgePiece
-                                    {
-                                        Size = new Vector2(380, 72),
-                                        Position = new Vector2(4, 5)
-                                    },
-                                    new ArgonScoreCounter
-                                    {
-                                        ShowLabel = { Value = false },
-                                    },
-                                    new ArgonHealthDisplay(),
-                                    new BoxElement
-                                    {
-                                        CornerRadius = { Value = 0.5f }
-                                    },
-                                    new ArgonAccuracyCounter(),
-                                    new ArgonPerformancePointsCounter
-                                    {
-                                        Scale = new Vector2(0.8f),
-                                    },
                                     new BarHitErrorMeter(),
                                     new BarHitErrorMeter(),
                                     new ArgonSongProgress(),
