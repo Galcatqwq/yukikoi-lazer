@@ -1,6 +1,7 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
+/*
 using System;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
@@ -9,8 +10,9 @@ using osu.Game.Online.Metadata;
 using osu.Game.Online.Multiplayer;
 using osu.Game.Overlays.Dashboard;
 using osu.Game.Overlays.Dashboard.Friends;
+*/
 
-namespace osu.Game.Overlays
+/*namespace osu.Game.Overlays
 {
     public partial class DashboardOverlay : TabbableOnlineOverlay<DashboardOverlayHeader, DashboardOverlayTabs>
     {
@@ -66,4 +68,4 @@ namespace osu.Game.Overlays
                 metadataClient.EndWatchingUserPresence().FireAndForget();
         }
     }
-}
+}*/

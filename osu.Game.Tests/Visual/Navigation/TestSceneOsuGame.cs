@@ -40,7 +40,7 @@ namespace osu.Game.Tests.Visual.Navigation
             typeof(OnScreenDisplay),
             typeof(INotificationOverlay),
             typeof(BeatmapListingOverlay),
-            typeof(DashboardOverlay),
+            /*typeof(DashboardOverlay),*/
             typeof(NewsOverlay),
             typeof(ChannelManager),
             typeof(ChatOverlay),
