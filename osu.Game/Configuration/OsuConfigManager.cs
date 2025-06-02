@@ -61,7 +61,7 @@ namespace osu.Game.Configuration
 
             SetDefault(OsuSetting.ToolbarClockDisplayMode, ToolbarClockDisplayMode.Full);
 
-            SetDefault(OsuSetting.SongSelectBackgroundBlur, true);
+            SetDefault(OsuSetting.SongSelectBackgroundBlur, false);
 
             // Online settings
             SetDefault(OsuSetting.Username, string.Empty);
@@ -91,7 +91,7 @@ namespace osu.Game.Configuration
 
             SetDefault(OsuSetting.ShowOnlineExplicitContent, false);
 
-            SetDefault(OsuSetting.NotifyOnUsernameMentioned, true);
+            SetDefault(OsuSetting.NotifyOnUsernameMentioned, false);
             SetDefault(OsuSetting.NotifyOnPrivateMessage, true);
 
             // Audio
@@ -105,7 +105,7 @@ namespace osu.Game.Configuration
 
             // Input
             SetDefault(OsuSetting.MenuCursorSize, 1.0f, 0.5f, 2f, 0.01f);
-            SetDefault(OsuSetting.GameplayCursorSize, 1.0f, 0.1f, 2f, 0.01f);
+            SetDefault(OsuSetting.GameplayCursorSize, 1.0f, 0.01f, 20f, 0.01f);
             SetDefault(OsuSetting.GameplayCursorDuringTouch, false);
             SetDefault(OsuSetting.AutoCursorSize, false);
 
@@ -119,7 +119,7 @@ namespace osu.Game.Configuration
             SetDefault(OsuSetting.ShowFpsDisplay, true);
 
             SetDefault(OsuSetting.ShowStoryboard, true);
-            SetDefault(OsuSetting.BeatmapSkins, true);
+            SetDefault(OsuSetting.BeatmapSkins, false);
             SetDefault(OsuSetting.BeatmapColours, false);
             SetDefault(OsuSetting.BeatmapHitsounds, true);
 
@@ -139,12 +139,12 @@ namespace osu.Game.Configuration
             SetDefault(OsuSetting.HitLighting, false);
 
             SetDefault(OsuSetting.HUDVisibilityMode, HUDVisibilityMode.Always);
-            SetDefault(OsuSetting.ShowHealthDisplayWhenCantFail, true);
+            SetDefault(OsuSetting.ShowHealthDisplayWhenCantFail, false);
             SetDefault(OsuSetting.FadePlayfieldWhenHealthLow, true);
             SetDefault(OsuSetting.KeyOverlay, false);
             SetDefault(OsuSetting.ReplaySettingsOverlay, true);
             SetDefault(OsuSetting.ReplayPlaybackControlsExpanded, true);
-            SetDefault(OsuSetting.GameplayLeaderboard, true);
+            SetDefault(OsuSetting.GameplayLeaderboard, false);
             SetDefault(OsuSetting.AlwaysPlayFirstComboBreak, true);
 
             SetDefault(OsuSetting.FloatingComments, false);
@@ -159,7 +159,7 @@ namespace osu.Game.Configuration
 
             SetDefault(OsuSetting.Version, string.Empty);
 
-            SetDefault(OsuSetting.ShowFirstRunSetup, true);
+            SetDefault(OsuSetting.ShowFirstRunSetup, false);
 
             SetDefault(OsuSetting.ScreenshotFormat, ScreenshotFormat.Jpg);
             SetDefault(OsuSetting.ScreenshotCaptureMenuCursor, false);
