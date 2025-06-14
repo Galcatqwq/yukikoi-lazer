@@ -120,9 +120,9 @@ namespace osu.Game.Localisation
         public static LocalisableString NeverSeasonalBackground => new TranslatableString(getKey(@"never_seasonal_backgrounds"), @"Never");
 
         /// <summary>
-        /// "Never"
+        /// "Sometimes"
         /// </summary>
-        public static LocalisableString SometimesSeasonalBackground => new TranslatableString(getKey(@"sometimes_seasonal_backgrounds"), @"Never");
+        public static LocalisableString SometimesSeasonalBackground => new TranslatableString(getKey(@"sometimes_seasonal_backgrounds"), @"Sometimes");
 
         /// <summary>
         /// "Sequential"
