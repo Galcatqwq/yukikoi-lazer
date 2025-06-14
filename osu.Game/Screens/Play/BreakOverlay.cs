@@ -26,7 +26,7 @@ namespace osu.Game.Screens.Play
         private const float remaining_time_container_max_size = 0.3f;
         private const int vertical_margin = 25;
 
-        private readonly Container fadeContainer;
+        //private readonly Container fadeContainer;
 
         private IReadOnlyList<BreakPeriod> breaks;
 
@@ -84,7 +84,7 @@ namespace osu.Game.Screens.Play
 
                 using (BeginAbsoluteSequence(b.StartTime))
                 {
-                    fadeContainer.FadeIn(BREAK_FADE_DURATION);
+                    //fadeContainer.FadeIn(BREAK_FADE_DURATION);
                     breakArrows.Show(BREAK_FADE_DURATION);
 
                     remainingTimeAdjustmentBox
@@ -101,7 +101,7 @@ namespace osu.Game.Screens.Play
 
                     using (BeginDelayedSequence(b.Duration - BREAK_FADE_DURATION))
                     {
-                        fadeContainer.FadeOut(BREAK_FADE_DURATION);
+                        //fadeContainer.FadeOut(BREAK_FADE_DURATION);
                         breakArrows.Hide(BREAK_FADE_DURATION);
                     }
                 }
