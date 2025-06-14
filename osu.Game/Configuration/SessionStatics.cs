@@ -23,7 +23,7 @@ namespace osu.Game.Configuration
             SetDefault(Static.LoginOverlayDisplayed, false);
             SetDefault(Static.MutedAudioNotificationShownOnce, false);
             SetDefault(Static.LowBatteryNotificationShownOnce, false);
-            SetDefault(Static.FeaturedArtistDisclaimerShownOnce, false);
+            //SetDefault(Static.FeaturedArtistDisclaimerShownOnce, ture);
             SetDefault(Static.LastHoverSoundPlaybackTime, (double?)null);
             SetDefault(Static.LastModSelectPanelSamplePlaybackTime, (double?)null);
             SetDefault<APISeasonalBackgrounds>(Static.SeasonalBackgrounds, null);
@@ -50,7 +50,7 @@ namespace osu.Game.Configuration
         LoginOverlayDisplayed,
         MutedAudioNotificationShownOnce,
         LowBatteryNotificationShownOnce,
-        FeaturedArtistDisclaimerShownOnce,
+        //FeaturedArtistDisclaimerShownOnce,
 
         /// <summary>
         /// Info about seasonal backgrounds available fetched from API - see <see cref="APISeasonalBackgrounds"/>.
