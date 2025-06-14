@@ -70,11 +70,6 @@ namespace osu.Game.Localisation
         public static LocalisableString SeasonalBackgrounds => new TranslatableString(getKey(@"seasonal_backgrounds"), @"Seasonal backgrounds");
 
         /// <summary>
-        /// "Changes to this setting will only apply with an active osu!supporter tag."
-        /// </summary>
-        public static LocalisableString NotSupporterNote => new TranslatableString(getKey(@"not_supporter_note"), @"Changes to this setting will only apply with an active osu!supporter tag.");
-
-        /// <summary>
         /// "Song Select"
         /// </summary>
         public static LocalisableString SongSelectHeader => new TranslatableString(getKey(@"song_select_header"), @"Song Select");
@@ -88,16 +83,6 @@ namespace osu.Game.Localisation
         /// "Show converted beatmaps"
         /// </summary>
         public static LocalisableString ShowConvertedBeatmaps => new TranslatableString(getKey(@"show_converted_beatmaps"), @"Show converted beatmaps");
-
-        /// <summary>
-        /// "Display beatmaps from"
-        /// </summary>
-        public static LocalisableString StarsMinimum => new TranslatableString(getKey(@"stars_minimum"), @"Display beatmaps from");
-
-        /// <summary>
-        /// "up to"
-        /// </summary>
-        public static LocalisableString StarsMaximum => new TranslatableString(getKey(@"stars_maximum"), @"up to");
 
         /// <summary>
         /// "Random selection algorithm"

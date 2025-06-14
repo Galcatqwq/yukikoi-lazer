@@ -62,17 +62,14 @@ namespace osu.Game.Overlays.Settings.Sections.UserInterface
             };
         }
 
-        protected override void LoadComplete()
+        /*protected override void LoadComplete()
         {
             base.LoadComplete();
 
             user.BindValueChanged(u =>
             {
-                if (u.NewValue?.IsSupporter != true)
-                    backgroundSourceDropdown.SetNoticeText(UserInterfaceStrings.NotSupporterNote, true);
-                else
-                    backgroundSourceDropdown.ClearNoticeText();
+                backgroundSourceDropdown.ClearNoticeText();
             }, true);
-        }
+        }*/
     }
 }
