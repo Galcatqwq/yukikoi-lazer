@@ -37,12 +37,12 @@ namespace osu.Game.Configuration
         {
             // UI/selection defaults
             SetDefault(OsuSetting.Ruleset, string.Empty);
-            SetDefault(OsuSetting.Skin, SkinInfo.ARGON_SKIN.ToString());
+            SetDefault(OsuSetting.Skin, SkinInfo.CLASSIC_SKIN.ToString());
 
             SetDefault(OsuSetting.BeatmapDetailTab, PlayBeatmapDetailArea.TabType.Local);
             SetDefault(OsuSetting.BeatmapDetailModsFilter, false);
 
-            SetDefault(OsuSetting.ShowConvertedBeatmaps, true);
+            SetDefault(OsuSetting.ShowConvertedBeatmaps, false);
             SetDefault(OsuSetting.DisplayStarsMinimum, 0.0, 0, 10, 0.1);
             SetDefault(OsuSetting.DisplayStarsMaximum, 10.1, 0, 10.1, 0.1);
 
@@ -113,7 +113,7 @@ namespace osu.Game.Configuration
             SetDefault(OsuSetting.MouseDisableWheel, false);
             SetDefault(OsuSetting.ConfineMouseMode, OsuConfineMouseMode.DuringGameplay);
 
-            SetDefault(OsuSetting.TouchDisableGameplayTaps, false);
+            SetDefault(OsuSetting.TouchDisableGameplayTaps, true);
 
             // Graphics
             SetDefault(OsuSetting.ShowFpsDisplay, true);
@@ -155,7 +155,7 @@ namespace osu.Game.Configuration
             SetDefault(OsuSetting.GameplayDisableWinKey, true);
 
             // Update
-            SetDefault(OsuSetting.ReleaseStream, ReleaseStream.Lazer);
+            SetDefault(OsuSetting.ReleaseStream, ReleaseStream.UnStable);
 
             SetDefault(OsuSetting.Version, string.Empty);
 
@@ -183,9 +183,9 @@ namespace osu.Game.Configuration
             SetDefault(OsuSetting.IntroSequence, IntroSequence.Triangles);
 
             SetDefault(OsuSetting.MenuBackgroundSource, BackgroundSource.Skin);
-            SetDefault(OsuSetting.SeasonalBackgroundMode, SeasonalBackgroundMode.Sometimes);
+            SetDefault(OsuSetting.SeasonalBackgroundMode, SeasonalBackgroundMode.Never);
 
-            SetDefault(OsuSetting.DiscordRichPresence, DiscordRichPresenceMode.Full);
+            SetDefault(OsuSetting.DiscordRichPresence, DiscordRichPresenceMode.Off);
 
             SetDefault(OsuSetting.EditorDim, 0.25f, 0f, 0.75f, 0.25f);
             SetDefault(OsuSetting.EditorWaveformOpacity, 0.25f, 0f, 1f, 0.25f);
