@@ -5,9 +5,9 @@ namespace osu.Game.Configuration
 {
     public enum ReleaseStream
     {
-        Lazer,
         UnStable,
-        Beta114514,
+        Lazer,
+        Cutting_Edge,
         ppysb
     }
 }
