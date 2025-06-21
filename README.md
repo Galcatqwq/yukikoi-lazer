@@ -12,13 +12,6 @@
 
 好大一个osu(
 
-### 下载源码
-
-克隆存储库:
-
-```shell
-git clone https://github.com/Galcatqwq/Yukikoi-lazer
-```
 
 ### 构建
 
