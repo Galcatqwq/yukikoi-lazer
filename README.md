@@ -20,7 +20,9 @@
 您应该通过平台特定的 .slnf 文件（而不是主 .sln 文件）加载解决方案.这将减少依赖项并隐藏您不需要关注的平台.有效的 .slnf 文件包括：
 
 osu.Desktop.slnf（最常用）
+
 osu.Android.slnf
+
 osu.iOS.slnf
 
 已为推荐 IDE（如上所列）配置了运行预设.您应该使用 IDE 提供的 生成/运行 功能来启动项目
